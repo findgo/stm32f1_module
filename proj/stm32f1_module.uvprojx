@@ -333,7 +333,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls>--gnu</MiscControls>
-              <Define>STM32F10X_MD,USE_STDPERIPH_DRIVER,DEBUG_MSG</Define>
+              <Define>STM32F10X_MD,USE_STDPERIPH_DRIVER,DEBUG_MSG,DEBUG_MLEDS</Define>
               <Undefine></Undefine>
               <IncludePath>..\common;..\dirver;..\module;..\user;..\util;..\dirver\board</IncludePath>
             </VariousControls>
@@ -439,6 +439,11 @@
               <FileType>1</FileType>
               <FilePath>..\dirver\usart.c</FilePath>
             </File>
+            <File>
+              <FileName>hal_led.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\dirver\hal_led.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -488,6 +493,16 @@
               <FileName>Mtimers.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\module\Mtimers.c</FilePath>
+            </File>
+            <File>
+              <FileName>mcoils.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\module\mcoils.c</FilePath>
+            </File>
+            <File>
+              <FileName>mleds.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\module\mleds.c</FilePath>
             </File>
           </Files>
         </Group>

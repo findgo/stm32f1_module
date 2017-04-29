@@ -47,7 +47,7 @@ uint32_t mcu_elapsedSystime(void)
 }
 
 /**
-  * @brief  ??????????§Ø????
+  * @brief  
   * @param  None
   * @note   
   * @retval  None

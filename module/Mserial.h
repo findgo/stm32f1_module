@@ -21,7 +21,7 @@
 
 //宏 用于控制非阻塞方式下，设置发送，接收最大缓冲区
 #define SERIAL_RX_MAX_SIZE   255
-#define SERIAL_TX_MAX_SIZE   255
+#define SERIAL_TX_MAX_SIZE   1024
 
 
 #define SerialPutByte(dat)  	(USART_SendData(USART_USING1, dat))
