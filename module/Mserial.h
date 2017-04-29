@@ -22,12 +22,15 @@
 // 宏 控制支持的串口数量
 #define COM_USE_NUM     1
 
-typedef enum{
+
+
+
+enum{
     COM0,
     COM1,
     COM2,
     COM3
-}Serial_Com_t;
+};
 
 //宏 用于控制非阻塞方式下，设置发送，接收最大缓冲区
 #define COM0_RX_MAX_SIZE   255

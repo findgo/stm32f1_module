@@ -40,8 +40,8 @@ typedef struct mtimer_s
 //静态初始化
 #define MTIMER_INIT() { 0,0,false }  
 //动态初始化
-#define INIT_TIMER(ptr)			do{\
-																(ptr)->start = 0; \
+#define INIT_MTIMER(ptr)			do{\
+                                (ptr)->start = 0; \
                                 (ptr)->timeout = 0; \
                                 (ptr)->enable = false;\
                             }while (0)

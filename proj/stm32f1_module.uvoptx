@@ -138,7 +138,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGUARM</Key>
-          <Name>報o</Name>
+          <Name>@髕</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -155,50 +155,35 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>264</LineNumber>
+          <LineNumber>232</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134224162</Address>
+          <Address>134224124</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\module\mleds.c</Filename>
+          <Filename>..\module\mkey.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\stm32f1_demo\../module/mleds.c\264</Expression>
+          <Expression>\\stm32f1_demo\../module/mkey.c\232</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
         <Ww>
           <count>0</count>
           <WinNumber>1</WinNumber>
-          <ItemText>test_mtimer</ItemText>
+          <ItemText>KeyHead</ItemText>
         </Ww>
         <Ww>
           <count>1</count>
           <WinNumber>1</WinNumber>
-          <ItemText>dbg_verbos</ItemText>
+          <ItemText>KeyTail</ItemText>
         </Ww>
         <Ww>
           <count>2</count>
           <WinNumber>1</WinNumber>
-          <ItemText>dbg_warn</ItemText>
-        </Ww>
-        <Ww>
-          <count>3</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>dbg_err</ItemText>
-        </Ww>
-        <Ww>
-          <count>4</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>PreCoilOnOffStatus</ItemText>
-        </Ww>
-        <Ww>
-          <count>5</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>elapsetime</ItemText>
+          <ItemText>curcfg</ItemText>
         </Ww>
       </WatchWindow1>
       <Tracepoint>
@@ -435,6 +420,18 @@
       <bDave2>0</bDave2>
       <PathWithFileName>..\module\mcheck.c</PathWithFileName>
       <FilenameWithoutPath>mcheck.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>15</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\module\mkey.c</PathWithFileName>
+      <FilenameWithoutPath>mkey.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

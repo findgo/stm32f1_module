@@ -56,7 +56,7 @@ static comcfg_t comcfg3 = {&Com3TxBuf[0], 0, 0, 0, COM3_TX_MAX_SIZE, &Com3RxBuf[
 
 
 
-static comcfg_t *GetUseCom(Serial_Com_t COM)
+static comcfg_t *GetUseCom(uint8_t COM)
 {
     switch(COM){
 #if COM_USE_NUM >= 1
@@ -157,7 +157,7 @@ uint16_t SerialTxBytePop(comcfg_t *cfg,uint8_t *dat)
   * @retval 返回发送缓冲区有效字节数
   * @note       
   */
-uint16_t serialTxValidAvail(Serial_Com_t COM)
+uint16_t serialTxValidAvail(uint8_t COM)
 {
     comcfg_t *cfg;
     
@@ -214,7 +214,7 @@ static uint16_t SerialRxBufPop(comcfg_t *cfg,uint8_t *buf, uint16_t len)
   * @note   
   * @retval  返回取出数据的实际个数
   */
-uint16_t serialRxValidAvail(Serial_Com_t COM)
+uint16_t serialRxValidAvail(uint8_t COM)
 {
     comcfg_t *cfg;
     
@@ -251,7 +251,7 @@ static void Start_TXEtransmit(uint8_t COM,comcfg_t *cfg)
         }
     }
 }
-//启动一个发送空中断
+//启动一个发送完成中断
 static void Start_TXCtransmit(uint8_t COM,comcfg_t *cfg)
 {
     uint8_t temp;
@@ -288,7 +288,7 @@ static void Start_TXCtransmit(uint8_t COM,comcfg_t *cfg)
   * @note   
   * @retval  number write
   */
-uint16_t Serial_WriteBuf(Serial_Com_t COM,uint8_t *buf,uint16_t len)
+uint16_t Serial_WriteBuf(uint8_t COM,uint8_t *buf,uint16_t len)
 {
     uint16_t count;
     halIntState_t bintstate;
@@ -310,7 +310,7 @@ uint16_t Serial_WriteBuf(Serial_Com_t COM,uint8_t *buf,uint16_t len)
 
 
 
-uint16_t Serial_WriteByte(Serial_Com_t COM,uint8_t dat)
+uint16_t Serial_WriteByte(uint8_t COM,uint8_t dat)
 {
     uint16_t count;
     halIntState_t bintstate;
@@ -335,7 +335,7 @@ uint16_t Serial_WriteByte(Serial_Com_t COM,uint8_t dat)
   * @note   
   * @retval  返回取到数据的实际个数
   */
-uint16_t Serial_Read(Serial_Com_t COM,uint8_t *buf, uint16_t len)
+uint16_t Serial_Read(uint8_t COM,uint8_t *buf, uint16_t len)
 {
     uint16_t length;
     halIntState_t bintstate;

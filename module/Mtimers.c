@@ -55,7 +55,7 @@ DELCARE_MTIMER(ctest_mtimer);
 void  funcheckinit(void)
  {
  	dbg_set_dbg_level(7);
-	INIT_TIMER(&atest_mtimer);
+	INIT_MTIMER(&atest_mtimer);
 	mtimer_start(&test_mtimer,tm_s(1));
 	mtimer_start(&test1_mtimer,tm_s(15));
 	mtimer_start(&test2_mtimer,tm_s(5));
