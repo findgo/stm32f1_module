@@ -45,7 +45,7 @@ do {                                                \
     } while (0)
 
 //重定向fput  用户定义
-#define REDIR_FPUT(ch)   (void)Serial_WriteByte(ch);
+#define REDIR_FPUT(ch)   (void)Serial_WriteByte(COM0,ch);
 #else
 
 #define DBG_VERBOS(fmt, args...)

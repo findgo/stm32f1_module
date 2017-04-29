@@ -48,11 +48,11 @@ typedef struct {
 
 
 //!  serial in a character
-#define console_readbyte(pchByte)	Serial_Read(pchByte, 1)
+#define console_readbyte(pchByte)	Serial_Read(COM0,pchByte, 1)
 //! serial out a character
-#define console_writebyte(chByte)  Serial_WriteByte(chByte)
+#define console_writebyte(chByte)  Serial_WriteByte(COM0,chByte)
 //! serial out a string
-#define console_writestring(pstring)	Serial_WriteStr(pstring)
+#define console_writestring(pstring)	Serial_WriteStr(COM0,pstring)
 
 #define console_extern_init()
 

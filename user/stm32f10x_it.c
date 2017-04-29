@@ -33,9 +33,9 @@ extern void mcu_systime_isr_callback(void);
   * @{
   */ 
 
-extern void Serial_TXE_Isr_callback(void);
-extern void Serial_TXC_Isr_callback(void);
-extern void Serial_RX_Isr_callback(void);
+extern void COM0_TXE_Isr_callback(void);
+extern void COM0_TXC_Isr_callback(void);
+extern void COM0_RX_Isr_callback(void);
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -155,17 +155,17 @@ void SysTick_Handler(void)
 void USART1_IRQHandler(void)
 {
 	if(USART_GetITStatus(USART1, USART_IT_TXE) != RESET){
-		Serial_TXE_Isr_callback();
+		COM0_TXE_Isr_callback();
 		USART_ClearITPendingBit(USART1, USART_IT_TXE);
 	}
 	
 	if(USART_GetITStatus(USART1,USART_IT_RXNE) != RESET){
-        Serial_RX_Isr_callback();
+        COM0_RX_Isr_callback();
 		USART_ClearITPendingBit(USART1, USART_IT_RXNE);
 	}
 	
 	if(USART_GetITStatus(USART1, USART_IT_TC) != RESET){
-		Serial_TXC_Isr_callback();
+		COM0_TXC_Isr_callback();
 		USART_ClearITPendingBit(USART1, USART_IT_TC);
 	}
 	NVIC_ClearPendingIRQ(USART1_IRQn);

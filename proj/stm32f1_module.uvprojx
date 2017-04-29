@@ -504,6 +504,11 @@
               <FileType>1</FileType>
               <FilePath>..\module\mleds.c</FilePath>
             </File>
+            <File>
+              <FileName>mcheck.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\module\mcheck.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
