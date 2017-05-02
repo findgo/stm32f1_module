@@ -4,7 +4,7 @@
   * @author  
   * @version 
   * @date    
-  * @brief     mod_clock.h
+  * @brief     
   ******************************************************************************
   * @attention 	  v1.1    jgb     jiangguobao        20151110
   * @attention      v1.2    jgb     重新修正函数规范          20170427

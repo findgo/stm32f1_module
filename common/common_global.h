@@ -14,6 +14,8 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <string.h>
+#include <stdlib.h>
 #include <stddef.h>
 #include "stm32F10x.h"
 
