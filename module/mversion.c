@@ -6,12 +6,17 @@
 const char *months[] = {"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
 
 
+uint8_t mver_getmajorver(void)
+{
+    return FIRMWARE_MAJOR_VER;
+}
+
 /*
 * __DATE__ : May 12 2017  月日年
 * __TIME__ : 15:26:26     时分秒
 *
 */
-uint32_t mver_getver(void)
+uint32_t mver_getminorver(void)
 {
     uint8_t i,lengh;
 		uint32_t ver;
@@ -49,7 +54,7 @@ uint32_t mver_getver(void)
 void funcheckinit(void)
 {
     dbg_set_dbg_level(7);
-    DBG_VERBOS("%d\r\n",mver_getver());
+    DBG_VERBOS("%d.%d\r\n",mver_getmajorver(),mver_getminorver());
     return;
 }
 

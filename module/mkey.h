@@ -52,6 +52,7 @@ typedef struct {
 enum
 {
 	KEY_NULL = 0,			/* 0 表示无按键事件 */	
+
 	KEY_PRESS1_DOWN,			
 	KEY_PRESS1_LONG, 		
 	KEY_PRESS1_UP
