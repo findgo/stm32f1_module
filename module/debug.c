@@ -15,7 +15,7 @@ void dbg_set_dbg_level(uint8_t level)
     dbg_warn = level & DEBUG_LEVEL_WARN;
     dbg_err = level & DEBUG_LEVEL_ERROR;
 }
-void dbg_print_deb_level(void)
+void dbg_print_dbg_level(void)
 {
     printf("dbg_verbos: %s\r\n",dbg_verbos ? "enable":"disable");
     printf("dbg_warn: %s\r\n",dbg_warn ? "enable":"disable");
@@ -44,7 +44,7 @@ void cmd_debug_control(uint8_t argc, char *argv[], void *pcmd)
     }
     // todo check a string is all digit
     dbg_set_dbg_level((uint8_t)atoi(argv[1]));  
-    dbg_print_deb_level();  
+    dbg_print_dbg_level();  
 }
 
 #else
@@ -53,7 +53,7 @@ void dbg_set_dbg_level(uint8_t level)
     (void) level;
 }
 
-void dbg_print_deb_level(void)
+void dbg_print_dbg_level(void)
 {
 }
 #endif
@@ -61,6 +61,7 @@ void dbg_print_deb_level(void)
 void __attribute__((weak)) funcheckinit(void)
 {
     dbg_set_dbg_level(7);
+    dbg_print_dbg_level();
     return;
 }
 

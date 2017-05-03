@@ -333,7 +333,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls>--gnu</MiscControls>
-              <Define>STM32F10X_MD,USE_STDPERIPH_DRIVER,DEBUG_MSG,MVER_DEBUG</Define>
+              <Define>STM32F10X_MD,USE_STDPERIPH_DRIVER,DEBUG_MSG</Define>
               <Undefine></Undefine>
               <IncludePath>..\common;..\dirver;..\module;..\user;..\util;..\dirver\board</IncludePath>
             </VariousControls>
@@ -518,6 +518,11 @@
               <FileName>mversion.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\module\mversion.c</FilePath>
+            </File>
+            <File>
+              <FileName>mutclock.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\module\mutclock.c</FilePath>
             </File>
           </Files>
         </Group>
