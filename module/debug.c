@@ -62,7 +62,6 @@ void __attribute__((weak)) funcheckinit(void)
 {
     dbg_set_dbg_level(7);
     dbg_print_dbg_level();
-    return;
 }
 
 void __attribute__((weak)) funchecktask(void)

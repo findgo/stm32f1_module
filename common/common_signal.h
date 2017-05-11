@@ -21,9 +21,6 @@ typedef bool halIntState_t;
 #define OS_Enter_Criticial() 	st( __set_PRIMASK(1); )
 #define OS_Exit_Criticial()		st( __set_PRIMASK(0); )
 
-#define OSAL_ENABLE_INTERRUPTS()         st( __set_PRIMASK(0); )
-#define OSAL_DISABLE_INTERRUPTS()        st( __set_PRIMASK(1); )
-
 #define GLOABLE_INTERRUPT_ENABLED()     ((0 ==  __get_PRIMASK()) ? true : false)
 
 //! \brief The safe ATOM code section macro

@@ -333,7 +333,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls>--gnu</MiscControls>
-              <Define>STM32F10X_MD,USE_STDPERIPH_DRIVER,DEBUG_MSG</Define>
+              <Define>STM32F10X_MD,USE_STDPERIPH_DRIVER,DEBUG_MSG,DEBUG_MEVENT</Define>
               <Undefine></Undefine>
               <IncludePath>..\common;..\dirver;..\module;..\user;..\util;..\dirver\board</IncludePath>
             </VariousControls>
@@ -523,6 +523,11 @@
               <FileName>mutclock.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\module\mutclock.c</FilePath>
+            </File>
+            <File>
+              <FileName>mevent.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\module\mevent.c</FilePath>
             </File>
           </Files>
         </Group>

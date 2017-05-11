@@ -18,12 +18,6 @@ int main(void)
 	Usart_Configuration();
 //	console_init();
 
-    uint8_t des[8];
-    uint8_t src[8] = {1,2,3,4,5,6,7,8};
-    memcpy(des,src,8);
-    while(1);
-
-
 #ifdef DEBUG_MSG
 	funcheckinit();
 #endif

@@ -61,8 +61,7 @@
 **	既	  :		0x20000000第4位带别名区地址
 **
 **  "位带地址＋位序号" 转换别名地址 
-**	#define BITBAND(addr, bitnum) ((addr & 0xF0000000)+0x2000000+((addr &
-0xFFFFF)<<5)+(bitnum<<2)) 
+**	#define BITBAND(addr, bitnum) ((addr & 0xF0000000)+0x2000000+((addr & 0xFFFFF)<<5)+(bitnum<<2)) 
 **	
 **/
 //IO口操作宏定义
@@ -88,7 +87,6 @@
 #define GPIOG_IDR_Addr    (GPIOG_BASE + 8) //0x40011E08 
 
 //-- IO口操作,只对单一的IO口;确保n的值小于16!--------------------------------
-----------------------------------------
 #define PAout(n)   		BIT_ADDR(GPIOA_ODR_Addr,n)  						// 输出 
 #define PAin(n)    		BIT_ADDR(GPIOA_IDR_Addr,n)  						// 输入 
 
