@@ -5,10 +5,10 @@
 #include "systick.h"
 #include "console.h"
 #include "debug.h"
+#include "mem_mange.h"
 
 static void prvClockInit(void);
 static void prvnvicInit(void);
-
 
 int main(void)
 {	
@@ -17,7 +17,7 @@ int main(void)
 	Systick_Configuration();
 	Usart_Configuration();
 //	console_init();
-
+  
 #ifdef DEBUG_MSG
 	funcheckinit();
 #endif
