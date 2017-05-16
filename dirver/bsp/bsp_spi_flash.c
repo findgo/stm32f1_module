@@ -57,13 +57,6 @@ static void __sf_WaitForWriteEnd(void)
 */
 static void __sf_WriteStatus(uint8_t _ucValue)
 {
-    if (g_sf_info.ChipID == SST25VF016B_ID){
-        /* 第1步：先使能写状态寄存器 */
-        SF_SPI_CS_ASSERT();                             /* 使能片选 */
-        sf_spiReadWriteByte(SF_CMD_EWRSR);                  /* 发送命令， 允许写状态寄存器 */
-        SF_SPI_CS_DEASSERT();                           /* 禁能片选 */
-    }
-
     SF_SPI_CS_ASSERT();                                 /* 使能片选 */
     sf_spiReadWriteByte(SF_CMD_WRSR);                       /* 发送命令， 写状态寄存器 */
     sf_spiReadWriteByte(_ucValue);                      /* 发送数据：状态寄存器的值 */
@@ -72,20 +65,9 @@ static void __sf_WriteStatus(uint8_t _ucValue)
 
 void __sf_ReadInfo(void)
 {
-    g_sf_info.ChipID = sf_ReadID(); /* 芯片ID */
+    g_sf_info.ChipID = sf_ReadID();/* 芯片ID */
+    
     switch (g_sf_info.ChipID){
-    case SST25VF016B_ID:    
-        g_sf_info.PageSize = 256;                   /* 页面大小 = 256字节 */
-        g_sf_info.SectorSize = 4 * 1024;            /* 扇区大小 = 4K */
-        g_sf_info.TotalSize = 2 * 1024 * 1024;      /* 总容量 = 2M */
-        break;
-
-    case MX25L1606E_ID:
-        g_sf_info.PageSize = 256;                   /* 页面大小 = 256字节 */
-        g_sf_info.SectorSize = 4 * 1024;            /* 扇区大小 = 4K */
-        g_sf_info.TotalSize = 2 * 1024 * 1024;      /* 总容量 = 2M */
-        break;
-        
     case W25Q256FV_ID:
         g_sf_info.PageSize = 256;               /* 页面大小 = 256字节 */
         g_sf_info.SectorSize = 4 * 1024;        /* 扇区大小 = 4K */
@@ -114,6 +96,7 @@ void __sf_ReadInfo(void)
         g_sf_info.TotalSize = 4 * 1024 * 1024;  /* 总容量 = 4M */
         break;
         
+    case MX25L1606E_ID:
     case W25Q16BV_ID:
     case W25X16_ID:
         g_sf_info.PageSize = 256;               /* 页面大小 = 256字节 */
@@ -238,81 +221,38 @@ void sf_ReadBuffer(uint32_t _uiReadAddr, uint8_t * _pBuf,uint32_t _uiSize)
 /* NumByteToWrite must be equal or less than pagesize */
 void sf_WritePage(uint32_t _PageAddr,uint8_t * _pBuf,uint16_t NumByteToWrite)
 {
-    uint32_t i;
-
-    if (g_sf_info.ChipID == SST25VF016B_ID){
-        /* AAI指令要求传入的数据个数是偶数 */
-        if ((NumByteToWrite < 2) && (NumByteToWrite % 2)){
-            return ;
-        }
-
-        __sf_WriteEnable();                             /* 发送写使能命令 */
-
-        SF_SPI_CS_ASSERT();                                 /* 使能片选 */
-        sf_spiReadWriteByte(SF_CMD_AAI);                            /* 发送AAI命令(地址自动增加编程) */
-        sf_spiReadWriteByte((_PageAddr & 0xFF0000) >> 16);  /* 发送扇区地址的高8bit */
-        sf_spiReadWriteByte((_PageAddr & 0xFF00) >> 8);     /* 发送扇区地址中间8bit */
-        sf_spiReadWriteByte(_PageAddr & 0xFF);              /* 发送扇区地址低8bit */
-        sf_spiReadWriteByte(*_pBuf++);                          /* 发送第1个数据 */
-        sf_spiReadWriteByte(*_pBuf++);                          /* 发送第2个数据 */
-        SF_SPI_CS_DEASSERT();                                   /* 禁能片选 */
-
-        __sf_WaitForWriteEnd();                         /* 等待串行Flash内部写操作完成 */
-
-        NumByteToWrite -= 2;                                    /* 计算剩余字节数 */
-
-        for (i = 0; i < NumByteToWrite / 2; i++){
-            SF_SPI_CS_ASSERT();                             /* 使能片选 */
-            sf_spiReadWriteByte(SF_CMD_AAI);                    /* 发送AAI命令(地址自动增加编程) */
-            sf_spiReadWriteByte(*_pBuf++);                  /* 发送数据 */
-            sf_spiReadWriteByte(*_pBuf++);                  /* 发送数据 */
-            SF_SPI_CS_DEASSERT();                           /* 禁能片选 */
-            __sf_WaitForWriteEnd();                     /* 等待串行Flash内部写操作完成 */
-        }
-
-        /* 进入写保护状态 */
-        SF_SPI_CS_ASSERT();
-        sf_spiReadWriteByte(SF_CMD_DISWR);
-        SF_SPI_CS_DEASSERT();
-
-        __sf_WaitForWriteEnd();                         /* 等待串行Flash内部写操作完成 */
-    }else{
     /* for MX25L1606E 、 W25Q64BV */
-        __sf_WriteEnable();                             
+    __sf_WriteEnable();                             
 
-        SF_SPI_CS_ASSERT();                             
-        /*!< Send "Write to Memory " instruction */
-        sf_spiReadWriteByte(SF_CMD_WRITE);  
-        /*!< Send WriteAddr high nibble address byte to write to */
-        sf_spiReadWriteByte((_PageAddr & 0xFF0000) >> 16);
-        sf_spiReadWriteByte((_PageAddr & 0xFF00) >> 8);     
-        sf_spiReadWriteByte(_PageAddr & 0xFF);              
+    SF_SPI_CS_ASSERT();                             
+    /*!< Send "Write to Memory " instruction */
+    sf_spiReadWriteByte(SF_CMD_WRITE);  
+    /*!< Send WriteAddr high nibble address byte to write to */
+    sf_spiReadWriteByte((_PageAddr & 0xFF0000) >> 16);
+    sf_spiReadWriteByte((_PageAddr & 0xFF00) >> 8);     
+    sf_spiReadWriteByte(_PageAddr & 0xFF);              
 
-        while(NumByteToWrite--)
-        {
-            sf_spiReadWriteByte(*_pBuf);
-            _pBuf++;
-        }
-
-        SF_SPI_CS_DEASSERT();                               
-
-        __sf_WaitForWriteEnd();                     
+    while(NumByteToWrite--)
+    {
+        sf_spiReadWriteByte(*_pBuf);
+        _pBuf++;
     }
+
+    SF_SPI_CS_DEASSERT();                               
+
+    __sf_WaitForWriteEnd();                     
 }
 
 
 void sf_WriteSector(uint32_t _SectorAddr,uint8_t * _pBuf,uint16_t NumByteToWrite)
 {
     uint32_t i;
-
-    if (g_sf_info.ChipID == SST25VF016B_ID){
-        sf_WritePage(_SectorAddr,_pBuf,NumByteToWrite);
-    }else{
-        /* for MX25L1606E 、 W25Q64BV */
-        for (i = 0; i < NumByteToWrite / 256; i++){
-            sf_WritePage(_SectorAddr,_pBuf,256);                       
-            _SectorAddr += 256;
-        }
+    
+    /* for MX25L1606E 、 W25Q64BV */
+    for (i = 0; i < NumByteToWrite / 256; i++){
+        sf_WritePage(_SectorAddr,_pBuf,256);                       
+        _SectorAddr += 256;
+        _pBuf += 256;
     }
 }
 
@@ -424,7 +364,7 @@ static uint8_t __sf_CmpData(uint32_t _uiSrcAddr, uint8_t *_ucpTar, uint32_t _uiS
 *   返 回 值: 0 : 错误， 1 ： 成功
 *********************************************************************************************************
 */
-static uint8_t sf_AutoWriteSector(uint8_t *_ucpSrc, uint32_t _uiWrAddr, uint16_t _usWrLen)
+static uint8_t sf_AutoWriteSector( uint32_t _uiWrAddr, uint8_t *_ucpSrc, uint16_t _usWrLen)
 {
     uint16_t i;
     uint16_t j;                 /* 用于延时 */
@@ -526,20 +466,20 @@ uint8_t sf_WriteBuffer(uint32_t _uiWriteAddr, uint8_t* _pBuf,  uint16_t _usWrite
 
     if (Addr == 0){ /* 起始地址是扇区首地址  */
         if (NumOfPage == 0){ /* 数据长度小于扇区大小 */
-            if (sf_AutoWriteSector(_pBuf, _uiWriteAddr, _usWriteSize) == 0){
+            if (sf_AutoWriteSector( _uiWriteAddr, _pBuf,_usWriteSize) == 0){
                 return 0;
             }
         }else{  /* 数据长度大于等于扇区面大小 */
 
             while (NumOfPage--)
             {
-                if (sf_AutoWriteSector(_pBuf, _uiWriteAddr, g_sf_info.SectorSize) == 0){
+                if (sf_AutoWriteSector( _uiWriteAddr, _pBuf, g_sf_info.SectorSize) == 0){
                     return 0;
                 }
                 _uiWriteAddr +=  g_sf_info.SectorSize;
                 _pBuf += g_sf_info.SectorSize;
             }
-            if (sf_AutoWriteSector(_pBuf, _uiWriteAddr, NumOfSingle) == 0){
+            if (sf_AutoWriteSector( _uiWriteAddr, _pBuf, NumOfSingle) == 0){
                 return 0;
             }
         }
@@ -549,18 +489,18 @@ uint8_t sf_WriteBuffer(uint32_t _uiWriteAddr, uint8_t* _pBuf,  uint16_t _usWrite
             if (NumOfSingle > count){ /* (_usWriteSize + _uiWriteAddr) > SPI_FLASH_PAGESIZE */
             
                 temp = NumOfSingle - count;
-                if (sf_AutoWriteSector(_pBuf, _uiWriteAddr, count) == 0){
+                if (sf_AutoWriteSector( _uiWriteAddr, _pBuf, count) == 0){
                     return 0;
                 }
 
                 _uiWriteAddr +=  count;
                 _pBuf += count;
 
-                if (sf_AutoWriteSector(_pBuf, _uiWriteAddr, temp) == 0){
+                if (sf_AutoWriteSector( _uiWriteAddr, _pBuf, temp) == 0){
                     return 0;
                 }
             }else{
-                if (sf_AutoWriteSector(_pBuf, _uiWriteAddr, _usWriteSize) == 0){
+                if (sf_AutoWriteSector( _uiWriteAddr, _pBuf, _usWriteSize) == 0){
                     return 0;
                 }
             }
@@ -570,7 +510,7 @@ uint8_t sf_WriteBuffer(uint32_t _uiWriteAddr, uint8_t* _pBuf,  uint16_t _usWrite
             NumOfPage =  _usWriteSize / g_sf_info.SectorSize;
             NumOfSingle = _usWriteSize % g_sf_info.SectorSize;
 
-            if (sf_AutoWriteSector(_pBuf, _uiWriteAddr, count) == 0){
+            if (sf_AutoWriteSector( _uiWriteAddr, _pBuf, count) == 0){
                 return 0;
             }
 
@@ -579,7 +519,7 @@ uint8_t sf_WriteBuffer(uint32_t _uiWriteAddr, uint8_t* _pBuf,  uint16_t _usWrite
 
             while (NumOfPage--)
             {
-                if (sf_AutoWriteSector(_pBuf, _uiWriteAddr, g_sf_info.SectorSize) == 0){
+                if (sf_AutoWriteSector( _uiWriteAddr, _pBuf, g_sf_info.SectorSize) == 0){
                     return 0;
                 }
                 _uiWriteAddr +=  g_sf_info.SectorSize;
@@ -587,7 +527,7 @@ uint8_t sf_WriteBuffer(uint32_t _uiWriteAddr, uint8_t* _pBuf,  uint16_t _usWrite
             }
 
             if (NumOfSingle != 0){
-                if (sf_AutoWriteSector(_pBuf, _uiWriteAddr, NumOfSingle) == 0){
+                if (sf_AutoWriteSector( _uiWriteAddr, _pBuf, NumOfSingle) == 0){
                     return 0;
                 }
             }
@@ -598,23 +538,92 @@ uint8_t sf_WriteBuffer(uint32_t _uiWriteAddr, uint8_t* _pBuf,  uint16_t _usWrite
 }
 #endif
 
+uint8_t sf_StatusBusy(void)
+{
+    uint8_t status;
+    
+    /*!< Select the FLASH: Chip Select low */
+    SF_SPI_CS_ASSERT();     
+    /*!< Send "Read Status Register" instruction */
+    sf_spiReadWriteByte(SF_CMD_RDSR);       
+    /*!< Send a dummy byte to generate the clock needed by the FLASH
+    and put the value of the status register in FLASH_Status variable */
+    status = sf_spiReadWriteByte(SF_DUMMY_BYTE) & WIP_FLAG;
+    /*!< Deselect the FLASH: Chip Select high */
+    SF_SPI_CS_DEASSERT();
+
+    return status;
+}
+
+void sf_StartEraseSectoreSequeue(uint32_t _uiSectorAddr)
+{
+    /*!< Send write enable instruction */
+    __sf_WriteEnable();                             
+
+    SF_SPI_CS_ASSERT();                                 
+    /*!< Send Sector Erase instruction */
+    sf_spiReadWriteByte(SF_CMD_SE);
+    /*!< Send Sector Erase instruction */
+    sf_spiReadWriteByte((_uiSectorAddr & 0xFF0000) >> 16);
+    sf_spiReadWriteByte((_uiSectorAddr & 0xFF00) >> 8); 
+    sf_spiReadWriteByte(_uiSectorAddr & 0xFF);          
+    SF_SPI_CS_DEASSERT();                                   
+}
+
+void sf_StartWritePageSequeue(uint32_t _PageAddr,uint8_t * _pBuf,uint16_t NumByteToWrite)
+{
+    /* for MX25L1606E 、 W25Q64BV */
+    __sf_WriteEnable();                             
+
+    SF_SPI_CS_ASSERT();                             
+    /*!< Send "Write to Memory " instruction */
+    sf_spiReadWriteByte(SF_CMD_WRITE);  
+    /*!< Send WriteAddr high nibble address byte to write to */
+    sf_spiReadWriteByte((_PageAddr & 0xFF0000) >> 16);
+    sf_spiReadWriteByte((_PageAddr & 0xFF00) >> 8);     
+    sf_spiReadWriteByte(_PageAddr & 0xFF);              
+
+    while(NumByteToWrite--)
+    {
+        sf_spiReadWriteByte(*_pBuf);
+        _pBuf++;
+    }
+
+    SF_SPI_CS_DEASSERT();                               
+}
+
 
 #ifdef DEBUG_SFLASH
 
 #include "debug.h"
 #include "hal_spi.h"
 
+
+static uint8_t testbuf[256];
 void  funcheckinit(void)
 {
     sflash_info_t *pinfo;
     
     dbg_set_dbg_level(7);
-    halSPI1_Init(SPI_BaudRatePrescaler_64);
-    sf_ReadID();
+    halSPI1_Init(SPI_BaudRatePrescaler_256);
+    sf_InitFlash();
     pinfo = sf_info();
 
-    DBG_VERBOS("chip id:%d\r\n flash size:%d k\r\n",pinfo->ChipID,pinfo->TotalSize/1024);
+    sf_EraseSector(0);
     
+    DBG_VERBOS("chip id:%d\r\n flash size:%d k\r\n",pinfo->ChipID,pinfo->TotalSize/1024);
+    memset(testbuf,0xaa,256);
+    sf_WritePage(0,testbuf,256);
+    memset(testbuf,0,256);
+    sf_ReadBuffer(0,testbuf,256);
+
+    memset(testbuf,0xbb,256);
+    sf_WriteBuffer(128,testbuf,256);
+    memset(testbuf,0,256);
+    sf_ReadBuffer(0,testbuf,256);
+    
+    memset(testbuf,0,256);
+    sf_ReadBuffer(128,testbuf,256);
     while(1);
 }
 

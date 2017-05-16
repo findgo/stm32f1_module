@@ -1,3 +1,17 @@
+/**
+  ******************************************************************************
+  * @file   hal_spi.h
+  * @author  
+  * @version 
+  * @date    
+  * @brief    
+  ******************************************************************************
+  * @attention    v1.1      jgb                 20170515 
+  ******************************************************************************
+  */
+#ifndef __HAL_SPI_H_
+#define __HAL_SPI_H_
+
 /*
  *  硬件SPI
  *  模式0  默认低，第一上升边沿捕获
@@ -5,11 +19,6 @@
  *  模式2  默认高，第一下降边沿捕获
  *  模式3  默认高，第二下降边沿捕获
 */
-
-
-
-#ifndef __HAL_SPI_H_
-#define __HAL_SPI_H_
 
 
 #include "app_cfg.h"
@@ -30,7 +39,7 @@
 #define HAL_SPI1_ACTIVE_CLOCK_EN()	do{RCC_APB2PeriphClockCmd( RCC_APB2Periph_SPI1 ,ENABLE );}while(0)
 
 #define HAL_SPI1_CS_HIGH()  (PAout(2) = 1)
-#define HAL_SPI1_CS_LOW()  (PAout(2) = 0)
+#define HAL_SPI1_CS_LOW()   (PAout(2) = 0)
 
 // spi2
 #define HAL_SPI2_MODE        (0)

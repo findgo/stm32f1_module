@@ -12,18 +12,18 @@ static void prvnvicInit(void);
 
 int main(void)
 {	
-	prvClockInit();
+    SystemCoreClockUpdate();
 	prvnvicInit();
 	Systick_Configuration();
 	Usart_Configuration();
-//	console_init();
+	console_init();
   
 #ifdef DEBUG_MSG
 	funcheckinit();
 #endif
 	while(1)
 	{
-//		console_task();
+		console_task();
 
 
 		

@@ -1,8 +1,19 @@
+/**
+  ******************************************************************************
+  * @file   hal_spi.h
+  * @author  
+  * @version 
+  * @date    
+  * @brief    
+  ******************************************************************************
+  * @attention    v1.1      jgb                 20170515 
+  ******************************************************************************
+  */
 
 #ifndef __BSP_SPI_FLASH_H_
 #define __BSP_SPI_FLASH_H_
 
-
+/* spi flash 需要spi支持模式3 */
 #include "app_cfg.h"
 #include "hal_spi.h"
 
@@ -10,15 +21,14 @@
 #define SF_FLASH_WRITE_ADVANCED_MODE    (0)
 
 // 抽像SPI底层
-#define SF_SPI_CS_ASSERT()   HAL_SPI1_CS_HIGH()   
-#define SF_SPI_CS_DEASSERT() HAL_SPI1_CS_LOW()
+#define SF_SPI_CS_ASSERT()   HAL_SPI1_CS_LOW()  
+#define SF_SPI_CS_DEASSERT() HAL_SPI1_CS_HIGH() 
 
 #define sf_spiReadWriteByte(_ucValue)   halSPI1_ReadWrite(_ucValue)
 
 /* 定义串行Flash ID */
 enum
 {
-    SST25VF016B_ID = 0xBF2541,
     MX25L1606E_ID  = 0xC22015,
     W25Q256FV_ID   = 0xEF6019,
     W25Q128FV_ID   = 0xEF6018,
@@ -67,5 +77,13 @@ void sf_ReadBuffer(uint32_t _uiReadAddr, uint8_t * _pBuf,uint32_t _uiSize);
 #if SF_FLASH_WRITE_ADVANCED_MODE == 1
 uint8_t sf_WriteBuffer(uint32_t _uiWriteAddr, uint8_t* _pBuf,  uint16_t _usWriteSize);
 #endif
+
+// 获得芯片当前是否忙
+uint8_t sf_StatusBusy(void);
+// 启动一个擦扇区序列 
+void sf_StartEraseSectoreSequeue(uint32_t _uiSectorAddr); 
+// 启动一个写页数据序列  NumByteToWrite <= 256
+void sf_StartWritePageSequeue(uint32_t _PageAddr,uint8_t * _pBuf,uint16_t NumByteToWrite);
+
 #endif
 

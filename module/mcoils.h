@@ -7,10 +7,10 @@
   * @brief    coils模块，只有开和关两状态都可以归于这一类别
   ******************************************************************************
   * @attention    v1.1      jgb     重构            20151113 
-  * @attention    v1.2      jgb     简化功能        20170428
+  * @attention    v1.2      jgb     简化功能修改更少的宏就可使用        20170428
   ******************************************************************************
   */
-/*
+/* 使用说明
 ;   定义coils使用的个数mCOILSNUM，
 ;   实现MTURN_COILS1_ON 各个coils的功能宏
 ;
@@ -21,8 +21,10 @@
 #include "app_cfg.h"
 
 
-//define Coils Numbers  Max 8
+//define Coils Numbers you want  Max 8
 #define mCOILSNUM   1
+
+
 
 /* COLIS - The COLIS number is the same as the bit position */
 #define MCOILS_1        ((uint8_t)1 << 0)
@@ -43,6 +45,7 @@ typedef enum
     MCOILS_MODE_TOGGLE  = 0x02,
 }mCoils_Mode;
 
+// 抽像继电器底层
 #define MTURN_COILS1_ON()   
 #define MTURN_COILS1_OFF()  
 #define MTURN_COILS2_ON()    

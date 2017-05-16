@@ -3,9 +3,9 @@
 #include "mtimers.h"
 
 typedef struct {
-    uint16_t valid;         //sector valid 
-    uint16_t band_index;    // band idex 
-    uint32_t band_sn;       // band sn
+    uint16_t valid;         // = 1,表明有有效数据band = 0,表明无有效band
+    uint16_t band_index;    // 数据有效, 指示有效band index,数据无效，指示下一块可写band index
+    uint32_t band_sn;       // 只记录有效数据sn号
 }sector_info_t;
 
 typedef struct  {
@@ -27,9 +27,9 @@ extern mcfg_para_t para_default;
 
 static sector_info_t sector_info[CFG_FLASH_USE_SECTOR_NUM];
 // 下一个要存储的sn编码  sn: 用于识别配置信息的,SN越大,则表示此信息最新
-static uint32_t next_sn;
+static volatile uint32_t next_sn;
 // 下一个要存储的扇区位置
-static uint16_t next_sector;
+static volatile uint16_t next_sector;
 
 // 当前配置参数
 static mcfg_para_t cfg_curbuf;
@@ -145,6 +145,7 @@ static void __loadcfg(uint32_t addr_offset,load_result_t *result)
            break;
        }
     }
+
     if (!result->empty){
         checksum = calculate_CRC32(CFG_CRC32_INIT_VALUE,(uint8_t *)cfg_flashbuf,CFG_SAVE_BAND_SIZE - CFG_SAVE_CRC32_SIZE);
         result->valid = checksum == cfg_flashbuf[CFG_SAVE_BAND_SIZE / 4 - 1]; 
@@ -155,20 +156,22 @@ static void __loadcfg(uint32_t addr_offset,load_result_t *result)
  * find valid page to load,set next sector, next sn and next band_index to write
  * return <0, no valid band found, >=0 valid page to load
  */
+ // TODO : 解决sn回绕问题
 static int __findBand(void)
 {
     uint16_t i;
     int sector_toload = -1;
     
     next_sector = 0;
+    next_sn = 0xfffffffd;
     for (i = 0; i < CFG_FLASH_USE_SECTOR_NUM; ++i) {
         if(sector_info[i].valid) {
-            // find which sector to load cfg
-            if (sector_toload < 0 || sector_info[i].band_sn > sector_info[sector_toload].band_sn){
+            // find which sector to load cfg  转化为有符号比较，解决回绕问题，请参考linux time_after的回绕
+            if (sector_toload < 0 ||  ((int32_t)sector_info[sector_toload].band_sn - (int32_t)sector_info[i].band_sn) < 0){
                 sector_toload = i;
             }
             //
-            if (sector_info[next_sector].valid && sector_info[i].band_sn < sector_info[next_sector].band_sn){
+            if (sector_info[next_sector].valid && ((int32_t)sector_info[i].band_sn - (int32_t)sector_info[next_sector].band_sn) < 0){
                 next_sector = i;
             }
         }else {
@@ -180,9 +183,9 @@ static int __findBand(void)
     if (sector_toload >= 0)
         next_sn = sector_info[sector_toload].band_sn + 1;
     // set next band_index
-    if (sector_info[next_sector].valid) {
+    if(sector_info[next_sector].valid)
         sector_info[next_sector].band_index++;
-    }
+
 
     return sector_toload;
 }
@@ -203,16 +206,18 @@ void mcfgLoadinit(void)
         sector_info[i].band_sn = 0;
         // find this sector valid band ,from back to front
         for (j = CFG_BAND_NUM_MAX - 1; j >= 0; --j) {
-            offset = CFG_FLASH_BASE_ADDRESS + i * CFG_FLASH_SECTOR_SIZE + j * CFG_SAVE_BAND_SIZE;
+            offset = CFG_FLASH_SECTOR_BASE_ADDRESS + i * CFG_FLASH_SECTOR_SIZE + j * CFG_SAVE_BAND_SIZE;
             __loadcfg(offset, &result0);
 
             // find a band in sector
             if (!result0.empty) {
                 sector_info[i].valid = result0.valid;
-                // 这里很关键，要记录当前有数据索引，以便指向下一块可写数据band
-                sector_info[i].band_index = j;
                 if (result0.valid) {
-                    sector_info[i].band_sn = cfg_flashbuf[0];
+                    // 这里很关键，要记录当前有数据索引
+                    sector_info[i].band_sn = cfg_flashbuf[0];                    
+                    sector_info[i].band_index = j;
+                }else{
+                    sector_info[i].band_index = j + 1;
                 }
                 break;
             }
@@ -224,8 +229,11 @@ void mcfgLoadinit(void)
     if (toload < 0) { 
         memcpy(&cfg_curbuf, &para_default, sizeof(cfg_curbuf));
     }else{
-        __loadcfg(CFG_FLASH_BASE_ADDRESS + CFG_FLASH_SECTOR_SIZE * toload + CFG_SAVE_BAND_SIZE * sector_info[toload].band_index,&result0);
-
+        if(toload == next_sector) // 这种情况，索引会被指向下一块空区域
+            __loadcfg(CFG_FLASH_SECTOR_BASE_ADDRESS + CFG_FLASH_SECTOR_SIZE * toload + CFG_SAVE_BAND_SIZE * (sector_info[toload].band_index - 1),&result0);
+        else
+            __loadcfg(CFG_FLASH_SECTOR_BASE_ADDRESS + CFG_FLASH_SECTOR_SIZE * toload + CFG_SAVE_BAND_SIZE * sector_info[toload].band_index,&result0);
+            
         if(!result0.empty && result0.valid)
             memcpy(&cfg_curbuf, cfg_flashbuf + 1, sizeof(cfg_curbuf));
         else
@@ -239,7 +247,7 @@ void mcfgLoadinit(void)
 
 
 
-mcfg_para_t *mcfgpara(void)
+mcfg_para_t *mcfgPara(void)
 {
     return &cfg_curbuf;
 }
@@ -312,24 +320,25 @@ void mcfgUpdate(void)
             // 要写的数据在一页内
             if(isband_inpage){
                 cfgstate = MCFG_PROGRAM_QUERY_OVER;
-                CFGFLASH_WritePage(CFG_FLASH_BASE_ADDRESS + next_sector * CFG_FLASH_SECTOR_SIZE + sector_info[next_sector].band_index * CFG_SAVE_BAND_SIZE,
+                CFGFLASH_WritePageSequeue(CFG_FLASH_SECTOR_BASE_ADDRESS + next_sector * CFG_FLASH_SECTOR_SIZE + sector_info[next_sector].band_index * CFG_SAVE_BAND_SIZE,
                             (void*)cfg_flashbuf, CFG_SAVE_BAND_SIZE);
             }else{ // 跨页写，先写前一页多的数据
                 cfgstate = MCFG_ENWRITEREMAIN;
-                CFGFLASH_WritePage(CFG_FLASH_BASE_ADDRESS + next_sector * CFG_FLASH_SECTOR_SIZE + sector_info[next_sector].band_index * CFG_SAVE_BAND_SIZE,
+                CFGFLASH_WritePageSequeue(CFG_FLASH_SECTOR_BASE_ADDRESS + next_sector * CFG_FLASH_SECTOR_SIZE + sector_info[next_sector].band_index * CFG_SAVE_BAND_SIZE,
                             (void*)cfg_flashbuf, nowByte);
             }
         } else { // 超出扇区索引,进行擦除再写
             cfgstate = MCFG_ERASE_QUERY;
-            CFGFLASH_Erase(CFG_FLASH_BASE_ADDRESS + next_sector * CFG_FLASH_SECTOR_SIZE);
+            CFGFLASH_EraseSectorSequeue(CFG_FLASH_SECTOR_BASE_ADDRESS + next_sector * CFG_FLASH_SECTOR_SIZE);
         }
         break;
 
     case MCFG_ENWRITEREMAIN:
         if (!CFGFLASHStatusBusy()) {            
             if(remainPage){
-                CFGFLASH_WritePage(CFG_FLASH_BASE_ADDRESS + next_sector * CFG_FLASH_SECTOR_SIZE + offsetPageaddr,
-                            (void*)cfg_flashbuf, CFG_FLASH_PAGE_SIZE);
+                // 数据地址要偏移,要4字节偏移
+                CFGFLASH_WritePageSequeue(CFG_FLASH_SECTOR_BASE_ADDRESS + next_sector * CFG_FLASH_SECTOR_SIZE + offsetPageaddr,
+                            (void*)&cfg_flashbuf[ (CFG_SAVE_BAND_SIZE - remainByte) / 4 ], CFG_FLASH_PAGE_SIZE);
                 remainByte -= CFG_FLASH_PAGE_SIZE;
                 remainPage--;
                 offsetPageaddr += CFG_FLASH_PAGE_SIZE;
@@ -337,8 +346,8 @@ void mcfgUpdate(void)
                 if(!remainByte)
                     cfgstate = MCFG_PROGRAM_QUERY_OVER;
             }else{
-                CFGFLASH_WritePage(CFG_FLASH_BASE_ADDRESS + next_sector * CFG_FLASH_SECTOR_SIZE  + offsetPageaddr,
-                            (void*)cfg_flashbuf, remainByte);
+                CFGFLASH_WritePageSequeue(CFG_FLASH_SECTOR_BASE_ADDRESS + next_sector * CFG_FLASH_SECTOR_SIZE  + offsetPageaddr,
+                            (void*)&cfg_flashbuf[ (CFG_SAVE_BAND_SIZE - remainByte) / 4 ], remainByte);
                 remainByte = 0;
                 offsetPageaddr = 0;
                 cfgstate = MCFG_PROGRAM_QUERY_OVER;
@@ -357,12 +366,15 @@ void mcfgUpdate(void)
     case MCFG_PROGRAM_QUERY_OVER:
         if (!CFGFLASHStatusBusy()) {
 
-            __loadcfg(CFG_FLASH_BASE_ADDRESS + next_sector * CFG_FLASH_SECTOR_SIZE + sector_info[next_sector].band_index * CFG_SAVE_BAND_SIZE
+            __loadcfg(CFG_FLASH_SECTOR_BASE_ADDRESS + next_sector * CFG_FLASH_SECTOR_SIZE + sector_info[next_sector].band_index * CFG_SAVE_BAND_SIZE
                 ,&result);
 
             if(result.empty || !result.valid){ 
                 // 无法写入，为空? 可能也是坏块，那写下一个地址
                 cfgstate = MCFG_ENWRITE;
+                //reload write to flash 
+                memcpy(cfg_flashbuf + 1, &cfg_curbuf, sizeof(cfg_curbuf));
+                __cfgbufleft();
                 sector_info[next_sector].band_index++;
             }else{ //数据不为空，且有效
                 cfgstate = MCFG_NOTSTART;
@@ -379,4 +391,38 @@ void mcfgUpdate(void)
         
     }
 }
+
+
+#ifdef MCFG_DEBUG
+
+#include "debug.h"
+#include "hal_spi.h"
+#include "bsp_spi_flash.h"
+
+void  funcheckinit(void)
+{
+    uint16_t erase = 0;
+    
+    dbg_set_dbg_level(7);
+    halSPI1_Init(SPI_BaudRatePrescaler_256);// 初始化SPI硬件底层
+    sf_InitFlash(); // 初始化FLASH
+    // 选择是否要擦除flash芯片进行测试
+    //sf_EraseSector(0);
+    if(erase)
+        sf_EraseChip();
+    mcfgLoadinit(); // 初始化mcfg
+}
+
+void funchecktask(void)
+{
+    mcfgUpdate();
+}
+
+
+
+
+
+
+
+#endif
 
