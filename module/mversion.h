@@ -16,7 +16,7 @@
 
 #include "app_cfg.h"
 
-
+// 定义主版本号
 #define FIRMWARE_MAJOR_VER  (1)
 
 /* 主版本号 */

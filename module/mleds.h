@@ -19,7 +19,7 @@
 ;  事件   发生次数      占空比    周期    设为0
 ;
 ;   ledseqset 调用说明，如果只是简单开,关,切换，将eve参数设为LEDSEQ_EVE_NONE,可调用函数ledseqmodeset
-;   如果是事件,将mode 设为LEDSEQ_MODE_NONE，可调用函数ledseqeveset
+;   如果是事件,如闪烁, 将mode 设为LEDSEQ_MODE_NONE，可调用函数ledseqeveset
 ;
 */
 
