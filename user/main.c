@@ -6,18 +6,19 @@
 #include "console.h"
 #include "debug.h"
 #include "mem_mange.h"
+#include "list.h"
 
 static void prvClockInit(void);
 static void prvnvicInit(void);
 
 int main(void)
-{	
+{	    
     SystemCoreClockUpdate();
 	prvnvicInit();
 	Systick_Configuration();
 	Usart_Configuration();
 	console_init();
-  
+
 #ifdef DEBUG_MSG
 	funcheckinit();
 #endif

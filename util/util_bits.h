@@ -34,6 +34,7 @@ uint8_t readbits_invU8(uint8_t value, uint8_t bitStart, uint8_t length);
 uint16_t readbits_invU16(uint16_t value, uint8_t bitStart, uint8_t length);
 uint32_t readbits_invU32(uint32_t value, uint8_t bitStart, uint8_t length);
 
+
 #endif
 
 

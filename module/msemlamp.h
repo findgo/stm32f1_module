@@ -23,7 +23,7 @@ typedef struct{
 }msemlamp_t;
 
 void msemlamp_init(msemlamp_t *sem,uint8_t origval);
-void msemlamp_post(msemlamp_t *sem);
-uint8_t msemlamp_get(msemlamp_t *sem);
+void msemlamp_give(msemlamp_t *sem);
+uint8_t msemlamp_take(msemlamp_t *sem);
 
 #endif

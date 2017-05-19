@@ -14,8 +14,6 @@
 #endif
 
 
-
-
 #define MBYTE_ORDER LITTLE_ENDIAN
 
 

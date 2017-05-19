@@ -19,6 +19,7 @@
 #include "common_type.h"
 #include "common_bits.h"
 #include "common_signal.h"
+#include "common_cpu.h"
 
 //!< util
 //#include "util_bits.h"

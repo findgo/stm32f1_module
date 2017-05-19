@@ -14,7 +14,9 @@
 
 #include "app_cfg.h"
 
+// 开平方后求倒数
 float invSqrt(float number);
+// 开平方
 float CarmSqrt(float x);
 
 #endif

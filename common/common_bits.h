@@ -10,8 +10,6 @@
   ******************************************************************************
   */
 
-
-
 #ifndef __COMMON_BITS_H_
 #define __COMMON_BITS_H_
 
@@ -59,6 +57,17 @@
 #define USE_GET_BIT(__x, BitNum) 	(((__x) >> (BitNum)) & 0x01)
 
 
+//将一个字母转换为大写
+#define  UPCASE( c ) ( ((c) >= 'a' && (c) <= 'z') ? ((c) - 0x20) : (c) )
+	
+//判断字符是不是10进值的数字
+#define  DECCHK( c ) ((c) >= '0' && (c) <= '9')
+//判断字符是不是16进值的数字
+#define  HEXCHK( c ) ( ((c) >= '0' && (c) <= '9') ||\
+                		 ((c) >= 'A' && (c) <= 'F') ||\
+						 ((c) >= 'a' && (c) <= 'f') )
+						 
+
 #if 0  //待测试宏
 #define  MEM_B( x )  ( *( (uint8_t *) (x) ) )//得到指定地址上的一个byte
 #define  MEM_W( x )  ( *( (uint16_t *) (x) ) )//得到指定地址上的两个byte
@@ -71,16 +80,6 @@
 #define  B_PTR( var )  ( (byte *) (void *) &(var) )
 #define  W_PTR( var )  ( (word *) (void *) &(var) )
 
-//将一个字母转换为大写
-#define  UPCASE( c ) ( ((c) >= 'a' && (c) <= 'z') ? ((c) - 0x20) : (c) )
-	
-//判断字符是不是10进值的数字
-#define  DECCHK( c ) ((c) >= '0' && (c) <= '9')
-//判断字符是不是16进值的数字
-#define  HEXCHK( c ) ( ((c) >= '0' && (c) <= '9') ||\
-                		 ((c) >= 'A' && (c) <= 'F') ||\
-						 ((c) >= 'a' && (c) <= 'f') )
-						 
 //对于IO空间映射在存储空间的结构，输入输出处理
 #define inp(port)         (*((volatile byte *) (port)))
 #define inpw(port)        (*((volatile word *) (port)))
