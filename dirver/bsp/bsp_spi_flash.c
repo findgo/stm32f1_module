@@ -600,7 +600,7 @@ void sf_StartWritePageSequeue(uint32_t _PageAddr,uint8_t * _pBuf,uint16_t NumByt
 
 
 static uint8_t testbuf[256];
-void  funcheckinit(void)
+void  FunDebuginit(void)
 {
     sflash_info_t *pinfo;
     
@@ -628,7 +628,7 @@ void  funcheckinit(void)
 }
 
 
-void funchecktask(void)
+void FunDebugtask(void)
 {
     
 }

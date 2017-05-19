@@ -194,7 +194,7 @@ void mCoilsOnOff(uint8_t Coils, mCoils_Mode mode)
 #ifdef DEBUG_MCOILS
 #include "debug.h"
 
-void  funcheckinit(void)
+void  FunDebuginit(void)
 {
     dbg_set_dbg_level(7);
     mCoilsInit();

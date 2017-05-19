@@ -399,7 +399,7 @@ void mcfgUpdate(void)
 #include "hal_spi.h"
 #include "bsp_spi_flash.h"
 
-void  funcheckinit(void)
+void  FunDebuginit(void)
 {
     uint16_t erase = 0;
     
@@ -413,7 +413,7 @@ void  funcheckinit(void)
     mcfgLoadinit(); // ≥ı ºªØmcfg
 }
 
-void funchecktask(void)
+void FunDebugtask(void)
 {
     mcfgUpdate();
 }

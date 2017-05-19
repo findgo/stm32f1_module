@@ -120,7 +120,7 @@ static void mEv_call_fn_reload(void *pmev);
 static void mEv_call_fn(void *pmev);
 static void mEv_call_fn_ev(void *pmev);
 
-void  funcheckinit(void)
+void  FunDebuginit(void)
 {
     dbg_set_dbg_level(7);
     mEv_create(&mev_testreload,mEv_call_fn_reload);
@@ -133,7 +133,7 @@ void  funcheckinit(void)
 }
 
 
-void funchecktask(void)
+void FunDebugtask(void)
 {
     uint32_t updatetime;
 

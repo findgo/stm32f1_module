@@ -51,14 +51,14 @@ uint32_t mver_getminorver(void)
 #include "debug.h"
 
 
-void funcheckinit(void)
+void FunDebuginit(void)
 {
     dbg_set_dbg_level(7);
     DBG_VERBOS("%d.%d\r\n",mver_getmajorver(),mver_getminorver());
     return;
 }
 
-void funchecktask(void)
+void FunDebugtask(void)
 {
     return;
 }

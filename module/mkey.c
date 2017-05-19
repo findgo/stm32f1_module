@@ -209,7 +209,7 @@ static key_cfg_t testKey;
 static key_cfg_t testKey0;
 
 static uint8_t TestKeyDown(void);
-void  funcheckinit(void)
+void  FunDebuginit(void)
 {
     GPIO_InitTypeDef GPIO_InitStruct;
 
@@ -234,7 +234,7 @@ void  funcheckinit(void)
 }
 
 
-void funchecktask(void)
+void FunDebugtask(void)
 {
     uint8_t keyval;
     

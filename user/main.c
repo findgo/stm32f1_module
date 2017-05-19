@@ -20,7 +20,7 @@ int main(void)
 	console_init();
 
 #ifdef DEBUG_MSG
-	funcheckinit();
+	FunDebuginit();
 #endif
 	while(1)
 	{
@@ -29,7 +29,7 @@ int main(void)
 
 		
 #ifdef DEBUG_MSG
-		funchecktask();
+		FunDebugtask();
 #endif
 
 	}

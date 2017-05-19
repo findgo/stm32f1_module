@@ -56,8 +56,8 @@ do {                                                \
 
 void dbg_set_dbg_level(uint8_t level);
 void dbg_print_dbg_level(void);
-void  funcheckinit(void);
-void  funchecktask(void);
+void  FunDebuginit(void);
+void  FunDebugtask(void);
 
 
 #endif

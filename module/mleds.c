@@ -249,7 +249,7 @@ void ledseqOnOff (uint8_t leds, bool val)
 #include "mclock.h"
 #include "hal_led.h"
 
-void  funcheckinit(void)
+void  FunDebuginit(void)
 {
     dbg_set_dbg_level(7);
     halledInit();
@@ -261,7 +261,7 @@ void  funcheckinit(void)
 }
 
 
-void funchecktask(void)
+void FunDebugtask(void)
 {
     uint32_t elapsetime;
     if(elapsetime = mcu_elapsedSystime(),elapsetime){

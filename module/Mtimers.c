@@ -52,7 +52,7 @@ static mtimer_t atest_mtimer = MTIMER_INIT();
 static mtimer_t btest_mtimer ;
 DELCARE_MTIMER(ctest_mtimer);
 
-void  funcheckinit(void)
+void  FunDebuginit(void)
  {
  	dbg_set_dbg_level(7);
 	INIT_MTIMER(&atest_mtimer);
@@ -63,7 +63,7 @@ void  funcheckinit(void)
 }
 
 
-void  funchecktask(void)
+void  FunDebugtask(void)
 {
 	if(mtimer_expired(&atest_mtimer)){
 		DBG_VERBOS("%ld ms is comming!\r\n",tm_s(1));

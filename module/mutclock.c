@@ -197,14 +197,14 @@ UTCTime mutc_ConvertUTCSecs( UTCTimeStruct *tm )
 #ifdef MUTC_DEBUG
 #include "debug.h"
 
-void funcheckinit(void)
+void FunDebuginit(void)
 {
     dbg_set_dbg_level(7);
 
     return;
 }
 
-void funchecktask(void)
+void FunDebugtask(void)
 {
     return;
 }

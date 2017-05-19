@@ -58,13 +58,13 @@ void dbg_print_dbg_level(void)
 }
 #endif
 
-void __attribute__((weak)) funcheckinit(void)
+void __attribute__((weak)) FunDebuginit(void)
 {
     dbg_set_dbg_level(7);
     dbg_print_dbg_level();
 }
 
-void __attribute__((weak)) funchecktask(void)
+void __attribute__((weak)) FunDebugtask(void)
 {
     return;
 }
