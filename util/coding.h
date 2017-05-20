@@ -2,7 +2,7 @@
 #ifndef __CODING_H_
 #define __CODING_H_
 
-#include <app_def.h>
+#include "app_cfg.h"
 
 // for coding 先低8位，再高8位
 uint8_t encode_signed8(uint8_t *pdu, int8_t value);
