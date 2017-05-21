@@ -15,7 +15,9 @@
 
 #include "app_cfg.h"
 
+// 定义了时间片的频率
 #define CLOCKTICK_RATE_HZ    (1000)   // 1000hz
+// 计算出时间片的时间ms
 #define CLOCKTICK_RATE_MS   (1000 / CLOCKTICK_RATE_HZ)
 
 uint32_t mcu_getCurSysctime(void);
