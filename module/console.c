@@ -1,14 +1,3 @@
-/**
-  ******************************************************************************
-  * @file   mod_console.c
-  * @author  
-  * @version 
-  * @date    
-  * @brief    console模块
-  ******************************************************************************
-  * @attention 20151117     v1.1    jgb     重构    
-  ******************************************************************************
-  */
 
 #include "console.h"
 
@@ -24,7 +13,7 @@
 //定义命令总大小
 #define CONSOLE_CMD_CONSOLE_BUFFER_SIZE     (CONSOLE_BUFFER_SIZE + 1)
 //!< \bad command note
-#define CONSOLE_BADCOMMAND_PRINT    "\tBad command or file name,and use \'help\' or '?' to get more info!"
+#define CONSOLE_BADCOMMAND_PRINT    "\tBad command or file name,and use \'help\' or '?' to get more info!\r\n"
 
 
 //!< 按键编码
@@ -60,11 +49,10 @@ typedef struct {
 static void cmd_help_hander(uint8_t argc, char *argv[], void *pcmd);
 static void cmd_clear_hander(uint8_t argc, char *argv[], void *pcmd);
 
-static console_command_t s_tCMD[] = {   
-    {"clear", &cmd_clear_hander, "\tclear\t-- Clear Screen"},
-    {"help",  &cmd_help_hander,  "\thelp\t-- How to use the console"}, 
-    {"?",  &cmd_help_hander,  "\t?\t-- same as help,How to use the console"},
-    CMD_SET_EXTERN_LIST
+static const console_command_t s_tCMD[] = {   
+    {"clear", &cmd_clear_hander, "clear\t-- Clear Screen",NULL},
+    {"help",  &cmd_help_hander,  "help\t-- How to use the console",NULL}, 
+    {"?",  &cmd_help_hander,  "?\t-- same as help,How to use the console",NULL},
 };
 
 //!< 接收到命令缓存区
@@ -75,8 +63,7 @@ static his_cmd_queue_t s_chHisCmd;
 static console_arg_t s_argCmd;
 
 //!< dynamic command 动态外部命令
-static const console_command_t *s_ptDynaCMD = NULL;
-static uint8_t s_chDynaCount = 0;
+static console_command_t *s_ptDynaCmdHead = NULL;
 
 /*============================ IMPLEMENTATION ================================*/
 
@@ -440,23 +427,25 @@ uint8_t console_str_len(char *pchString)
 static const console_command_t *search_cmd_map(char* proutine)
 {
     uint8_t chCount = 0;
+    console_command_t *srchcmd;
 
 	if(proutine == NULL)
 		return NULL;
 	
     while (chCount < UBOUND(s_tCMD)) {
-        if (console_str_cmp(proutine, s_tCMD[chCount].pchCMD)) {
+        if (strcmp(proutine, s_tCMD[chCount].pchCMD) == 0) {
             return &s_tCMD[chCount];
         }
         chCount++;
     }
-    
-    chCount = 0;
-    while (chCount < s_chDynaCount) {
-        if (console_str_cmp(proutine, s_ptDynaCMD[chCount].pchCMD)) {
-            return &s_ptDynaCMD[chCount];
-        }
-        chCount++;      
+
+    srchcmd = s_ptDynaCmdHead;
+    while(srchcmd)
+    {
+        if(strcmp(proutine,srchcmd->pchCMD) == 0)
+            return srchcmd;
+
+        srchcmd = srchcmd->next;
     }
     
     return NULL;
@@ -473,7 +462,7 @@ static bool IsMeetHelp(char *pchTokens)
     }
     
     for ( i = 0; i < UBOUND(s_pchHelpString); i++ ) {
-        if ( console_str_cmp(s_pchHelpString[i], pchTokens) ) {
+        if ( strcmp(s_pchHelpString[i], pchTokens) == 0) {
             return true;
         }
     }
@@ -483,23 +472,28 @@ static bool IsMeetHelp(char *pchTokens)
 static void cmd_help_hander(uint8_t argc, char *argv[], void *pcmd)
 {
     uint8_t i;
-
+    console_command_t *srchcmd;
+    
     if(argc != 1){
         console_writestring(CONSOLE_BADCOMMAND_PRINT);
-        console_prn_rn();
         return;
     }
     for(i = 0; i < UBOUND(s_tCMD); i++){
+        console_writebyte('\t');
         console_writestring(s_tCMD[i].pchHelp);
         console_prn_rn();
     }
 
-/*
-    for(i = 0; i < s_chDynaCount; i++){
-        console_writestring(s_ptDynaCMD[i].pchHelp);
-        console_prn_rn();
+    srchcmd = s_ptDynaCmdHead;
+    while(srchcmd)
+    {
+        if(srchcmd->pchHelp){
+            console_writebyte('\t');
+            console_writestring(srchcmd->pchHelp);
+            console_prn_rn();
+        }
+        srchcmd = srchcmd->next;
     }
-*/
 }
 
 
@@ -507,7 +501,6 @@ static void cmd_clear_hander(uint8_t argc, char *argv[], void *pcmd)
 {
     if(argc != 1){
         console_writestring(CONSOLE_BADCOMMAND_PRINT);
-        console_prn_rn();
         return;
     }
     
@@ -566,11 +559,13 @@ static void parse(void)
     s_ptCMD = search_cmd_map(s_argCmd.argv[0]);
     if (NULL == s_ptCMD) { 
         console_writestring(CONSOLE_BADCOMMAND_PRINT);
-        console_prn_rn();
     }else{//消息找到
         if(s_argCmd.argc == 2 && IsMeetHelp(s_argCmd.argv[1])){
-            console_writestring(s_ptCMD->pchHelp);
-            console_prn_rn();
+            if(s_ptCMD->pchHelp){
+                console_writebyte('\t');
+                console_writestring(s_ptCMD->pchHelp);
+                console_prn_rn();
+            }
         }else{
             s_ptCMD->fncmd_handler(s_argCmd.argc,s_argCmd.argv, (void *)s_ptCMD);
         }   
@@ -579,7 +574,7 @@ static void parse(void)
 
 void console_init(void)
 {
-    console_extern_init();
+    console_extern_init();  
 }
 
 void console_task(void)
@@ -594,20 +589,33 @@ void console_task(void)
 
 
 /*! \note console dynamic command register
- *  \param ptCmdList register command list
- * \param CmdListCount show command list count
+ *  \param ptCmd register command
+ * \param cmd show command 
+ * \param cmd_handler  cmd handler
+ * \param help show command help
  *  \retval true command register succeeded.
  *  \retval false command register  failed
  */
-bool console_cmd_register(const console_command_t *ptCmdList, uint8_t CmdListCount)
-{   
-    if (NULL == ptCmdList) {
+bool console_cmd_register(console_command_t *ptCmd, 
+                            const char *cmd,
+                            CONSOLE_CMD_HANDLER *cmd_handler,
+                            const char *help)
+{
+    if(ptCmd == NULL || cmd == NULL || cmd_handler == NULL)
         return false;
+
+    ptCmd->pchCMD = cmd;
+    ptCmd->fncmd_handler = cmd_handler;
+    ptCmd->pchHelp = help;
+    ptCmd->next = NULL;
+    
+    if(!s_ptDynaCmdHead){
+        s_ptDynaCmdHead = ptCmd;
+    }else{
+        ptCmd->next = s_ptDynaCmdHead;
+        s_ptDynaCmdHead = ptCmd;
     }
-    
-    s_ptDynaCMD = ptCmdList;
-    s_chDynaCount = CmdListCount;
-    
+
     return true;
 }
 

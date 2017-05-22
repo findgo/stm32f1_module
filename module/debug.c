@@ -9,6 +9,8 @@ bool dbg_verbos = false;
 bool dbg_warn = false;
 bool dbg_err = true;
 
+static console_command_t debug_cmd;
+
 void dbg_set_dbg_level(uint8_t level)
 {
     dbg_verbos = level & DEBUG_LEVEL_VERBOS;
@@ -60,6 +62,9 @@ void dbg_print_dbg_level(void)
 
 void __attribute__((weak)) FunDebuginit(void)
 {
+#ifdef DEBUG_MSG
+    console_cmd_register(&debug_cmd,"debug",cmd_debug_control,"debug\t-- debug level control");
+#endif
     dbg_set_dbg_level(7);
     dbg_print_dbg_level();
 }

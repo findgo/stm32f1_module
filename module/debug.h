@@ -47,11 +47,9 @@ do {                                                \
 //重定向fput  用户定义
 #define REDIR_FPUT(ch)   (void)Serial_WriteByte(COM0,ch);
 #else
-
 #define DBG_VERBOS(fmt, args...)
 #define DBG_WARN(fmt, args...)
 #define DBG_ERR(fmt, args...)
-
 #endif
 
 void dbg_set_dbg_level(uint8_t level);
