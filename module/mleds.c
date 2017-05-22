@@ -6,8 +6,8 @@ typedef struct ledseq_t{
     uint8_t     eve;
     uint8_t     todo;       /* 眨现次数，如果设置为0xff，表明无限闪烁*/
     uint8_t     onPct;      /* 占空比*/
-    uint16_t    period; /*开/关总周期 */    
-    uint16_t    next;    /* 下一次改变的时间/与流逝时间相关 ，与时基绑定*/
+    uint16_t    cycle;      /*开/关总周期 */    
+    uint16_t    next;       /* 下一次改变的时间/与流逝时间相关 ，与时基绑定*/
 }ledseq_t;
 
 static uint8_t PreledsOnOffstatus;
@@ -15,13 +15,12 @@ static ledseq_t ledseqControl[mLEDSNUM];
 
 const ledseq_t ledseqeveList[LEDSEQ_EVE_MAX]= {
     {LEDSEQ_EVE_NONE, 0, 0, 0, 0},
-    {LEDSEQ_EVE_BLINK_ONCE,     1,                   LED_SEQ_DEFAULT_BLINK_DUTY_CYCLE,         LED_SEQ_DEFAULT_FLASH_TIME, 0},
-    {LEDSEQ_EVE_FLASH_BLINK,    LED_SEQ_ALWAYS_TODO, LED_SEQ_DEFAULT_BLINK_DUTY_CYCLE,         LED_SEQ_DEFAULT_FLASH_TIME, 0},
-    {LEDSEQ_EVE_FLASH_QUARTER,  LED_SEQ_ALWAYS_TODO, LED_SEQ_DEFAULT_FLASH_QUARTER_DUTY_CYCLE, LED_SEQ_DEFAULT_FLASH_TIME, 0},
-    {LEDSEQ_EVE_FLASH_HALF,     LED_SEQ_ALWAYS_TODO, LED_SEQ_DEFAULT_FLASH_HALF_DUTY_CYCLE,    LED_SEQ_DEFAULT_FLASH_TIME, 0},
+    {LEDSEQ_EVE_BLINK_ONCE,     LED_SEQ_BLINK_TODO,  LED_SEQ_BLINK_DUTY_CYCLE,         LED_SEQ_FLASH_CYCLE_TIME, 0},
+    {LEDSEQ_EVE_FLASH_BLINK,    LED_SEQ_ALWAYS_TODO, LED_SEQ_BLINK_DUTY_CYCLE,         LED_SEQ_FLASH_CYCLE_TIME, 0},
+    {LEDSEQ_EVE_FLASH_QUARTER,  LED_SEQ_ALWAYS_TODO, LED_SEQ_FLASH_QUARTER_DUTY_CYCLE, LED_SEQ_FLASH_CYCLE_TIME, 0},
+    {LEDSEQ_EVE_FLASH_HALF,     LED_SEQ_ALWAYS_TODO, LED_SEQ_FLASH_HALF_DUTY_CYCLE,    LED_SEQ_FLASH_CYCLE_TIME, 0},
     LEDSEQ_EVE_EXTERN_LSIT
 };
-
 /**
   * @brief  初始化
   * @param  None
@@ -36,7 +35,7 @@ void ledseqInit(void)
         ledseqControl[i].eve = LEDSEQ_EVE_NONE;
         ledseqControl[i].onPct = 0;
         ledseqControl[i].todo = 0;
-        ledseqControl[i].period = LED_SEQ_DEFAULT_FLASH_TIME;
+        ledseqControl[i].cycle = LED_SEQ_FLASH_CYCLE_TIME;
         ledseqControl[i].next = 0;
     }
     ledseqOnOff( MLED_ALL, false);// 所有灯关
@@ -79,9 +78,9 @@ void ledseqset(uint8_t leds, ledseq_eve_t eve, ledseq_mode_t mode)
             }else{
                 if(eve != sts->eve){//diferent from current
                     sts->eve = eve;
-                    sts->onPct = ledseqeveList[eve].onPct;
                     sts->todo = ledseqeveList[eve].todo;
-                    sts->period = ledseqeveList[eve].period;
+                    sts->onPct = ledseqeveList[eve].onPct;
+                    sts->cycle = ledseqeveList[eve].cycle;
                     sts->next = ledseqeveList[eve].next;
 
                     ledseqOnOff(led, false); 
@@ -131,7 +130,7 @@ void ledsequpdate (uint16_t ElapseTime)
                     if( !sts->todo){//次数到
                         sts->eve = LEDSEQ_EVE_NONE; //转到停止
                     }
-                    sts->next = (uint16_t)(((uint32_t)pct * (uint32_t)sts->period) / 100);//取出下一次时间
+                    sts->next = (uint16_t)(((uint32_t)pct * (uint32_t)sts->cycle) / 100);//取出下一次时间
                 }else{//未超时，减去流逝时间
                     sts->next -= ElapseTime;
                 }
@@ -142,7 +141,6 @@ void ledsequpdate (uint16_t ElapseTime)
         sts++;      //下一个灯
     }
 }
-
 /**
   * @brief  leds开关控制 抽象低层
   * @param  leds: bitmask ,detaial for MLED_XX ,bool
