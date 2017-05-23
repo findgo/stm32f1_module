@@ -3,13 +3,8 @@
 #include "mversion.h"
 
 
-const char *months[] = {"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
+static const char *months[] = {"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
 
-
-uint8_t mver_getmajorver(void)
-{
-    return FIRMWARE_MAJOR_VER;
-}
 
 /*
 * __DATE__ : May 12 2017  ‘¬»’ƒÍ
