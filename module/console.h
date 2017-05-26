@@ -1,20 +1,20 @@
-/**
+ï»¿/**
   ******************************************************************************
   * @file   console.h
   * @author  
   * @version 
   * @date    
-  * @brief    consoleÄ£¿é
+  * @brief    consoleæ¨¡å—
   ******************************************************************************
-  * @attention 20170320     v1.1   	jgb	 ĞŞÕıBUG£¬²âÊÔOK
-  * @attention 20170522     v1.2   	jgb	 ĞŞ¸ÄÍâ²¿½Ó¿ÚAPI,¼õÉÙÓÃ»§½éÈë£¬×¢²áĞÂÖ¸Áî¸üÈİÒ×
+  * @attention 20170320     v1.1   	jgb	 ä¿®æ­£BUGï¼Œæµ‹è¯•OK
+  * @attention 20170522     v1.2   	jgb	 ä¿®æ”¹å¤–éƒ¨æ¥å£API,å‡å°‘ç”¨æˆ·ä»‹å…¥ï¼Œæ³¨å†Œæ–°æŒ‡ä»¤æ›´å®¹æ˜“
   ******************************************************************************
   */
 /*
- *  ÊµÏÖconsol readbyte writebyte writestring  initµÄ½Ó¿Ú
- *  ³õÊ¼»¯ console_init
- *  ´óÑ­»·µ÷ÓÃ console_task
- *  ×¢²á×Ô¶¨ÒåÃüÁî console_cmd_register
+ *  å®ç°consol readbyte writebyte writestring  initçš„æ¥å£
+ *  åˆå§‹åŒ– console_init
+ *  å¤§å¾ªç¯è°ƒç”¨ console_task
+ *  æ³¨å†Œè‡ªå®šä¹‰å‘½ä»¤ console_cmd_register
  *  
  */
 #ifndef __CONSOLE_H_
@@ -54,10 +54,10 @@ typedef struct {
 
 
 void console_init(void);
-bool console_cmd_register(console_command_t *ptCmd,   // ¶¨ÒåÒ»¸öÃüÁî¾ä±ú
-                            const char *cmd,                // ¶¨ÒåÃüÁî
-                            CONSOLE_CMD_HANDLER *cmd_handler, // ¶¨ÒåÃüÁî½âÎö»Øµ÷º¯Êı
-                            const char *help);                  // ¶¨ÒåÃüÁî°ïÖú×Ö·û´®
+bool console_cmd_register(console_command_t *ptCmd,   // å®šä¹‰ä¸€ä¸ªå‘½ä»¤å¥æŸ„
+                            const char *cmd,                // å®šä¹‰å‘½ä»¤
+                            CONSOLE_CMD_HANDLER *cmd_handler, // å®šä¹‰å‘½ä»¤è§£æå›è°ƒå‡½æ•°
+                            const char *help);                  // å®šä¹‰å‘½ä»¤å¸®åŠ©å­—ç¬¦ä¸²
 void console_task(void);
 
 #endif

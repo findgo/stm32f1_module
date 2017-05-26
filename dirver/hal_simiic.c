@@ -1,11 +1,11 @@
-
+ï»¿
 #include "soft_iic.h"
 
   	   		   
-//IO	²Ù×÷½Å 
+//IO	æ“ä½œè„š 
 //SCL
 //SDA	 
-//ÊäÈëSDA 
+//è¾“å…¥SDA 
 
 #define SOFT_IIC_SDA_PORT	GPIOB
 #define SOFT_IIC_SDA_PIN	GPIO_Pin_7
@@ -100,7 +100,7 @@ static uint8_t IIC_Wait_Ack(void)
 	return 0;  
 } 
 
-// ²úÉúÓ¦´ğ
+// äº§ç”Ÿåº”ç­”
 static void IIC_Ack(void)
 {
 	SOFT_IIC_SCL_LOW();
@@ -111,7 +111,7 @@ static void IIC_Ack(void)
 	SOFT_IIC_DELAY_WIDE();
 	SOFT_IIC_SCL_LOW();
 }
-//²úÉú·ÇÓ¦´ğ	
+//äº§ç”Ÿéåº”ç­”	
 static void IIC_NAck(void)
 {
 	SOFT_IIC_SCL_LOW();

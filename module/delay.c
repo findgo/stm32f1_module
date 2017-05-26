@@ -1,6 +1,6 @@
-#include "delay.h"
+ï»¿#include "delay.h"
 
-//°´48MHZËã£¬HUNS 0.1/(1/48) ~= 5
+//æŒ‰48MHZç®—ï¼ŒHUNS 0.1/(1/48) ~= 5
 #define DELAY_HUN_NS_TICK	5	
 #define DELAY_ONE_US_TICK	48
 
@@ -8,7 +8,7 @@
 
 
 /**
-  * @brief	°ÙnsÑÓÊ±
+  * @brief	ç™¾nså»¶æ—¶
   * @param	None
   * @note		
   * @retval  None

@@ -1,4 +1,4 @@
-#include "hal_spi.h"
+ï»¿#include "hal_spi.h"
 void halSPI1_Init(uint16_t baud)
 {
 	SPI_InitTypeDef  SPI_InitStructure;
@@ -7,10 +7,10 @@ void halSPI1_Init(uint16_t baud)
     HAL_SPI1_GPIO_CLOCK_EN();	
     HAL_SPI1_ACTIVE_CLOCK_EN();
     
-	//--- ÅäÖÃSPI1µÄSCK,MISO MOSI 
+	//--- é…ç½®SPI1çš„SCK,MISO MOSI 
 	GPIO_InitStructure.GPIO_Pin = HAL_SPI1_SCK_PIN;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;			  // ¸´ÓÃ¹¦ÄÜ
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;			  // å¤ç”¨åŠŸèƒ½
 	GPIO_Init(HAL_SPI1_SCK_PORT, &GPIO_InitStructure);
 
 	GPIO_InitStructure.GPIO_Pin =  HAL_SPI1_MOSI_PIN;
@@ -30,17 +30,17 @@ void halSPI1_Init(uint16_t baud)
 	SPI_InitStructure.SPI_Mode = SPI_Mode_Master;
 	SPI_InitStructure.SPI_DataSize = SPI_DataSize_8b;
 #if HAL_SPI1_MODE == 0
-        SPI_InitStructure.SPI_CPOL = SPI_CPOL_Low;      //ÎÈÌ¬      :Ê±ÖÓĞü¿ÕÎªµÍ
-        SPI_InitStructure.SPI_CPHA = SPI_CPHA_1Edge;    //Î»²¶»ñ    :Î»ÓÚµÚÒ»¸öÉÏÉıÑØºó
+        SPI_InitStructure.SPI_CPOL = SPI_CPOL_Low;      //ç¨³æ€      :æ—¶é’Ÿæ‚¬ç©ºä¸ºä½
+        SPI_InitStructure.SPI_CPHA = SPI_CPHA_1Edge;    //ä½æ•è·    :ä½äºç¬¬ä¸€ä¸ªä¸Šå‡æ²¿å
 #elif HAL_SPI1_MODE == 1
-        SPI_InitStructure.SPI_CPOL = SPI_CPOL_Low;       //ÎÈÌ¬      :Ê±ÖÓĞü¿ÕÎªµÍ
-        SPI_InitStructure.SPI_CPHA = SPI_CPHA_2Edge;     //Î»²¶»ñ    :Î»ÓÚµÚ¶ş¸öÉÏÉıÑØºó
+        SPI_InitStructure.SPI_CPOL = SPI_CPOL_Low;       //ç¨³æ€      :æ—¶é’Ÿæ‚¬ç©ºä¸ºä½
+        SPI_InitStructure.SPI_CPHA = SPI_CPHA_2Edge;     //ä½æ•è·    :ä½äºç¬¬äºŒä¸ªä¸Šå‡æ²¿å
 #elif HAL_SPI1_MODE == 2
-        SPI_InitStructure.SPI_CPOL = SPI_CPOL_High;       //ÎÈÌ¬      :Ê±ÖÓĞü¿ÕÎª¸ß
-        SPI_InitStructure.SPI_CPHA = SPI_CPHA_1Edge;       //Î»²¶»ñ    :Î»ÓÚµÚÒ»¸öÏÂ½µÑØ
+        SPI_InitStructure.SPI_CPOL = SPI_CPOL_High;       //ç¨³æ€      :æ—¶é’Ÿæ‚¬ç©ºä¸ºé«˜
+        SPI_InitStructure.SPI_CPHA = SPI_CPHA_1Edge;       //ä½æ•è·    :ä½äºç¬¬ä¸€ä¸ªä¸‹é™æ²¿
 #elif HAL_SPI1_MODE == 3
-        SPI_InitStructure.SPI_CPOL = SPI_CPOL_High;         //ÎÈÌ¬      :Ê±ÖÓĞü¿ÕÎª¸ß
-        SPI_InitStructure.SPI_CPHA = SPI_CPHA_2Edge;        //Î»²¶»ñ    :Î»ÓÚµÚÒ»¸öÏÂ½µÑØ
+        SPI_InitStructure.SPI_CPOL = SPI_CPOL_High;         //ç¨³æ€      :æ—¶é’Ÿæ‚¬ç©ºä¸ºé«˜
+        SPI_InitStructure.SPI_CPHA = SPI_CPHA_2Edge;        //ä½æ•è·    :ä½äºç¬¬ä¸€ä¸ªä¸‹é™æ²¿
 #else
     #error "set SPI1 mode error,it must be (0 - 3)"
 #endif
@@ -51,7 +51,7 @@ void halSPI1_Init(uint16_t baud)
 	SPI_InitStructure.SPI_CRCPolynomial = 7;
 	SPI_Init(SPI1, &SPI_InitStructure);	
 		
-	//--- Ê¹ÄÜSPI1 
+	//--- ä½¿èƒ½SPI1 
 	SPI_Cmd(SPI1, ENABLE); 
 }
 
@@ -75,14 +75,14 @@ void halSPI2_Init(uint16_t baud)
   	SPI_InitTypeDef SPI_InitStructure;
    	GPIO_InitTypeDef GPIO_InitStructure;
 
-   	//--- Ê¹ÄÜSPI2
+   	//--- ä½¿èƒ½SPI2
     HAL_SPI2_GPIO_CLOCK_EN();
     HAL_SPI2_ACTIVE_CLOCK_EN();
 
-    //--- ÅäÖÃSPI2µÄSCK,MISO MOSI 
+    //--- é…ç½®SPI2çš„SCK,MISO MOSI 
     GPIO_InitStructure.GPIO_Pin = HAL_SPI2_SCK_PIN;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;			  // ¸´ÓÃ¹¦ÄÜ
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;			  // å¤ç”¨åŠŸèƒ½
 	GPIO_Init(HAL_SPI2_SCK_PORT, &GPIO_InitStructure);
 
 	GPIO_InitStructure.GPIO_Pin =  HAL_SPI2_MOSI_PIN;
@@ -101,28 +101,28 @@ void halSPI2_Init(uint16_t baud)
 
     HAL_SPI2_CS_HIGH();
 	//--- SPI2
-	SPI_InitStructure.SPI_Direction = SPI_Direction_2Lines_FullDuplex;		//·½Ïò		:Ë«ÏòÈ«Ë«¹¤
-	SPI_InitStructure.SPI_Mode = SPI_Mode_Master;							//Ä£Ê½		:Ö÷»úÄ£Ê½
-	SPI_InitStructure.SPI_DataSize = SPI_DataSize_8b;						//Êı¾İ´óĞ¡	:8Î»Ä£Ê½
+	SPI_InitStructure.SPI_Direction = SPI_Direction_2Lines_FullDuplex;		//æ–¹å‘		:åŒå‘å…¨åŒå·¥
+	SPI_InitStructure.SPI_Mode = SPI_Mode_Master;							//æ¨¡å¼		:ä¸»æœºæ¨¡å¼
+	SPI_InitStructure.SPI_DataSize = SPI_DataSize_8b;						//æ•°æ®å¤§å°	:8ä½æ¨¡å¼
 #if HAL_SPI2_MODE == 0
-	SPI_InitStructure.SPI_CPOL = SPI_CPOL_Low;		//ÎÈÌ¬		:Ê±ÖÓĞü¿ÕÎªµÍ
-	SPI_InitStructure.SPI_CPHA = SPI_CPHA_1Edge;	//Î»²¶»ñ	:Î»ÓÚµÚÒ»¸öÉÏÉıÑØºó
+	SPI_InitStructure.SPI_CPOL = SPI_CPOL_Low;		//ç¨³æ€		:æ—¶é’Ÿæ‚¬ç©ºä¸ºä½
+	SPI_InitStructure.SPI_CPHA = SPI_CPHA_1Edge;	//ä½æ•è·	:ä½äºç¬¬ä¸€ä¸ªä¸Šå‡æ²¿å
 #elif HAL_SPI2_MODE == 1
-    SPI_InitStructure.SPI_CPOL = SPI_CPOL_Low;       //ÎÈÌ¬      :Ê±ÖÓĞü¿ÕÎªµÍ
-    SPI_InitStructure.SPI_CPHA = SPI_CPHA_2Edge;     //Î»²¶»ñ    :Î»ÓÚµÚ¶ş¸öÉÏÉıÑØºó
+    SPI_InitStructure.SPI_CPOL = SPI_CPOL_Low;       //ç¨³æ€      :æ—¶é’Ÿæ‚¬ç©ºä¸ºä½
+    SPI_InitStructure.SPI_CPHA = SPI_CPHA_2Edge;     //ä½æ•è·    :ä½äºç¬¬äºŒä¸ªä¸Šå‡æ²¿å
 #elif HAL_SPI2_MODE == 2
-    SPI_InitStructure.SPI_CPOL = SPI_CPOL_High;       //ÎÈÌ¬      :Ê±ÖÓĞü¿ÕÎª¸ß
-    SPI_InitStructure.SPI_CPHA = SPI_CPHA_1Edge;       //Î»²¶»ñ    :Î»ÓÚµÚÒ»¸öÏÂ½µÑØ
+    SPI_InitStructure.SPI_CPOL = SPI_CPOL_High;       //ç¨³æ€      :æ—¶é’Ÿæ‚¬ç©ºä¸ºé«˜
+    SPI_InitStructure.SPI_CPHA = SPI_CPHA_1Edge;       //ä½æ•è·    :ä½äºç¬¬ä¸€ä¸ªä¸‹é™æ²¿
 #elif HAL_SPI2_MODE == 3
-	SPI_InitStructure.SPI_CPOL = SPI_CPOL_High;		    //ÎÈÌ¬		:Ê±ÖÓĞü¿ÕÎª¸ß
-	SPI_InitStructure.SPI_CPHA = SPI_CPHA_2Edge;		//Î»²¶»ñ	:Î»ÓÚµÚÒ»¸öÏÂ½µÑØ
+	SPI_InitStructure.SPI_CPOL = SPI_CPOL_High;		    //ç¨³æ€		:æ—¶é’Ÿæ‚¬ç©ºä¸ºé«˜
+	SPI_InitStructure.SPI_CPHA = SPI_CPHA_2Edge;		//ä½æ•è·	:ä½äºç¬¬ä¸€ä¸ªä¸‹é™æ²¿
 #else
     #error "set SPI2 mode error,it must be (0 - 3)"
 #endif
-	SPI_InitStructure.SPI_NSS = SPI_NSS_Soft;								//NSS¹ÜÀí	:ÄÚ²¿¹ÜÀí
-	SPI_InitStructure.SPI_BaudRatePrescaler = baud; 						//ËÙ¶È		:256±¶·ÖÆµ£¬Îª×îµÍËÙÄ£Äâ
-	SPI_InitStructure.SPI_FirstBit = SPI_FirstBit_MSB;						//Î»´«Êä	:´Ó¸ß×Ö½Ú¿ªÊ¼
-	SPI_InitStructure.SPI_CRCPolynomial = 7;								//Ğ£Ñé		:´Ë´¦²»´óÀí½â
+	SPI_InitStructure.SPI_NSS = SPI_NSS_Soft;								//NSSç®¡ç†	:å†…éƒ¨ç®¡ç†
+	SPI_InitStructure.SPI_BaudRatePrescaler = baud; 						//é€Ÿåº¦		:256å€åˆ†é¢‘ï¼Œä¸ºæœ€ä½é€Ÿæ¨¡æ‹Ÿ
+	SPI_InitStructure.SPI_FirstBit = SPI_FirstBit_MSB;						//ä½ä¼ è¾“	:ä»é«˜å­—èŠ‚å¼€å§‹
+	SPI_InitStructure.SPI_CRCPolynomial = 7;								//æ ¡éªŒ		:æ­¤å¤„ä¸å¤§ç†è§£
 	SPI_Init(SPI2, &SPI_InitStructure);				    
 
 	//--- SPI1

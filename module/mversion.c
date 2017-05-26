@@ -1,4 +1,4 @@
-
+ï»¿
 
 #include "mversion.h"
 
@@ -7,8 +7,8 @@ static const char *months[] = {"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","
 
 
 /*
-* __DATE__ : May 12 2017  ÔÂÈÕÄê
-* __TIME__ : 15:26:26     Ê±·ÖÃë
+* __DATE__ : May 12 2017  æœˆæ—¥å¹´
+* __TIME__ : 15:26:26     æ—¶åˆ†ç§’
 *
 */
 uint32_t mver_getminorver(void)

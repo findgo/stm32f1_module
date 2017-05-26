@@ -1,13 +1,13 @@
-/**
+﻿/**
   ******************************************************************************
   * @file   commond_signal.h
   * @author  
   * @version 
   * @date    
-  * @brief 		ȫ���ļ��ͺ궨�� ����ƽ̨�޸�
+  * @brief 		全局文件和宏定义 根据平台修改
   ******************************************************************************
-  * @attention 	     v1.1   	jgb		�ع�	            20151120
-  * @attention 	     v1.2   	jgb		����λ��ַӳ��	20170508
+  * @attention 	     v1.1   	jgb		重构	            20151120
+  * @attention 	     v1.2   	jgb		增加位地址映射	20170508
   ******************************************************************************
   */
 #ifndef __COMMON_GLOBAL_H_
@@ -30,42 +30,42 @@
 #endif
 
 /*
-**						  STM32λ�������
+**						  STM32位带区详解
 **				
-**							  λ����					
-**	STM32�о���������ʵ����λ����SRAM	0x20000000	-	0x200FFFFF(1MB)
+**							  位带区					
+**	STM32中具有两个区实现了位带：SRAM	0x20000000	-	0x200FFFFF(1MB)
 **								 FLASH 	0x40000000	-	0x400FFFFF(1MB)
 **							
-**							 λ��������
-**	λ�����еĵ�ַ���˿���ͬRAMһ��ʹ���⣬�������Լ��ġ�λ������������ÿ��
-**λ��չΪ32λ���֣��ȳ���λ��������
+**							 位带别名区
+**	位带区中的地址除了可以同RAM一样使用外，还带有自己的“位带别名”。将每个
+**位拓展为32位的字，既成了位带别名。
 **
-**	�磺0x20000000��һ���ֽڣ���չ��32λ�ɵ�8��32λ���ֱַ��ǣ�
+**	如：0x20000000（一个字节）拓展到32位可得8个32位的字分别是：
 **		0x22000000	0x22000004	0x22000008	0x2200000c
 **		0x22000010	0x22000014	0x22000018	0x2200001c
 **
-**	�ɴ˿ɵá�λ������ �������ַ�� ��λ��������ַ�� 
+**	由此可得“位带区” 上任意地址的 “位带别名地址” 
 **
-**	SRAM  :		0x22000000 +((A�\0x20000000)*8+n)*4
-**	FLASH :		0x42000000 +((A�\0x40000000)*8+n)*4
-**	��	  :		
-**				0x22000000+ (A�\0x20000000)*32 + n*4
-**				0x42000000+ (A�\0x40000000)*32 + n*4
-**				��������ַ = λ����������ʼ��ַ+ƫ����
+**	SRAM  :		0x22000000 +((A‐0x20000000)*8+n)*4
+**	FLASH :		0x42000000 +((A‐0x40000000)*8+n)*4
+**	既	  :		
+**				0x22000000+ (A‐0x20000000)*32 + n*4
+**				0x42000000+ (A‐0x40000000)*32 + n*4
+**				别名区地址 = 位带别名区起始地址+偏移量
 **
-**	��ע  ��	�ֽڵĵ�ַ��	A
-**				λ���	  ��	n	��0<n<7��
+**	备注  ：	字节的地址：	A
+**				位序号	  ：	n	（0<n<7）
 **	
-**	��	  ��	0x22000000 + ((0x20000000 - 0x20000000 )*8+4)*4
+**	例	  ：	0x22000000 + ((0x20000000 - 0x20000000 )*8+4)*4
 **			 =  0x22000010 		
-**	��	  :		0x20000000��4λ����������ַ
+**	既	  :		0x20000000第4位带别名区地址
 **
-**  "λ����ַ��λ���" ת��������ַ 
+**  "位带地址＋位序号" 转换别名地址 
 **	#define BITBAND(addr, bitnum) ((addr & 0xF0000000)+0x2000000+((addr & 0xFFFFF)<<5)+(bitnum<<2)) 
 **	
 **/
 
-//IO�ڵ�ַӳ��
+//IO口地址映射
 #define GPIOA_ODR_Addr    (GPIOA_BASE + 12) //0x4001080C 
 #define GPIOB_ODR_Addr    (GPIOB_BASE + 12) //0x40010C0C 
 #define GPIOC_ODR_Addr    (GPIOC_BASE + 12) //0x4001100C 
@@ -82,31 +82,31 @@
 #define GPIOF_IDR_Addr    (GPIOF_BASE + 8) //0x40011A08 
 #define GPIOG_IDR_Addr    (GPIOG_BASE + 8) //0x40011E08 
 
-//IO�ڲ����궨��
+//IO口操作宏定义
 #define BITBAND(addr, bitnum) ((addr & 0xF0000000)+0x2000000+((addr &0xFFFFF)<<5)+(bitnum<<2)) 
 #define MEM_ADDR(addr)  *((volatile unsigned long  *)(addr)) 
 #define BIT_ADDR(addr, bitnum)   MEM_ADDR(BITBAND(addr, bitnum))  
 
-//-- IO�ڲ���,ֻ�Ե�һ��IO��;ȷ��n��ֵС��16!--------------------------------
-#define PAout(n)   		BIT_ADDR(GPIOA_ODR_Addr,n)  						// ��� 
-#define PAin(n)    		BIT_ADDR(GPIOA_IDR_Addr,n)  						// ���� 
+//-- IO口操作,只对单一的IO口;确保n的值小于16!--------------------------------
+#define PAout(n)   		BIT_ADDR(GPIOA_ODR_Addr,n)  						// 输出 
+#define PAin(n)    		BIT_ADDR(GPIOA_IDR_Addr,n)  						// 输入 
 
-#define PBout(n)   		BIT_ADDR(GPIOB_ODR_Addr,n)  						// ��� 
-#define PBin(n)    		BIT_ADDR(GPIOB_IDR_Addr,n)  						// ���� 
+#define PBout(n)   		BIT_ADDR(GPIOB_ODR_Addr,n)  						// 输出 
+#define PBin(n)    		BIT_ADDR(GPIOB_IDR_Addr,n)  						// 输入 
 
-#define PCout(n)   		BIT_ADDR(GPIOC_ODR_Addr,n)  						// ��� 
-#define PCin(n)    		BIT_ADDR(GPIOC_IDR_Addr,n)  						// ���� 
+#define PCout(n)   		BIT_ADDR(GPIOC_ODR_Addr,n)  						// 输出 
+#define PCin(n)    		BIT_ADDR(GPIOC_IDR_Addr,n)  						// 输入 
 
-#define PDout(n)   		BIT_ADDR(GPIOD_ODR_Addr,n)  						// ��� 
-#define PDin(n)    		BIT_ADDR(GPIOD_IDR_Addr,n)  						// ���� 
+#define PDout(n)   		BIT_ADDR(GPIOD_ODR_Addr,n)  						// 输出 
+#define PDin(n)    		BIT_ADDR(GPIOD_IDR_Addr,n)  						// 输入 
 
-#define PEout(n)   		BIT_ADDR(GPIOE_ODR_Addr,n)  						// ��� 
-#define PEin(n)    		BIT_ADDR(GPIOE_IDR_Addr,n)  						// ����
+#define PEout(n)   		BIT_ADDR(GPIOE_ODR_Addr,n)  						// 输出 
+#define PEin(n)    		BIT_ADDR(GPIOE_IDR_Addr,n)  						// 输入
 
-#define PFout(n)   		BIT_ADDR(GPIOF_ODR_Addr,n)  						// ��� 
-#define PFin(n)    		BIT_ADDR(GPIOF_IDR_Addr,n)  						// ����
+#define PFout(n)   		BIT_ADDR(GPIOF_ODR_Addr,n)  						// 输出 
+#define PFin(n)    		BIT_ADDR(GPIOF_IDR_Addr,n)  						// 输入
 
-#define PGout(n)   		BIT_ADDR(GPIOG_ODR_Addr,n)  						// ��� 
-#define PGin(n)    		BIT_ADDR(GPIOG_IDR_Addr,n)  						// ����
+#define PGout(n)   		BIT_ADDR(GPIOG_ODR_Addr,n)  						// 输出 
+#define PGin(n)    		BIT_ADDR(GPIOG_IDR_Addr,n)  						// 输入
 
 #endif

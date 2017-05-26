@@ -1,12 +1,12 @@
-/**
+ï»¿/**
   ******************************************************************************
   * @file   util_queue.h
   * @author  
   * @version 
   * @date    
-  * @brief  	¿éÊı¾İ¶ÓÁĞ
+  * @brief  	å—æ•°æ®é˜Ÿåˆ—
   ******************************************************************************
-  * @attention      v1.1   	jgb		ÖØ¹¹		ÒÑ²âÊÔ 20151119
+  * @attention      v1.1   	jgb		é‡æ„		å·²æµ‹è¯• 20151119
   ******************************************************************************
   */
 
@@ -16,12 +16,12 @@
 #include "app_cfg.h"
 
 typedef struct  {
-	uint8_t *buffer;   		/* ×Ü¿éÖ¸Õë */
-	uint16_t element_size;     	 		/* Ã¿Ò»¿éµÄ´óĞ¡*/
-	uint16_t chunks_size;     			/* ¿é×Ü¸öÊı */
-	volatile uint16_t chunks_count;		/* ¿é¼ÆÊıÆ÷*/
-	volatile uint16_t chunks_head;      /* ¿éÍ· */
-	volatile uint16_t chunks_tail;      /* ¿éÎ²*/
+	uint8_t *buffer;   		/* æ€»å—æŒ‡é’ˆ */
+	uint16_t element_size;     	 		/* æ¯ä¸€å—çš„å¤§å°*/
+	uint16_t chunks_size;     			/* å—æ€»ä¸ªæ•° */
+	volatile uint16_t chunks_count;		/* å—è®¡æ•°å™¨*/
+	volatile uint16_t chunks_head;      /* å—å¤´ */
+	volatile uint16_t chunks_tail;      /* å—å°¾*/
 }ring_buf_t;
 
 void ringbuf_init(ring_buf_t * b,    			/* ring buffer structure */

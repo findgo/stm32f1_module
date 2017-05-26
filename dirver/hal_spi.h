@@ -1,4 +1,4 @@
-/**
+ï»¿/**
   ******************************************************************************
   * @file   hal_spi.h
   * @author  
@@ -13,11 +13,11 @@
 #define __HAL_SPI_H_
 
 /*
- *  Ó²¼şSPI
- *  Ä£Ê½0  Ä¬ÈÏµÍ£¬µÚÒ»ÉÏÉı±ßÑØ²¶»ñ
- *  Ä£Ê½1  Ä¬ÈÏµÍ£¬µÚ¶şÉÏÉı±ßÑØ²¶»ñ
- *  Ä£Ê½2  Ä¬ÈÏ¸ß£¬µÚÒ»ÏÂ½µ±ßÑØ²¶»ñ
- *  Ä£Ê½3  Ä¬ÈÏ¸ß£¬µÚ¶şÏÂ½µ±ßÑØ²¶»ñ
+ *  ç¡¬ä»¶SPI
+ *  æ¨¡å¼0  é»˜è®¤ä½ï¼Œç¬¬ä¸€ä¸Šå‡è¾¹æ²¿æ•è·
+ *  æ¨¡å¼1  é»˜è®¤ä½ï¼Œç¬¬äºŒä¸Šå‡è¾¹æ²¿æ•è·
+ *  æ¨¡å¼2  é»˜è®¤é«˜ï¼Œç¬¬ä¸€ä¸‹é™è¾¹æ²¿æ•è·
+ *  æ¨¡å¼3  é»˜è®¤é«˜ï¼Œç¬¬äºŒä¸‹é™è¾¹æ²¿æ•è·
 */
 
 
@@ -25,7 +25,7 @@
 
 //spi1
 #define HAL_SPI1_MODE        (3)
-/*¶¨ÒåÓ²¼şIO*/
+/*å®šä¹‰ç¡¬ä»¶IO*/
 #define HAL_SPI1_SCK_PORT        GPIOA
 #define HAL_SPI1_SCK_PIN         GPIO_Pin_5
 #define HAL_SPI1_MISO_PORT       GPIOA
@@ -43,7 +43,7 @@
 
 // spi2
 #define HAL_SPI2_MODE        (0)
-/*¶¨ÒåÓ²¼şIO*/
+/*å®šä¹‰ç¡¬ä»¶IO*/
 #define HAL_SPI2_SCK_PORT        GPIOB
 #define HAL_SPI2_SCK_PIN         GPIO_Pin_13
 #define HAL_SPI2_MISO_PORT       GPIOB
@@ -60,8 +60,8 @@
 #define HAL_SPI2_CS_LOW()  (PAout(12) = 0)
 
 
-void halSPI1_Init(uint16_t baud);									// SPI1³õÊ¼»¯
-uint8_t halSPI1_ReadWrite(uint8_t writedat);			// SPI1¶ÁĞ´Ò»×Ö½ÚÊı¾İ
+void halSPI1_Init(uint16_t baud);									// SPI1åˆå§‹åŒ–
+uint8_t halSPI1_ReadWrite(uint8_t writedat);			// SPI1è¯»å†™ä¸€å­—èŠ‚æ•°æ®
 void halSPI2_Init(uint16_t baud);
 uint8_t halSPI2_ReadWrite(uint8_t writedat);
 

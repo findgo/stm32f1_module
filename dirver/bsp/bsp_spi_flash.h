@@ -1,4 +1,4 @@
-/**
+ï»¿/**
   ******************************************************************************
   * @file   hal_spi.h
   * @author  
@@ -13,20 +13,20 @@
 #ifndef __BSP_SPI_FLASH_H_
 #define __BSP_SPI_FLASH_H_
 
-/* spi flash ĞèÒªspiÖ§³ÖÄ£Ê½3 */
+/* spi flash éœ€è¦spiæ”¯æŒæ¨¡å¼3 */
 #include "app_cfg.h"
 #include "hal_spi.h"
 
-/* Ê¹ÄÜ¸ß¼¶Ğ´Ä£Ê½£¬½«»á¿ª±Ù4K Ram ÉÈÇø¿Õ¼äÓÃÓÚ¶ÁĞ´»º³å */
+/* ä½¿èƒ½é«˜çº§å†™æ¨¡å¼ï¼Œå°†ä¼šå¼€è¾Ÿ4K Ram æ‰‡åŒºç©ºé—´ç”¨äºè¯»å†™ç¼“å†² */
 #define SF_FLASH_WRITE_ADVANCED_MODE    (0)
 
-// ³éÏñSPIµ×²ã
+// æŠ½åƒSPIåº•å±‚
 #define SF_SPI_CS_ASSERT()   HAL_SPI1_CS_LOW()  
 #define SF_SPI_CS_DEASSERT() HAL_SPI1_CS_HIGH() 
 
 #define sf_spiReadWriteByte(_ucValue)   halSPI1_ReadWrite(_ucValue)
 
-/* ¶¨Òå´®ĞĞFlash ID */
+/* å®šä¹‰ä¸²è¡ŒFlash ID */
 enum
 {
     MX25L1606E_ID  = 0xC22015,
@@ -60,10 +60,10 @@ enum
 
 typedef struct
 {
-    uint32_t ChipID;        /* Ğ¾Æ¬ID */
-    uint16_t PageSize;      /* Ò³Ãæ´óĞ¡ */
-    uint16_t SectorSize;    /* ÉÈÇø´óĞ¡ */  
-    uint32_t TotalSize;     /* ×ÜÈİÁ¿ */
+    uint32_t ChipID;        /* èŠ¯ç‰‡ID */
+    uint16_t PageSize;      /* é¡µé¢å¤§å° */
+    uint16_t SectorSize;    /* æ‰‡åŒºå¤§å° */  
+    uint32_t TotalSize;     /* æ€»å®¹é‡ */
 }sflash_info_t;
 
 void sf_InitFlash(void);
@@ -78,11 +78,11 @@ void sf_ReadBuffer(uint32_t _uiReadAddr, uint8_t * _pBuf,uint32_t _uiSize);
 uint8_t sf_WriteBuffer(uint32_t _uiWriteAddr, uint8_t* _pBuf,  uint16_t _usWriteSize);
 #endif
 
-// »ñµÃĞ¾Æ¬µ±Ç°ÊÇ·ñÃ¦
+// è·å¾—èŠ¯ç‰‡å½“å‰æ˜¯å¦å¿™
 uint8_t sf_StatusBusy(void);
-// Æô¶¯Ò»¸ö²ÁÉÈÇøĞòÁĞ 
+// å¯åŠ¨ä¸€ä¸ªæ“¦æ‰‡åŒºåºåˆ— 
 void sf_StartEraseSectoreSequeue(uint32_t _uiSectorAddr); 
-// Æô¶¯Ò»¸öĞ´Ò³Êı¾İĞòÁĞ  NumByteToWrite <= 256
+// å¯åŠ¨ä¸€ä¸ªå†™é¡µæ•°æ®åºåˆ—  NumByteToWrite <= 256
 void sf_StartWritePageSequeue(uint32_t _PageAddr,uint8_t * _pBuf,uint16_t NumByteToWrite);
 
 #endif

@@ -1,13 +1,13 @@
+﻿
 
-
-/* ��ģ��δ���� */
+/* 本模块未测试 */
 #ifndef __HAL_SIMIIC_H_
 #define __HAL_SIMIIC_H_
 
 #include "app_cfg.h"
 
 
-// ���ڶ��ڲ��Ĵ���?
+// 用于读内部寄存器?
 #define IICDEV_NO_MEM_ADDR	0xff
 
 void IIC_Init(void);

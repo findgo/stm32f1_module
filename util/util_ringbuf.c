@@ -1,4 +1,4 @@
-
+ï»¿
 
 
 
@@ -6,7 +6,7 @@
 #include "util_ringbuf.h"
 
 /**
-  * @brief	»ñµÃÓĞ¶àÉÙ¸ö¿ÉÓÃ¿é ÔÚ¶ÓÁĞ»·ÖĞÖĞ
+  * @brief	è·å¾—æœ‰å¤šå°‘ä¸ªå¯ç”¨å— åœ¨é˜Ÿåˆ—ç¯ä¸­ä¸­
   * @param	None
   * @note	    
   * @retval None
@@ -170,7 +170,7 @@ uint8_t *ringbuf_alloc(ring_buf_t * b)
 	return ring_data;
 }
 /**
-  * @brief  ³õÊ¼»¯ringbuf
+  * @brief  åˆå§‹åŒ–ringbuf
   * @param	None
   * @note	   chunks_size must be a power of two
   * @retval None

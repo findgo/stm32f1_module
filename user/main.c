@@ -1,4 +1,4 @@
-#include "app_cfg.h"
+ï»¿#include "app_cfg.h"
 
 //for driver
 #include "usart.h"
@@ -71,7 +71,7 @@ int main(void)
  *=============================================================================
 */
 //HSI Clock configuration
-// µ±²»Ê¹ÓÃÍâ²¿Ê±ÖÓÊ±£¬ÅäÖÃÄÚ²¿Ê±ÖÓ²ÎÊı
+// å½“ä¸ä½¿ç”¨å¤–éƒ¨æ—¶é’Ÿæ—¶ï¼Œé…ç½®å†…éƒ¨æ—¶é’Ÿå‚æ•°
 static void prvClockInit(void)
 {
     RCC_DeInit();

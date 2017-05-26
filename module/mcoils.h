@@ -1,19 +1,19 @@
-/**
+ï»¿/**
   ******************************************************************************
   * @file   mcoils.h
   * @author  
   * @version 
   * @date    
-  * @brief    coilsÄ£¿é£¬Ö»ÓĞ¿ªºÍ¹ØÁ½×´Ì¬¶¼¿ÉÒÔ¹éÓÚÕâÒ»Àà±ğ
+  * @brief    coilsæ¨¡å—ï¼Œåªæœ‰å¼€å’Œå…³ä¸¤çŠ¶æ€éƒ½å¯ä»¥å½’äºè¿™ä¸€ç±»åˆ«
   ******************************************************************************
-  * @attention    v1.1      jgb     ÖØ¹¹                                20151113 
-  * @attention    v1.2      jgb     ¼ò»¯¹¦ÄÜĞŞ¸Ä¸üÉÙµÄºê¾Í¿ÉÊ¹ÓÃ        20170428
+  * @attention    v1.1      jgb     é‡æ„                                20151113 
+  * @attention    v1.2      jgb     ç®€åŒ–åŠŸèƒ½ä¿®æ”¹æ›´å°‘çš„å®å°±å¯ä½¿ç”¨        20170428
   ******************************************************************************
   */
-/* Ê¹ÓÃËµÃ÷
-;   ¶¨ÒåcoilsÊ¹ÓÃµÄ¸öÊımCOILSNUM£¬
-;   ÊµÏÖMTURN_COILS1_ON ¸÷¸öcoilsµÄ¹¦ÄÜºê
-;   µ÷ÓÃAPI
+/* ä½¿ç”¨è¯´æ˜
+;   å®šä¹‰coilsä½¿ç”¨çš„ä¸ªæ•°mCOILSNUMï¼Œ
+;   å®ç°MTURN_COILS1_ON å„ä¸ªcoilsçš„åŠŸèƒ½å®
+;   è°ƒç”¨API
 */
 #ifndef __COILS_H_
 #define __COILS_H_
@@ -45,7 +45,7 @@ typedef enum
     MCOILS_MODE_TOGGLE  = 0x02,
 }mCoils_Mode;
 
-// ³éÏñ¼ÌµçÆ÷µ×²ã
+// æŠ½åƒç»§ç”µå™¨åº•å±‚
 #define MTURN_COILS1_ON()   
 #define MTURN_COILS1_OFF()  
 #define MTURN_COILS2_ON()    
@@ -67,7 +67,7 @@ void mCoilsInit(void);
 void mCoilsSet (uint8_t Coils, mCoils_Mode mode);
 bool mCoilsGetStasus(uint8_t which);
 uint8_t mCoilsGetMulStasus(uint8_t Coils);
-// ÄÚ²¿º¯Êı£¬²»½¨ÒéÊ¹ÓÃ
+// å†…éƒ¨å‡½æ•°ï¼Œä¸å»ºè®®ä½¿ç”¨
 void mCoilsOnOff(uint8_t Coils, mCoils_Mode mode);
 
 #endif

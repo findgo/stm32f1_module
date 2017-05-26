@@ -1,19 +1,19 @@
-
+ï»¿
 #include "mcoils.h"
 
-/* ÓÃÓÚ¼ÇÂ¼coilµ±Ç°µÄ¹¤×÷×´Ì¬ */
+/* ç”¨äºè®°å½•coilå½“å‰çš„å·¥ä½œçŠ¶æ€ */
 static uint8_t PreCoilOnOffStatus = 0x00;
 
 #define PreCoilStatus(Coil) (PreCoilOnOffStatus & (Coil))
 
 /***********************************************************
-* º¯ÊıÃû³Æ:     mCoilsInit(void)
-* º¯Êı¹¦ÄÜ:     Íâ²¿µ÷ÓÃ£¬³õÊ¼»¯
-* Èë¿Ú²ÎÊı:     None
-* ³ö¿Ú²ÎÊı:     ÎŞ      
-* ·µ»Ø²ÎÊı:     ÎŞ
-* ¹¦ÄÜÃèÊö: Coils ²ÉÓÃÎ»ÑÚÂë
-* ±¸ ×¢: 
+* å‡½æ•°åç§°:     mCoilsInit(void)
+* å‡½æ•°åŠŸèƒ½:     å¤–éƒ¨è°ƒç”¨ï¼Œåˆå§‹åŒ–
+* å…¥å£å‚æ•°:     None
+* å‡ºå£å‚æ•°:     æ—       
+* è¿”å›å‚æ•°:     æ— 
+* åŠŸèƒ½æè¿°: Coils é‡‡ç”¨ä½æ©ç 
+* å¤‡ æ³¨: 
 ************************************************************/
 void mCoilsInit(void)
 {
@@ -21,29 +21,29 @@ void mCoilsInit(void)
 }
 
 /***********************************************************
-* º¯ÊıÃû³Æ:     mCoilsSet
-* º¯Êı¹¦ÄÜ:     Íâ²¿µ÷ÓÃ£¬ÉèÖÃcoilsÄ£Ê½,Î»ÑÚÂë¿ª·¢
-* Èë¿Ú²ÎÊı:     Coils--ÄÄ¸öcoil,  mode  Ä£Ê½
-* ³ö¿Ú²ÎÊı:     ÎŞ      
-* ·µ»Ø²ÎÊı:     ÎŞ
-* ¹¦ÄÜÃèÊö: Coils ²ÉÓÃÎ»ÑÚÂë
-* ±¸ ×¢: 
+* å‡½æ•°åç§°:     mCoilsSet
+* å‡½æ•°åŠŸèƒ½:     å¤–éƒ¨è°ƒç”¨ï¼Œè®¾ç½®coilsæ¨¡å¼,ä½æ©ç å¼€å‘
+* å…¥å£å‚æ•°:     Coils--å“ªä¸ªcoil,  mode  æ¨¡å¼
+* å‡ºå£å‚æ•°:     æ—       
+* è¿”å›å‚æ•°:     æ— 
+* åŠŸèƒ½æè¿°: Coils é‡‡ç”¨ä½æ©ç 
+* å¤‡ æ³¨: 
 ************************************************************/
 void mCoilsSet (uint8_t Coils, mCoils_Mode mode)
 {
     uint8_t Coil;
     mCoils_Mode uSMode;
     
-    Coil  = MCOILS_1;       //´ÓµÚÒ»¸öµÆ¿ªÊ¼²é
-    Coils &= MCOILS_ALL;        //ÆÁ±Î²»ÔÚÇı¶¯ÄÚµÄcoils
+    Coil  = MCOILS_1;       //ä»ç¬¬ä¸€ä¸ªç¯å¼€å§‹æŸ¥
+    Coils &= MCOILS_ALL;        //å±è”½ä¸åœ¨é©±åŠ¨å†…çš„coils
     
-    while (Coils)  //±éÀúÕÒ³öÏëÒªÉèÖÃµÄcoils
+    while (Coils)  //éå†æ‰¾å‡ºæƒ³è¦è®¾ç½®çš„coils
     {
       if (Coils & Coil){
-        if (mode != MCOILS_MODE_TOGGLE){//·ÇÇĞ»»Ä£Ê½        
-            if(PreCoilStatus(Coil)){//²é¿´µ±Ç°coil×´Ì¬
+        if (mode != MCOILS_MODE_TOGGLE){//éåˆ‡æ¢æ¨¡å¼        
+            if(PreCoilStatus(Coil)){//æŸ¥çœ‹å½“å‰coilçŠ¶æ€
               if(mode == MCOILS_MODE_OFF){ //on,then check it want to set off?
-                mCoilsOnOff(Coil, MCOILS_MODE_OFF); //¶¯×÷
+                mCoilsOnOff(Coil, MCOILS_MODE_OFF); //åŠ¨ä½œ
               }
             }else{               
               if(mode == MCOILS_MODE_ON){   //off, then check it want to set on?
@@ -51,39 +51,39 @@ void mCoilsSet (uint8_t Coils, mCoils_Mode mode)
               }
             }
         } else {           /* Toggle mode*/
-            if(PreCoilStatus(Coil)){  //²é¿´µ±Ç°coil×´Ì¬
+            if(PreCoilStatus(Coil)){  //æŸ¥çœ‹å½“å‰coilçŠ¶æ€
                 uSMode = MCOILS_MODE_OFF;   //on, Toggle to off 
             }else{
                 uSMode = MCOILS_MODE_ON;    //off, Toggle to on
             }
-            mCoilsOnOff(Coil, uSMode);    //¶¯×÷
+            mCoilsOnOff(Coil, uSMode);    //åŠ¨ä½œ
         }
-        Coils ^= Coil;//Õâ¸ö²ÎÊıÒÑÉèÖÃÍê,Çå³ı¶ÔÓ¦Î»ÑÚÂë
+        Coils ^= Coil;//è¿™ä¸ªå‚æ•°å·²è®¾ç½®å®Œ,æ¸…é™¤å¯¹åº”ä½æ©ç 
       }
-      Coil <<= 1;  //ÏÂÒ»¸öcoils
+      Coil <<= 1;  //ä¸‹ä¸€ä¸ªcoils
     }
 }
 /***********************************************************
-* º¯ÊıÃû³Æ:     mCoilsGetStasus(void)
-* º¯Êı¹¦ÄÜ:     Íâ²¿µ÷ÓÃ£¬»ñµÃÕâ¸öcoilsÄ£Ê½,Î»ÑÚÂë¿ª·¢
-* Èë¿Ú²ÎÊı:     which--ÄÄ¸öwhich, 
-* ³ö¿Ú²ÎÊı:     ÎŞ      
-* ·µ»Ø²ÎÊı:     ÎŞ
-* ¹¦ÄÜÃèÊö: »ñµÃµ¥¸öcoilµÄ×´Ì¬
-* ±¸ ×¢: 
+* å‡½æ•°åç§°:     mCoilsGetStasus(void)
+* å‡½æ•°åŠŸèƒ½:     å¤–éƒ¨è°ƒç”¨ï¼Œè·å¾—è¿™ä¸ªcoilsæ¨¡å¼,ä½æ©ç å¼€å‘
+* å…¥å£å‚æ•°:     which--å“ªä¸ªwhich, 
+* å‡ºå£å‚æ•°:     æ—       
+* è¿”å›å‚æ•°:     æ— 
+* åŠŸèƒ½æè¿°: è·å¾—å•ä¸ªcoilçš„çŠ¶æ€
+* å¤‡ æ³¨: 
 ************************************************************/
 bool mCoilsGetStasus(uint8_t which)
 {
     return (bool)PreCoilStatus(which);
 }
 /***********************************************************
-* º¯ÊıÃû³Æ:     mCoilsGetMulStasus(void)
-* º¯Êı¹¦ÄÜ:     Íâ²¿µ÷ÓÃ£¬»ñµÃÕâ¸öcoilsÄ£Ê½,Î»ÑÚÂë¿ª·¢
-* Èë¿Ú²ÎÊı:     coils--ÄÄ¸öcoils, 
-* ³ö¿Ú²ÎÊı:     ÎŞ      
-* ·µ»Ø²ÎÊı:     ÎŞ
-* ¹¦ÄÜÃèÊö: »ñµÃ¶à¸öcoils£¬ĞèÒª×Ô¼º×öÎ»ÒÆ
-* ±¸ ×¢: 
+* å‡½æ•°åç§°:     mCoilsGetMulStasus(void)
+* å‡½æ•°åŠŸèƒ½:     å¤–éƒ¨è°ƒç”¨ï¼Œè·å¾—è¿™ä¸ªcoilsæ¨¡å¼,ä½æ©ç å¼€å‘
+* å…¥å£å‚æ•°:     coils--å“ªä¸ªcoils, 
+* å‡ºå£å‚æ•°:     æ—       
+* è¿”å›å‚æ•°:     æ— 
+* åŠŸèƒ½æè¿°: è·å¾—å¤šä¸ªcoilsï¼Œéœ€è¦è‡ªå·±åšä½ç§»
+* å¤‡ æ³¨: 
 ************************************************************/
 uint8_t mCoilsGetMulStasus(uint8_t Coils)
 {
@@ -91,8 +91,8 @@ uint8_t mCoilsGetMulStasus(uint8_t Coils)
 }
 
 /**
-  * @brief      Coils¿ª¹Ø¿ØÖÆ
-  * @param  Coils --ÄÄ¸öcoils, mode---Ä£Ê½
+  * @brief      Coilså¼€å…³æ§åˆ¶
+  * @param  Coils --å“ªä¸ªcoils, mode---æ¨¡å¼
   * @note   
   * @note    
   * @note   

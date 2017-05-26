@@ -1,14 +1,14 @@
-
+ï»¿
 #include "mclock.h"
 
 
 static volatile uint32_t Ms_ClockTimerCounter = 0; //time count
 
 /**
-  * @brief  »ñµÃMs_ClockTimerCounterµÄÖµ£¬
+  * @brief  è·å¾—Ms_ClockTimerCounterçš„å€¼ï¼Œ
   * @param  None
-  * @note   Ms_ClockTimerCounterÎªÖĞ¶ÏÊ±»ùµ÷ÓÃ 
-  * @retval Ms_ClockTimerCounter µ±Ç°Öµ
+  * @note   Ms_ClockTimerCounterä¸ºä¸­æ–­æ—¶åŸºè°ƒç”¨ 
+  * @retval Ms_ClockTimerCounter å½“å‰å€¼
   */
 uint32_t mcu_getCurSysctime(void)
 {
@@ -16,16 +16,16 @@ uint32_t mcu_getCurSysctime(void)
     //uint32_t tmp;
 
     //ENTER_SAFE_ATOM_CODE(intState);
-    //tmp = Ms_ClockTimerCounter;//»ñµÃÏµÍ³Ê±¼ä
+    //tmp = Ms_ClockTimerCounter;//è·å¾—ç³»ç»Ÿæ—¶é—´
     //EXIT_SAFE_ATOM_CODE(intState);
     //return tmp;
     return Ms_ClockTimerCounter;
 }
 /**
-  * @brief  »ñµÃÁ÷ÊÅÊ±¼ä
+  * @brief  è·å¾—æµé€æ—¶é—´
   * @param  None
-  * @note       Ã¿×ßµ½ÕâÀïÒ»´Î£¬Á÷ÊÅÊ±¼ä¶¼²»»á³¬2^16¸öÊ±»ù
-  * @retval  Á÷ÊÅÊ±¼ä ×î´ó2^32
+  * @note       æ¯èµ°åˆ°è¿™é‡Œä¸€æ¬¡ï¼Œæµé€æ—¶é—´éƒ½ä¸ä¼šè¶…2^16ä¸ªæ—¶åŸº
+  * @retval  æµé€æ—¶é—´ æœ€å¤§2^32
   */
 uint32_t mcu_elapsedSystime(void)
 {
@@ -35,7 +35,7 @@ uint32_t mcu_elapsedSystime(void)
     uint32_t tmp;
     
     //ENTER_SAFE_ATOM_CODE(intState);
-    tmp = Ms_ClockTimerCounter;//»ñµÃÏµÍ³Ê±¼ä
+    tmp = Ms_ClockTimerCounter;//è·å¾—ç³»ç»Ÿæ—¶é—´
     //EXIT_SAFE_ATOM_CODE(intState);
 
     if(tmp != wHisTimerCounter){

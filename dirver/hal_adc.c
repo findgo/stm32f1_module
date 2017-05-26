@@ -1,4 +1,4 @@
-
+ï»¿
 #include "hal_adc.h"
 
 
@@ -128,8 +128,8 @@ void haladcInit(void)
 
 
 /**
-  * @brief	¶ÁADCµÄÖµ£¬Î´´¦Àí
-  * @param	channel Í¨µÀ
+  * @brief	è¯»ADCçš„å€¼ï¼Œæœªå¤„ç†
+  * @param	channel é€šé“
   * @note		
   * @retval  None
   */
@@ -149,7 +149,7 @@ uint16_t adcGetRawValue(uint8_t channel)
 #define TEMP110_CAL_ADDR ((uint16_t *)((uint32_t)0x1ffff7c2))
 #define TEMP30_CAL_ADDR ((uint16_t *)((uint32_t)0x1ffff7b8))
 
-// Î´²âÊÔ
+// æœªæµ‹è¯•
 int32_t adcInternalTemp(void)
 {
 	uint16_t sensor;
@@ -163,7 +163,7 @@ int32_t adcInternalTemp(void)
 	return temperature;
 }
 
-//Î´²âÊÔ
+//æœªæµ‹è¯•
 uint32_t adcInternalVref(void)
 {
 	uint16_t vtemp;
