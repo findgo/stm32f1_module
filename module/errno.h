@@ -1,6 +1,6 @@
+ï»¿
 
-
-/* ±¾Ä£¿éÒÆÖ²ÖÁlinux ÄÚºË */
+/* æœ¬æ¨¡å—ç§»æ¤è‡³linux å†…æ ¸ */
 #ifndef _ALPHA_ERRNO_H_
 #define _ALPHA_ERRNO_H_
 

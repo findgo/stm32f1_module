@@ -1,11 +1,11 @@
-
+ï»¿
 #include "mcfg.h"
 #include "mtimers.h"
 
 typedef struct {
-    uint16_t valid;         // = 1,±íÃ÷ÓĞÓĞĞ§Êı¾İband = 0,±íÃ÷ÎŞÓĞĞ§band
-    uint16_t band_index;    // Êı¾İÓĞĞ§, Ö¸Ê¾ÓĞĞ§band index,Êı¾İÎŞĞ§£¬Ö¸Ê¾ÏÂÒ»¿é¿ÉĞ´band index
-    uint32_t band_sn;       // Ö»¼ÇÂ¼ÓĞĞ§Êı¾İsnºÅ
+    uint16_t valid;         // = 1,è¡¨æ˜æœ‰æœ‰æ•ˆæ•°æ®band = 0,è¡¨æ˜æ— æœ‰æ•ˆband
+    uint16_t band_index;    // æ•°æ®æœ‰æ•ˆ, æŒ‡ç¤ºæœ‰æ•ˆband index,æ•°æ®æ— æ•ˆï¼ŒæŒ‡ç¤ºä¸‹ä¸€å—å¯å†™band index
+    uint32_t band_sn;       // åªè®°å½•æœ‰æ•ˆæ•°æ®snå·
 }sector_info_t;
 
 typedef struct  {
@@ -13,27 +13,27 @@ typedef struct  {
     uint8_t valid;
 }load_result_t;
 
-// ´æÈëflashµÄºê ¶¨Òå
+// å­˜å…¥flashçš„å® å®šä¹‰
 // bandsn32 + cfg(NUM * sizeof(uint16_t)) + crc32
 #define CFG_SAVE_BANDSN32_SIZE     (4)
 #define CFG_SAVE_CRC32_SIZE        (4)
 #define CFG_SAVE_BAND_SIZE       ((sizeof(mcfg_para_t) + 3) / 4 * 4 + CFG_SAVE_BANDSN32_SIZE + CFG_SAVE_CRC32_SIZE)  // hold 4 byte align
 
-// Ã¿Ò»Ò³ ÄÜ´æcfg×î´ó¸öÊı  ( Sector /  bandSize = bandnum)
+// æ¯ä¸€é¡µ èƒ½å­˜cfgæœ€å¤§ä¸ªæ•°  ( Sector /  bandSize = bandnum)
 #define CFG_BAND_NUM_MAX  (CFG_FLASH_SECTOR_SIZE / CFG_SAVE_BAND_SIZE)
 
 /* extern default para */
 extern mcfg_para_t para_default;
 
 static sector_info_t sector_info[CFG_FLASH_USE_SECTOR_NUM];
-// ÏÂÒ»¸öÒª´æ´¢µÄsn±àÂë  sn: ÓÃÓÚÊ¶±ğÅäÖÃĞÅÏ¢µÄ,SNÔ½´ó,Ôò±íÊ¾´ËĞÅÏ¢×îĞÂ
+// ä¸‹ä¸€ä¸ªè¦å­˜å‚¨çš„snç¼–ç   sn: ç”¨äºè¯†åˆ«é…ç½®ä¿¡æ¯çš„,SNè¶Šå¤§,åˆ™è¡¨ç¤ºæ­¤ä¿¡æ¯æœ€æ–°
 static volatile uint32_t next_sn;
-// ÏÂÒ»¸öÒª´æ´¢µÄÉÈÇøÎ»ÖÃ
+// ä¸‹ä¸€ä¸ªè¦å­˜å‚¨çš„æ‰‡åŒºä½ç½®
 static volatile uint16_t next_sector;
 
-// µ±Ç°ÅäÖÃ²ÎÊı
+// å½“å‰é…ç½®å‚æ•°
 static mcfg_para_t cfg_curbuf;
-// flashĞ´Èë»º³åÇø
+// flashå†™å…¥ç¼“å†²åŒº
 static uint32_t cfg_flashbuf[CFG_SAVE_BAND_SIZE / 4];
 //
 static mtimer_t cfgtime = MTIMER_INIT();
@@ -120,7 +120,7 @@ static void __cfgbufleft(void)
 {
     uint16_t *p;
     cfg_flashbuf[0] = next_sn;
-    // Çå³ıÄÇĞ©ĞèÇó¶ÔÆëµÄ²»ÓÃµÄ×Ö½Ú£¬Ê¹Ö®Îª0xffff
+    // æ¸…é™¤é‚£äº›éœ€æ±‚å¯¹é½çš„ä¸ç”¨çš„å­—èŠ‚ï¼Œä½¿ä¹‹ä¸º0xffff
     for (p = (uint16_t*) (cfg_flashbuf + 1) + sizeof(cfg_curbuf) / 2;
             p < (uint16_t*) (cfg_flashbuf + CFG_SAVE_BAND_SIZE / 4 - 1); ++p)
         *p = 0xFFFF;
@@ -128,13 +128,13 @@ static void __cfgbufleft(void)
     cfg_flashbuf[CFG_SAVE_BAND_SIZE / 4 - 1] = calculate_CRC32(CFG_CRC32_INIT_VALUE,(uint8_t *)cfg_flashbuf,CFG_SAVE_BAND_SIZE - CFG_SAVE_CRC32_SIZE);
 }
 
-/* ´ÓÖ¸¶¨µØÖ·¶Á³öÊı¾İ  ²¢ÅĞ¶ÏÊÇ·ñÎª¿Õ£¬Êı¾İÊÇ·ñÓĞĞ§ */
+/* ä»æŒ‡å®šåœ°å€è¯»å‡ºæ•°æ®  å¹¶åˆ¤æ–­æ˜¯å¦ä¸ºç©ºï¼Œæ•°æ®æ˜¯å¦æœ‰æ•ˆ */
 static void __loadcfg(uint32_t addr_offset,load_result_t *result)
 {
     uint16_t i;
     uint32_t checksum;
     
-    while(CFGFLASHStatusBusy());// Ã¦ µÈĞ¾Æ¬¿ÕÏĞ
+    while(CFGFLASHStatusBusy());// å¿™ ç­‰èŠ¯ç‰‡ç©ºé—²
     CFGFLASH_Read(addr_offset, (uint8_t *)cfg_flashbuf , CFG_SAVE_BAND_SIZE);
 
     result->empty = 1;
@@ -156,7 +156,7 @@ static void __loadcfg(uint32_t addr_offset,load_result_t *result)
  * find valid page to load,set next sector, next sn and next band_index to write
  * return <0, no valid band found, >=0 valid page to load
  */
- // TODO : ½â¾ösn»ØÈÆÎÊÌâ
+ // TODO : è§£å†³snå›ç»•é—®é¢˜
 static int __findBand(void)
 {
     uint16_t i;
@@ -166,7 +166,7 @@ static int __findBand(void)
     next_sn = 0xfffffffd;
     for (i = 0; i < CFG_FLASH_USE_SECTOR_NUM; ++i) {
         if(sector_info[i].valid) {
-            // find which sector to load cfg  ×ª»¯ÎªÓĞ·ûºÅ±È½Ï£¬½â¾ö»ØÈÆÎÊÌâ£¬Çë²Î¿¼linux time_afterµÄ»ØÈÆ
+            // find which sector to load cfg  è½¬åŒ–ä¸ºæœ‰ç¬¦å·æ¯”è¾ƒï¼Œè§£å†³å›ç»•é—®é¢˜ï¼Œè¯·å‚è€ƒlinux time_afterçš„å›ç»•
             if (sector_toload < 0 ||  ((int32_t)sector_info[sector_toload].band_sn - (int32_t)sector_info[i].band_sn) < 0){
                 sector_toload = i;
             }
@@ -199,7 +199,7 @@ void mcfgLoadinit(void)
     uint32_t offset;
     load_result_t result0;
 
-    // ³õÊ¼»¯sector_infoµÄ¹ÜÀíĞÅÏ¢
+    // åˆå§‹åŒ–sector_infoçš„ç®¡ç†ä¿¡æ¯
     for (i = 0; i < CFG_FLASH_USE_SECTOR_NUM; ++i) {
         sector_info[i].valid = 0;
         sector_info[i].band_index = 0;
@@ -213,7 +213,7 @@ void mcfgLoadinit(void)
             if (!result0.empty) {
                 sector_info[i].valid = result0.valid;
                 if (result0.valid) {
-                    // ÕâÀïºÜ¹Ø¼ü£¬Òª¼ÇÂ¼µ±Ç°ÓĞÊı¾İË÷Òı
+                    // è¿™é‡Œå¾ˆå…³é”®ï¼Œè¦è®°å½•å½“å‰æœ‰æ•°æ®ç´¢å¼•
                     sector_info[i].band_sn = cfg_flashbuf[0];                    
                     sector_info[i].band_index = j;
                 }else{
@@ -229,7 +229,7 @@ void mcfgLoadinit(void)
     if (toload < 0) { 
         memcpy(&cfg_curbuf, &para_default, sizeof(cfg_curbuf));
     }else{
-        if(toload == next_sector) // ÕâÖÖÇé¿ö£¬Ë÷Òı»á±»Ö¸ÏòÏÂÒ»¿é¿ÕÇøÓò
+        if(toload == next_sector) // è¿™ç§æƒ…å†µï¼Œç´¢å¼•ä¼šè¢«æŒ‡å‘ä¸‹ä¸€å—ç©ºåŒºåŸŸ
             __loadcfg(CFG_FLASH_SECTOR_BASE_ADDRESS + CFG_FLASH_SECTOR_SIZE * toload + CFG_SAVE_BAND_SIZE * (sector_info[toload].band_index - 1),&result0);
         else
             __loadcfg(CFG_FLASH_SECTOR_BASE_ADDRESS + CFG_FLASH_SECTOR_SIZE * toload + CFG_SAVE_BAND_SIZE * sector_info[toload].band_index,&result0);
@@ -280,7 +280,7 @@ void mcfgUpdate(void)
 
         mtimer_start(&cfgtime,CFG_FLUSH_TIME);
         
-        // ±È½ÏÅäÖÃ,ÊÇ·ñÒªĞ´
+        // æ¯”è¾ƒé…ç½®,æ˜¯å¦è¦å†™
         if(!memcmp(cfg_flashbuf + 1, &cfg_curbuf,sizeof(cfg_curbuf)))
             break;// same as previous
 
@@ -291,7 +291,7 @@ void mcfgUpdate(void)
         //break;  fall down to write
         
     case MCFG_ENWRITE:
-        // Ğ¾Æ¬Ã¦,ÍË³ö
+        // èŠ¯ç‰‡å¿™,é€€å‡º
         if(CFGFLASHStatusBusy())
             return;
         
@@ -317,17 +317,17 @@ void mcfgUpdate(void)
                 isband_inpage = 1; 
             }
 
-            // ÒªĞ´µÄÊı¾İÔÚÒ»Ò³ÄÚ
+            // è¦å†™çš„æ•°æ®åœ¨ä¸€é¡µå†…
             if(isband_inpage){
                 cfgstate = MCFG_PROGRAM_QUERY_OVER;
                 CFGFLASH_WritePageSequeue(CFG_FLASH_SECTOR_BASE_ADDRESS + next_sector * CFG_FLASH_SECTOR_SIZE + sector_info[next_sector].band_index * CFG_SAVE_BAND_SIZE,
                             (void*)cfg_flashbuf, CFG_SAVE_BAND_SIZE);
-            }else{ // ¿çÒ³Ğ´£¬ÏÈĞ´Ç°Ò»Ò³¶àµÄÊı¾İ
+            }else{ // è·¨é¡µå†™ï¼Œå…ˆå†™å‰ä¸€é¡µå¤šçš„æ•°æ®
                 cfgstate = MCFG_ENWRITEREMAIN;
                 CFGFLASH_WritePageSequeue(CFG_FLASH_SECTOR_BASE_ADDRESS + next_sector * CFG_FLASH_SECTOR_SIZE + sector_info[next_sector].band_index * CFG_SAVE_BAND_SIZE,
                             (void*)cfg_flashbuf, nowByte);
             }
-        } else { // ³¬³öÉÈÇøË÷Òı,½øĞĞ²Á³ıÔÙĞ´
+        } else { // è¶…å‡ºæ‰‡åŒºç´¢å¼•,è¿›è¡Œæ“¦é™¤å†å†™
             cfgstate = MCFG_ERASE_QUERY;
             CFGFLASH_EraseSectorSequeue(CFG_FLASH_SECTOR_BASE_ADDRESS + next_sector * CFG_FLASH_SECTOR_SIZE);
         }
@@ -336,7 +336,7 @@ void mcfgUpdate(void)
     case MCFG_ENWRITEREMAIN:
         if (!CFGFLASHStatusBusy()) {            
             if(remainPage){
-                // Êı¾İµØÖ·ÒªÆ«ÒÆ,Òª4×Ö½ÚÆ«ÒÆ
+                // æ•°æ®åœ°å€è¦åç§»,è¦4å­—èŠ‚åç§»
                 CFGFLASH_WritePageSequeue(CFG_FLASH_SECTOR_BASE_ADDRESS + next_sector * CFG_FLASH_SECTOR_SIZE + offsetPageaddr,
                             (void*)&cfg_flashbuf[ (CFG_SAVE_BAND_SIZE - remainByte) / 4 ], CFG_FLASH_PAGE_SIZE);
                 remainByte -= CFG_FLASH_PAGE_SIZE;
@@ -370,13 +370,13 @@ void mcfgUpdate(void)
                 ,&result);
 
             if(result.empty || !result.valid){ 
-                // ÎŞ·¨Ğ´Èë£¬Îª¿Õ? ¿ÉÄÜÒ²ÊÇ»µ¿é£¬ÄÇĞ´ÏÂÒ»¸öµØÖ·
+                // æ— æ³•å†™å…¥ï¼Œä¸ºç©º? å¯èƒ½ä¹Ÿæ˜¯åå—ï¼Œé‚£å†™ä¸‹ä¸€ä¸ªåœ°å€
                 cfgstate = MCFG_ENWRITE;
                 //reload write to flash 
                 memcpy(cfg_flashbuf + 1, &cfg_curbuf, sizeof(cfg_curbuf));
                 __cfgbufleft();
                 sector_info[next_sector].band_index++;
-            }else{ //Êı¾İ²»Îª¿Õ£¬ÇÒÓĞĞ§
+            }else{ //æ•°æ®ä¸ä¸ºç©ºï¼Œä¸”æœ‰æ•ˆ
                 cfgstate = MCFG_NOTSTART;
                 sector_info[next_sector].valid = 1;
                 sector_info[next_sector].band_sn = next_sn;
@@ -404,13 +404,13 @@ void  FunDebuginit(void)
     uint16_t erase = 0;
     
     dbg_set_dbg_level(7);
-    halSPI1_Init(SPI_BaudRatePrescaler_256);// ³õÊ¼»¯SPIÓ²¼şµ×²ã
-    sf_InitFlash(); // ³õÊ¼»¯FLASH
-    // Ñ¡ÔñÊÇ·ñÒª²Á³ıflashĞ¾Æ¬½øĞĞ²âÊÔ
+    halSPI1_Init(SPI_BaudRatePrescaler_256);// åˆå§‹åŒ–SPIç¡¬ä»¶åº•å±‚
+    sf_InitFlash(); // åˆå§‹åŒ–FLASH
+    // é€‰æ‹©æ˜¯å¦è¦æ“¦é™¤flashèŠ¯ç‰‡è¿›è¡Œæµ‹è¯•
     //sf_EraseSector(0);
     if(erase)
         sf_EraseChip();
-    mcfgLoadinit(); // ³õÊ¼»¯mcfg
+    mcfgLoadinit(); // åˆå§‹åŒ–mcfg
 }
 
 void FunDebugtask(void)

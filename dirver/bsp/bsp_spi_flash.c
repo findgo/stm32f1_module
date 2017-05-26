@@ -1,11 +1,11 @@
-
+ï»¿
 #include "bsp_spi_flash.h"
 
 #define SF_SECTOR_SIZE  (4 * 1024)
 
-#define SF_CMD_AAI       0xAD       /* AAI Á¬Ğø±à³ÌÖ¸Áî(FOR SST25VF016B) */
-#define SF_CMD_DISWR      0x04      /* ½ûÖ¹Ğ´, ÍË³öAAI×´Ì¬ */
-#define SF_CMD_EWRSR      0x50      /* ÔÊĞíĞ´×´Ì¬¼Ä´æÆ÷µÄÃüÁî */
+#define SF_CMD_AAI       0xAD       /* AAI è¿ç»­ç¼–ç¨‹æŒ‡ä»¤(FOR SST25VF016B) */
+#define SF_CMD_DISWR      0x04      /* ç¦æ­¢å†™, é€€å‡ºAAIçŠ¶æ€ */
+#define SF_CMD_EWRSR      0x50      /* å…è®¸å†™çŠ¶æ€å¯„å­˜å™¨çš„å‘½ä»¤ */
  
 #define SF_CMD_WRITE     0x02       /*!< Write to Memory instruction */
 #define SF_CMD_RDSR      0x05       /*!< Write Status Register instruction */
@@ -49,87 +49,87 @@ static void __sf_WaitForWriteEnd(void)
 
 /*
 *********************************************************************************************************
-*   º¯ Êı Ãû: sf_WriteStatus
-*   ¹¦ÄÜËµÃ÷: Ğ´×´Ì¬¼Ä´æÆ÷
-*   ĞÎ    ²Î:  _ucValue : ×´Ì¬¼Ä´æÆ÷µÄÖµ
-*   ·µ »Ø Öµ: ÎŞ
+*   å‡½ æ•° å: sf_WriteStatus
+*   åŠŸèƒ½è¯´æ˜: å†™çŠ¶æ€å¯„å­˜å™¨
+*   å½¢    å‚:  _ucValue : çŠ¶æ€å¯„å­˜å™¨çš„å€¼
+*   è¿” å› å€¼: æ— 
 *********************************************************************************************************
 */
 static void __sf_WriteStatus(uint8_t _ucValue)
 {
-    SF_SPI_CS_ASSERT();                                 /* Ê¹ÄÜÆ¬Ñ¡ */
-    sf_spiReadWriteByte(SF_CMD_WRSR);                       /* ·¢ËÍÃüÁî£¬ Ğ´×´Ì¬¼Ä´æÆ÷ */
-    sf_spiReadWriteByte(_ucValue);                      /* ·¢ËÍÊı¾İ£º×´Ì¬¼Ä´æÆ÷µÄÖµ */
-    SF_SPI_CS_DEASSERT();                               /* ½ûÄÜÆ¬Ñ¡ */
+    SF_SPI_CS_ASSERT();                                 /* ä½¿èƒ½ç‰‡é€‰ */
+    sf_spiReadWriteByte(SF_CMD_WRSR);                       /* å‘é€å‘½ä»¤ï¼Œ å†™çŠ¶æ€å¯„å­˜å™¨ */
+    sf_spiReadWriteByte(_ucValue);                      /* å‘é€æ•°æ®ï¼šçŠ¶æ€å¯„å­˜å™¨çš„å€¼ */
+    SF_SPI_CS_DEASSERT();                               /* ç¦èƒ½ç‰‡é€‰ */
 }
 
 void __sf_ReadInfo(void)
 {
-    g_sf_info.ChipID = sf_ReadID();/* Ğ¾Æ¬ID */
+    g_sf_info.ChipID = sf_ReadID();/* èŠ¯ç‰‡ID */
     
     switch (g_sf_info.ChipID){
     case W25Q256FV_ID:
-        g_sf_info.PageSize = 256;               /* Ò³Ãæ´óĞ¡ = 256×Ö½Ú */
-        g_sf_info.SectorSize = 4 * 1024;        /* ÉÈÇø´óĞ¡ = 4K */
-        g_sf_info.TotalSize = 32 * 1024 * 1024; /* ×ÜÈİÁ¿ = 32M */
+        g_sf_info.PageSize = 256;               /* é¡µé¢å¤§å° = 256å­—èŠ‚ */
+        g_sf_info.SectorSize = 4 * 1024;        /* æ‰‡åŒºå¤§å° = 4K */
+        g_sf_info.TotalSize = 32 * 1024 * 1024; /* æ€»å®¹é‡ = 32M */
         break;
 
     case W25Q128FV_ID:
-        g_sf_info.PageSize = 256;               /* Ò³Ãæ´óĞ¡ = 256×Ö½Ú */
-        g_sf_info.SectorSize = 4 * 1024;        /* ÉÈÇø´óĞ¡ = 4K */
-        g_sf_info.TotalSize = 16 * 1024 * 1024; /* ×ÜÈİÁ¿ = 16M */
+        g_sf_info.PageSize = 256;               /* é¡µé¢å¤§å° = 256å­—èŠ‚ */
+        g_sf_info.SectorSize = 4 * 1024;        /* æ‰‡åŒºå¤§å° = 4K */
+        g_sf_info.TotalSize = 16 * 1024 * 1024; /* æ€»å®¹é‡ = 16M */
         break;
 
     case W25Q64FV_ID:
     case W25Q64BV_ID:
     case W25X64_ID:
-        g_sf_info.PageSize = 256;               /* Ò³Ãæ´óĞ¡ = 256×Ö½Ú */
-        g_sf_info.SectorSize = 4 * 1024;        /* ÉÈÇø´óĞ¡ = 4K */
-        g_sf_info.TotalSize = 8 * 1024 * 1024;  /* ×ÜÈİÁ¿ = 8M */
+        g_sf_info.PageSize = 256;               /* é¡µé¢å¤§å° = 256å­—èŠ‚ */
+        g_sf_info.SectorSize = 4 * 1024;        /* æ‰‡åŒºå¤§å° = 4K */
+        g_sf_info.TotalSize = 8 * 1024 * 1024;  /* æ€»å®¹é‡ = 8M */
         break;
         
     case W25Q32FV_ID:
     case W25Q32BV_ID:
     case W25X32_ID:
-        g_sf_info.PageSize = 256;               /* Ò³Ãæ´óĞ¡ = 256×Ö½Ú */
-        g_sf_info.SectorSize = 4 * 1024;        /* ÉÈÇø´óĞ¡ = 4K */
-        g_sf_info.TotalSize = 4 * 1024 * 1024;  /* ×ÜÈİÁ¿ = 4M */
+        g_sf_info.PageSize = 256;               /* é¡µé¢å¤§å° = 256å­—èŠ‚ */
+        g_sf_info.SectorSize = 4 * 1024;        /* æ‰‡åŒºå¤§å° = 4K */
+        g_sf_info.TotalSize = 4 * 1024 * 1024;  /* æ€»å®¹é‡ = 4M */
         break;
         
     case MX25L1606E_ID:
     case W25Q16BV_ID:
     case W25X16_ID:
-        g_sf_info.PageSize = 256;               /* Ò³Ãæ´óĞ¡ = 256×Ö½Ú */
-        g_sf_info.SectorSize = 4 * 1024;        /* ÉÈÇø´óĞ¡ = 4K */
-        g_sf_info.TotalSize = 2 * 1024 * 1024;  /* ×ÜÈİÁ¿ = 2M */
+        g_sf_info.PageSize = 256;               /* é¡µé¢å¤§å° = 256å­—èŠ‚ */
+        g_sf_info.SectorSize = 4 * 1024;        /* æ‰‡åŒºå¤§å° = 4K */
+        g_sf_info.TotalSize = 2 * 1024 * 1024;  /* æ€»å®¹é‡ = 2M */
         break;
     
     case W25Q80DV_ID:
     case W25X80_ID:
-        g_sf_info.PageSize = 256;               /* Ò³Ãæ´óĞ¡ = 256×Ö½Ú */
-        g_sf_info.SectorSize = 4 * 1024;        /* ÉÈÇø´óĞ¡ = 4K */
-        g_sf_info.TotalSize = 1 * 1024 * 1024;  /* ×ÜÈİÁ¿ = 1M */
+        g_sf_info.PageSize = 256;               /* é¡µé¢å¤§å° = 256å­—èŠ‚ */
+        g_sf_info.SectorSize = 4 * 1024;        /* æ‰‡åŒºå¤§å° = 4K */
+        g_sf_info.TotalSize = 1 * 1024 * 1024;  /* æ€»å®¹é‡ = 1M */
         break;
     
     case W25Q40BW_ID:
     case W25X40_ID:
     case GD25Q40B_ID:
-        g_sf_info.PageSize = 256;               /* Ò³Ãæ´óĞ¡ = 256×Ö½Ú */
-        g_sf_info.SectorSize = 4 * 1024;        /* ÉÈÇø´óĞ¡ = 4K */
-        g_sf_info.TotalSize = 512 * 1024;       /* ×ÜÈİÁ¿ = 512k */
+        g_sf_info.PageSize = 256;               /* é¡µé¢å¤§å° = 256å­—èŠ‚ */
+        g_sf_info.SectorSize = 4 * 1024;        /* æ‰‡åŒºå¤§å° = 4K */
+        g_sf_info.TotalSize = 512 * 1024;       /* æ€»å®¹é‡ = 512k */
         break;
 
     case W25X20_ID:
     case GD25Q20B_ID:
-        g_sf_info.PageSize = 256;               /* Ò³Ãæ´óĞ¡ = 256×Ö½Ú */
-        g_sf_info.SectorSize = 4 * 1024;        /* ÉÈÇø´óĞ¡ = 4K */
-        g_sf_info.TotalSize = 256 * 1024;       /* ×ÜÈİÁ¿ = 256k */
+        g_sf_info.PageSize = 256;               /* é¡µé¢å¤§å° = 256å­—èŠ‚ */
+        g_sf_info.SectorSize = 4 * 1024;        /* æ‰‡åŒºå¤§å° = 4K */
+        g_sf_info.TotalSize = 256 * 1024;       /* æ€»å®¹é‡ = 256k */
         break;
 
     case W25X10_ID:
-        g_sf_info.PageSize = 256;               /* Ò³Ãæ´óĞ¡ = 256×Ö½Ú */
-        g_sf_info.SectorSize = 4 * 1024;        /* ÉÈÇø´óĞ¡ = 4K */
-        g_sf_info.TotalSize = 128 * 1024;       /* ×ÜÈİÁ¿ = 128K */
+        g_sf_info.PageSize = 256;               /* é¡µé¢å¤§å° = 256å­—èŠ‚ */
+        g_sf_info.SectorSize = 4 * 1024;        /* æ‰‡åŒºå¤§å° = 4K */
+        g_sf_info.TotalSize = 128 * 1024;       /* æ€»å®¹é‡ = 128K */
         break;
 
     default:
@@ -198,7 +198,7 @@ void sf_EraseChip(void)
 
 void sf_ReadBuffer(uint32_t _uiReadAddr, uint8_t * _pBuf,uint32_t _uiSize)
 {
-    /* Èç¹û¶ÁÈ¡µÄÊı¾İ³¤¶ÈÎª0»òÕß³¬³ö´®ĞĞFlashµØÖ·¿Õ¼ä£¬ÔòÖ±½Ó·µ»Ø */
+    /* å¦‚æœè¯»å–çš„æ•°æ®é•¿åº¦ä¸º0æˆ–è€…è¶…å‡ºä¸²è¡ŒFlashåœ°å€ç©ºé—´ï¼Œåˆ™ç›´æ¥è¿”å› */
     if ((_uiSize == 0) ||(_uiReadAddr + _uiSize) > g_sf_info.TotalSize){
         return;
     } 
@@ -221,7 +221,7 @@ void sf_ReadBuffer(uint32_t _uiReadAddr, uint8_t * _pBuf,uint32_t _uiSize)
 /* NumByteToWrite must be equal or less than pagesize */
 void sf_WritePage(uint32_t _PageAddr,uint8_t * _pBuf,uint16_t NumByteToWrite)
 {
-    /* for MX25L1606E ¡¢ W25Q64BV */
+    /* for MX25L1606E ã€ W25Q64BV */
     __sf_WriteEnable();                             
 
     SF_SPI_CS_ASSERT();                             
@@ -248,7 +248,7 @@ void sf_WriteSector(uint32_t _SectorAddr,uint8_t * _pBuf,uint16_t NumByteToWrite
 {
     uint32_t i;
     
-    /* for MX25L1606E ¡¢ W25Q64BV */
+    /* for MX25L1606E ã€ W25Q64BV */
     for (i = 0; i < NumByteToWrite / 256; i++){
         sf_WritePage(_SectorAddr,_pBuf,256);                       
         _SectorAddr += 256;
@@ -258,27 +258,27 @@ void sf_WriteSector(uint32_t _SectorAddr,uint8_t * _pBuf,uint16_t NumByteToWrite
 
 void sf_InitFlash(void)
 {
-    __sf_ReadInfo();                /* ×Ô¶¯Ê¶±ğĞ¾Æ¬ĞÍºÅ */
+    __sf_ReadInfo();                /* è‡ªåŠ¨è¯†åˆ«èŠ¯ç‰‡å‹å· */
 
-    SF_SPI_CS_ASSERT();             /* Èí¼ş·½Ê½£¬Ê¹ÄÜ´®ĞĞFlashÆ¬Ñ¡ */
-    sf_spiReadWriteByte(SF_CMD_DISWR);      /* ·¢ËÍ½ûÖ¹Ğ´ÈëµÄÃüÁî,¼´Ê¹ÄÜÈí¼şĞ´±£»¤ */
-    SF_SPI_CS_DEASSERT();               /* Èí¼ş·½Ê½£¬½ûÄÜ´®ĞĞFlashÆ¬Ñ¡ */
+    SF_SPI_CS_ASSERT();             /* è½¯ä»¶æ–¹å¼ï¼Œä½¿èƒ½ä¸²è¡ŒFlashç‰‡é€‰ */
+    sf_spiReadWriteByte(SF_CMD_DISWR);      /* å‘é€ç¦æ­¢å†™å…¥çš„å‘½ä»¤,å³ä½¿èƒ½è½¯ä»¶å†™ä¿æŠ¤ */
+    SF_SPI_CS_DEASSERT();               /* è½¯ä»¶æ–¹å¼ï¼Œç¦èƒ½ä¸²è¡ŒFlashç‰‡é€‰ */
 
-    __sf_WaitForWriteEnd();     /* µÈ´ı´®ĞĞFlashÄÚ²¿²Ù×÷Íê³É */
-    __sf_WriteStatus(0);            /* ½â³ıËùÓĞBLOCKµÄĞ´±£»¤ */
+    __sf_WaitForWriteEnd();     /* ç­‰å¾…ä¸²è¡ŒFlashå†…éƒ¨æ“ä½œå®Œæˆ */
+    __sf_WriteStatus(0);            /* è§£é™¤æ‰€æœ‰BLOCKçš„å†™ä¿æŠ¤ */
 }
 
 #if SF_FLASH_WRITE_ADVANCED_MODE == 1
-static uint8_t g_sfBuf[SF_SECTOR_SIZE]; /* ÓÃÓÚĞ´º¯Êı£¬ÏÈ¶Á³öÕû¸ösector£¬ĞŞ¸Ä»º³åÇøºó£¬ÔÙÕû¸ösector»ØĞ´ */
+static uint8_t g_sfBuf[SF_SECTOR_SIZE]; /* ç”¨äºå†™å‡½æ•°ï¼Œå…ˆè¯»å‡ºæ•´ä¸ªsectorï¼Œä¿®æ”¹ç¼“å†²åŒºåï¼Œå†æ•´ä¸ªsectorå›å†™ */
 
 /*
 *********************************************************************************************************
-*   º¯ Êı Ãû: sf_NeedErase
-*   ¹¦ÄÜËµÃ÷: ÅĞ¶ÏĞ´PAGEÇ°ÊÇ·ñĞèÒªÏÈ²Á³ı¡£
-*   ĞÎ    ²Î:   _ucpOldBuf £º ¾ÉÊı¾İ
-*              _ucpNewBuf £º ĞÂÊı¾İ
-*              _uiLen £ºÊı¾İ¸öÊı£¬²»ÄÜ³¬¹ıÒ³Ãæ´óĞ¡
-*   ·µ »Ø Öµ: 0 : ²»ĞèÒª²Á³ı£¬ 1 £ºĞèÒª²Á³ı
+*   å‡½ æ•° å: sf_NeedErase
+*   åŠŸèƒ½è¯´æ˜: åˆ¤æ–­å†™PAGEå‰æ˜¯å¦éœ€è¦å…ˆæ“¦é™¤ã€‚
+*   å½¢    å‚:   _ucpOldBuf ï¼š æ—§æ•°æ®
+*              _ucpNewBuf ï¼š æ–°æ•°æ®
+*              _uiLen ï¼šæ•°æ®ä¸ªæ•°ï¼Œä¸èƒ½è¶…è¿‡é¡µé¢å¤§å°
+*   è¿” å› å€¼: 0 : ä¸éœ€è¦æ“¦é™¤ï¼Œ 1 ï¼šéœ€è¦æ“¦é™¤
 *********************************************************************************************************
 */
 static uint8_t __sf_NeedErase(uint8_t * _ucpOldBuf, uint8_t *_ucpNewBuf, uint16_t _usLen)
@@ -287,18 +287,18 @@ static uint8_t __sf_NeedErase(uint8_t * _ucpOldBuf, uint8_t *_ucpNewBuf, uint16_
     uint8_t ucOld;
 
     /*
-    Ëã·¨µÚ1²½£ºold Çó·´, new ²»±ä
+    ç®—æ³•ç¬¬1æ­¥ï¼šold æ±‚å, new ä¸å˜
           old    new
           1101   0101
     ~     1111
         = 0010   0101
 
-    Ëã·¨µÚ2²½: old Çó·´µÄ½á¹ûÓë new Î»Óë
+    ç®—æ³•ç¬¬2æ­¥: old æ±‚åçš„ç»“æœä¸ new ä½ä¸
           0010   old
     &     0101   new
          =0000
 
-    Ëã·¨µÚ3²½: ½á¹ûÎª0,Ôò±íÊ¾ÎŞĞè²Á³ı. ·ñÔò±íÊ¾ĞèÒª²Á³ı
+    ç®—æ³•ç¬¬3æ­¥: ç»“æœä¸º0,åˆ™è¡¨ç¤ºæ— éœ€æ“¦é™¤. å¦åˆ™è¡¨ç¤ºéœ€è¦æ“¦é™¤
     */
 
     for (i = 0; i < _usLen; i++)
@@ -306,7 +306,7 @@ static uint8_t __sf_NeedErase(uint8_t * _ucpOldBuf, uint8_t *_ucpNewBuf, uint16_
         ucOld = *_ucpOldBuf++;
         ucOld = ~ucOld;
 
-        /* ×¢Òâ´íÎóµÄĞ´·¨: if (ucOld & (*_ucpNewBuf++) != 0) */
+        /* æ³¨æ„é”™è¯¯çš„å†™æ³•: if (ucOld & (*_ucpNewBuf++) != 0) */
         if ((ucOld & (*_ucpNewBuf++)) != 0)
         {
             return 1;
@@ -316,33 +316,33 @@ static uint8_t __sf_NeedErase(uint8_t * _ucpOldBuf, uint8_t *_ucpNewBuf, uint16_
 }
 /*
 *********************************************************************************************************
-*   º¯ Êı Ãû: sf_CmpData
-*   ¹¦ÄÜËµÃ÷: ±È½ÏFlashµÄÊı¾İ.
-*   ĞÎ    ²Î:   _ucpTar : Êı¾İ»º³åÇø
-*               _uiSrcAddr £ºFlashµØÖ·
-*               _uiSize £ºÊı¾İ¸öÊı, ¿ÉÒÔ´óÓÚPAGE_SIZE,µ«ÊÇ²»ÄÜ³¬³öĞ¾Æ¬×ÜÈİÁ¿
-*   ·µ »Ø Öµ: 0 = ÏàµÈ, 1 = ²»µÈ
+*   å‡½ æ•° å: sf_CmpData
+*   åŠŸèƒ½è¯´æ˜: æ¯”è¾ƒFlashçš„æ•°æ®.
+*   å½¢    å‚:   _ucpTar : æ•°æ®ç¼“å†²åŒº
+*               _uiSrcAddr ï¼šFlashåœ°å€
+*               _uiSize ï¼šæ•°æ®ä¸ªæ•°, å¯ä»¥å¤§äºPAGE_SIZE,ä½†æ˜¯ä¸èƒ½è¶…å‡ºèŠ¯ç‰‡æ€»å®¹é‡
+*   è¿” å› å€¼: 0 = ç›¸ç­‰, 1 = ä¸ç­‰
 *********************************************************************************************************
 */
 static uint8_t __sf_CmpData(uint32_t _uiSrcAddr, uint8_t *_ucpTar, uint32_t _uiSize)
 {
     uint8_t ucValue;
 
-    /* Èç¹û¶ÁÈ¡µÄÊı¾İ³¤¶ÈÎª0»òÕß³¬³ö´®ĞĞFlashµØÖ·¿Õ¼ä£¬ÔòÖ±½Ó·µ»Ø */
+    /* å¦‚æœè¯»å–çš„æ•°æ®é•¿åº¦ä¸º0æˆ–è€…è¶…å‡ºä¸²è¡ŒFlashåœ°å€ç©ºé—´ï¼Œåˆ™ç›´æ¥è¿”å› */
     if ((_uiSrcAddr + _uiSize) > g_sf_info.TotalSize)
         return 1;
 
     if (_uiSize == 0)
         return 0;
 
-    SF_SPI_CS_ASSERT();                                 /* Ê¹ÄÜÆ¬Ñ¡ */
-    sf_spiReadWriteByte(SF_CMD_READ);                           /* ·¢ËÍ¶ÁÃüÁî */
-    sf_spiReadWriteByte((_uiSrcAddr & 0xFF0000) >> 16);     /* ·¢ËÍÉÈÇøµØÖ·µÄ¸ß8bit */
-    sf_spiReadWriteByte((_uiSrcAddr & 0xFF00) >> 8);        /* ·¢ËÍÉÈÇøµØÖ·ÖĞ¼ä8bit */
-    sf_spiReadWriteByte(_uiSrcAddr & 0xFF);                 /* ·¢ËÍÉÈÇøµØÖ·µÍ8bit */
+    SF_SPI_CS_ASSERT();                                 /* ä½¿èƒ½ç‰‡é€‰ */
+    sf_spiReadWriteByte(SF_CMD_READ);                           /* å‘é€è¯»å‘½ä»¤ */
+    sf_spiReadWriteByte((_uiSrcAddr & 0xFF0000) >> 16);     /* å‘é€æ‰‡åŒºåœ°å€çš„é«˜8bit */
+    sf_spiReadWriteByte((_uiSrcAddr & 0xFF00) >> 8);        /* å‘é€æ‰‡åŒºåœ°å€ä¸­é—´8bit */
+    sf_spiReadWriteByte(_uiSrcAddr & 0xFF);                 /* å‘é€æ‰‡åŒºåœ°å€ä½8bit */
     while (_uiSize--)
     {
-        /* ¶ÁÒ»¸ö×Ö½Ú */
+        /* è¯»ä¸€ä¸ªå­—èŠ‚ */
         ucValue = sf_spiReadWriteByte(SF_DUMMY_BYTE);
         if (*_ucpTar++ != ucValue){
             SF_SPI_CS_DEASSERT();
@@ -356,46 +356,46 @@ static uint8_t __sf_CmpData(uint32_t _uiSrcAddr, uint8_t *_ucpTar, uint32_t _uiS
 
 /*
 *********************************************************************************************************
-*   º¯ Êı Ãû: sf_AutoWriteSector
-*   ¹¦ÄÜËµÃ÷: Ğ´1¸öSector²¢Ğ£Ñé,Èç¹û²»ÕıÈ·ÔòÔÙÖØĞ´Á½´Î¡£±¾º¯Êı×Ô¶¯Íê³É²Á³ı²Ù×÷¡£
-*   ĞÎ    ²Î:   _pBuf : Êı¾İÔ´»º³åÇø£»
-*               _uiWriteAddr £ºÄ¿±êÇøÓòÊ×µØÖ·
-*               _usSize £ºÊı¾İ¸öÊı£¬²»ÄÜ³¬¹ıÉÈÇøÃæ´óĞ¡
-*   ·µ »Ø Öµ: 0 : ´íÎó£¬ 1 £º ³É¹¦
+*   å‡½ æ•° å: sf_AutoWriteSector
+*   åŠŸèƒ½è¯´æ˜: å†™1ä¸ªSectorå¹¶æ ¡éªŒ,å¦‚æœä¸æ­£ç¡®åˆ™å†é‡å†™ä¸¤æ¬¡ã€‚æœ¬å‡½æ•°è‡ªåŠ¨å®Œæˆæ“¦é™¤æ“ä½œã€‚
+*   å½¢    å‚:   _pBuf : æ•°æ®æºç¼“å†²åŒºï¼›
+*               _uiWriteAddr ï¼šç›®æ ‡åŒºåŸŸé¦–åœ°å€
+*               _usSize ï¼šæ•°æ®ä¸ªæ•°ï¼Œä¸èƒ½è¶…è¿‡æ‰‡åŒºé¢å¤§å°
+*   è¿” å› å€¼: 0 : é”™è¯¯ï¼Œ 1 ï¼š æˆåŠŸ
 *********************************************************************************************************
 */
 static uint8_t sf_AutoWriteSector( uint32_t _uiWrAddr, uint8_t *_ucpSrc, uint16_t _usWrLen)
 {
     uint16_t i;
-    uint16_t j;                 /* ÓÃÓÚÑÓÊ± */
-    uint32_t uiFirstAddr;       /* ÉÈÇøÊ×Ö· */
-    uint8_t ucNeedErase;        /* 1±íÊ¾ĞèÒª²Á³ı */
+    uint16_t j;                 /* ç”¨äºå»¶æ—¶ */
+    uint32_t uiFirstAddr;       /* æ‰‡åŒºé¦–å€ */
+    uint8_t ucNeedErase;        /* 1è¡¨ç¤ºéœ€è¦æ“¦é™¤ */
     uint8_t cRet;
 
-    /* ³¤¶ÈÎª0Ê±²»¼ÌĞø²Ù×÷,Ö±½ÓÈÏÎª³É¹¦ */
+    /* é•¿åº¦ä¸º0æ—¶ä¸ç»§ç»­æ“ä½œ,ç›´æ¥è®¤ä¸ºæˆåŠŸ */
     if (_usWrLen == 0){
         return 1;
     }
 
-    /* Èç¹ûÆ«ÒÆµØÖ·³¬¹ıĞ¾Æ¬ÈİÁ¿ÔòÍË³ö */
+    /* å¦‚æœåç§»åœ°å€è¶…è¿‡èŠ¯ç‰‡å®¹é‡åˆ™é€€å‡º */
     if (_uiWrAddr >= g_sf_info.TotalSize){
         return 0;
     }
 
-    /* Èç¹ûÊı¾İ³¤¶È´óÓÚÉÈÇøÈİÁ¿£¬ÔòÍË³ö */
+    /* å¦‚æœæ•°æ®é•¿åº¦å¤§äºæ‰‡åŒºå®¹é‡ï¼Œåˆ™é€€å‡º */
     if (_usWrLen > g_sf_info.SectorSize)
     {
         return 0;
     }
 
-    /* Èç¹ûFLASHÖĞµÄÊı¾İÃ»ÓĞ±ä»¯,Ôò²»Ğ´FLASH */
+    /* å¦‚æœFLASHä¸­çš„æ•°æ®æ²¡æœ‰å˜åŒ–,åˆ™ä¸å†™FLASH */
     sf_ReadBuffer(_uiWrAddr,g_sfBuf,_usWrLen);
     if (memcmp(g_sfBuf, _ucpSrc, _usWrLen) == 0){
         return 1;
     }
 
-    /* ÅĞ¶ÏÊÇ·ñĞèÒªÏÈ²Á³ıÉÈÇø */
-    /* Èç¹û¾ÉÊı¾İĞŞ¸ÄÎªĞÂÊı¾İ£¬ËùÓĞÎ»¾ùÊÇ 1->0 »òÕß 0->0, ÔòÎŞĞè²Á³ı,Ìá¸ßFlashÊÙÃü */
+    /* åˆ¤æ–­æ˜¯å¦éœ€è¦å…ˆæ“¦é™¤æ‰‡åŒº */
+    /* å¦‚æœæ—§æ•°æ®ä¿®æ”¹ä¸ºæ–°æ•°æ®ï¼Œæ‰€æœ‰ä½å‡æ˜¯ 1->0 æˆ–è€… 0->0, åˆ™æ— éœ€æ“¦é™¤,æé«˜Flashå¯¿å‘½ */
     ucNeedErase = 0;
     if (__sf_NeedErase(g_sfBuf, _ucpSrc, _usWrLen)){
         ucNeedErase = 1;
@@ -403,28 +403,28 @@ static uint8_t sf_AutoWriteSector( uint32_t _uiWrAddr, uint8_t *_ucpSrc, uint16_
 
     uiFirstAddr = _uiWrAddr & (~(g_sf_info.SectorSize - 1));
 
-    if (_usWrLen == g_sf_info.SectorSize){      /* Õû¸öÉÈÇø¶¼¸ÄĞ´ */
+    if (_usWrLen == g_sf_info.SectorSize){      /* æ•´ä¸ªæ‰‡åŒºéƒ½æ”¹å†™ */
         for (i = 0; i < g_sf_info.SectorSize; i++){
             g_sfBuf[i] = _ucpSrc[i];
         }
-    }else{                      /* ¸ÄĞ´²¿·ÖÊı¾İ */
-        /* ÏÈ½«Õû¸öÉÈÇøµÄÊı¾İ¶Á³ö */
+    }else{                      /* æ”¹å†™éƒ¨åˆ†æ•°æ® */
+        /* å…ˆå°†æ•´ä¸ªæ‰‡åŒºçš„æ•°æ®è¯»å‡º */
         sf_ReadBuffer(uiFirstAddr,g_sfBuf,g_sf_info.SectorSize);
 
-        /* ÔÙÓÃĞÂÊı¾İ¸²¸Ç */
+        /* å†ç”¨æ–°æ•°æ®è¦†ç›– */
         i = _uiWrAddr & (g_sf_info.SectorSize - 1);
         memcpy(&g_sfBuf[i], _ucpSrc, _usWrLen);
     }
 
-    /* Ğ´ÍêÖ®ºó½øĞĞĞ£Ñé£¬Èç¹û²»ÕıÈ·ÔòÖØĞ´£¬×î¶à3´Î */
+    /* å†™å®Œä¹‹åè¿›è¡Œæ ¡éªŒï¼Œå¦‚æœä¸æ­£ç¡®åˆ™é‡å†™ï¼Œæœ€å¤š3æ¬¡ */
     cRet = 0;
     for (i = 0; i < 3; i++){
-        /* Èç¹û¾ÉÊı¾İĞŞ¸ÄÎªĞÂÊı¾İ£¬ËùÓĞÎ»¾ùÊÇ 1->0 »òÕß 0->0, ÔòÎŞĞè²Á³ı,Ìá¸ßFlashÊÙÃü */
+        /* å¦‚æœæ—§æ•°æ®ä¿®æ”¹ä¸ºæ–°æ•°æ®ï¼Œæ‰€æœ‰ä½å‡æ˜¯ 1->0 æˆ–è€… 0->0, åˆ™æ— éœ€æ“¦é™¤,æé«˜Flashå¯¿å‘½ */
         if (ucNeedErase == 1){
-            sf_EraseSector(uiFirstAddr);        /* ²Á³ı1¸öÉÈÇø */
+            sf_EraseSector(uiFirstAddr);        /* æ“¦é™¤1ä¸ªæ‰‡åŒº */
         }
 
-        /* ±à³ÌÒ»¸öSector */
+        /* ç¼–ç¨‹ä¸€ä¸ªSector */
         sf_WriteSector(uiFirstAddr, g_sfBuf, g_sf_info.SectorSize);
 
         if (__sf_CmpData(_uiWrAddr, _ucpSrc, _usWrLen) == 0){
@@ -436,7 +436,7 @@ static uint8_t sf_AutoWriteSector( uint32_t _uiWrAddr, uint8_t *_ucpSrc, uint16_
                 break;
             }
 
-            /* Ê§°ÜºóÑÓ³ÙÒ»¶ÎÊ±¼äÔÙÖØÊÔ */
+            /* å¤±è´¥åå»¶è¿Ÿä¸€æ®µæ—¶é—´å†é‡è¯• */
             for (j = 0; j < 500; j++);
         }
     }
@@ -447,12 +447,12 @@ static uint8_t sf_AutoWriteSector( uint32_t _uiWrAddr, uint8_t *_ucpSrc, uint16_
 
 /*
 *********************************************************************************************************
-*   º¯ Êı Ãû: sf_WriteBuffer
-*   ¹¦ÄÜËµÃ÷: Ğ´1¸öÉÈÇø²¢Ğ£Ñé,Èç¹û²»ÕıÈ·ÔòÔÙÖØĞ´Á½´Î¡£±¾º¯Êı×Ô¶¯Íê³É²Á³ı²Ù×÷¡£
-*   ĞÎ    ²Î:   _pBuf : Êı¾İÔ´»º³åÇø£»
-*               _uiWrAddr £ºÄ¿±êÇøÓòÊ×µØÖ·
-*               _usSize £ºÊı¾İ¸öÊı£¬²»ÄÜ³¬¹ıÒ³Ãæ´óĞ¡
-*   ·µ »Ø Öµ: 1 : ³É¹¦£¬ 0 £º Ê§°Ü
+*   å‡½ æ•° å: sf_WriteBuffer
+*   åŠŸèƒ½è¯´æ˜: å†™1ä¸ªæ‰‡åŒºå¹¶æ ¡éªŒ,å¦‚æœä¸æ­£ç¡®åˆ™å†é‡å†™ä¸¤æ¬¡ã€‚æœ¬å‡½æ•°è‡ªåŠ¨å®Œæˆæ“¦é™¤æ“ä½œã€‚
+*   å½¢    å‚:   _pBuf : æ•°æ®æºç¼“å†²åŒºï¼›
+*               _uiWrAddr ï¼šç›®æ ‡åŒºåŸŸé¦–åœ°å€
+*               _usSize ï¼šæ•°æ®ä¸ªæ•°ï¼Œä¸èƒ½è¶…è¿‡é¡µé¢å¤§å°
+*   è¿” å› å€¼: 1 : æˆåŠŸï¼Œ 0 ï¼š å¤±è´¥
 *********************************************************************************************************
 */
 uint8_t sf_WriteBuffer(uint32_t _uiWriteAddr, uint8_t* _pBuf,  uint16_t _usWriteSize)
@@ -464,12 +464,12 @@ uint8_t sf_WriteBuffer(uint32_t _uiWriteAddr, uint8_t* _pBuf,  uint16_t _usWrite
     NumOfPage =  _usWriteSize / g_sf_info.SectorSize;
     NumOfSingle = _usWriteSize % g_sf_info.SectorSize;
 
-    if (Addr == 0){ /* ÆğÊ¼µØÖ·ÊÇÉÈÇøÊ×µØÖ·  */
-        if (NumOfPage == 0){ /* Êı¾İ³¤¶ÈĞ¡ÓÚÉÈÇø´óĞ¡ */
+    if (Addr == 0){ /* èµ·å§‹åœ°å€æ˜¯æ‰‡åŒºé¦–åœ°å€  */
+        if (NumOfPage == 0){ /* æ•°æ®é•¿åº¦å°äºæ‰‡åŒºå¤§å° */
             if (sf_AutoWriteSector( _uiWriteAddr, _pBuf,_usWriteSize) == 0){
                 return 0;
             }
-        }else{  /* Êı¾İ³¤¶È´óÓÚµÈÓÚÉÈÇøÃæ´óĞ¡ */
+        }else{  /* æ•°æ®é•¿åº¦å¤§äºç­‰äºæ‰‡åŒºé¢å¤§å° */
 
             while (NumOfPage--)
             {
@@ -483,9 +483,9 @@ uint8_t sf_WriteBuffer(uint32_t _uiWriteAddr, uint8_t* _pBuf,  uint16_t _usWrite
                 return 0;
             }
         }
-    }else{  /* ÆğÊ¼µØÖ·²»ÊÇÒ³ÃæÊ×µØÖ·  */
+    }else{  /* èµ·å§‹åœ°å€ä¸æ˜¯é¡µé¢é¦–åœ°å€  */
     
-        if (NumOfPage == 0){ /* Êı¾İ³¤¶ÈĞ¡ÓÚÒ³Ãæ´óĞ¡ */
+        if (NumOfPage == 0){ /* æ•°æ®é•¿åº¦å°äºé¡µé¢å¤§å° */
             if (NumOfSingle > count){ /* (_usWriteSize + _uiWriteAddr) > SPI_FLASH_PAGESIZE */
             
                 temp = NumOfSingle - count;
@@ -504,7 +504,7 @@ uint8_t sf_WriteBuffer(uint32_t _uiWriteAddr, uint8_t* _pBuf,  uint16_t _usWrite
                     return 0;
                 }
             }
-        }else{  /* Êı¾İ³¤¶È´óÓÚµÈÓÚÒ³Ãæ´óĞ¡ */
+        }else{  /* æ•°æ®é•¿åº¦å¤§äºç­‰äºé¡µé¢å¤§å° */
         
             _usWriteSize -= count;
             NumOfPage =  _usWriteSize / g_sf_info.SectorSize;
@@ -534,7 +534,7 @@ uint8_t sf_WriteBuffer(uint32_t _uiWriteAddr, uint8_t* _pBuf,  uint16_t _usWrite
         }
     }
     
-    return 1;   /* ³É¹¦ */
+    return 1;   /* æˆåŠŸ */
 }
 #endif
 
@@ -572,7 +572,7 @@ void sf_StartEraseSectoreSequeue(uint32_t _uiSectorAddr)
 
 void sf_StartWritePageSequeue(uint32_t _PageAddr,uint8_t * _pBuf,uint16_t NumByteToWrite)
 {
-    /* for MX25L1606E ¡¢ W25Q64BV */
+    /* for MX25L1606E ã€ W25Q64BV */
     __sf_WriteEnable();                             
 
     SF_SPI_CS_ASSERT();                             

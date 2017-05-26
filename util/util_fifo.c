@@ -1,9 +1,9 @@
-
+ï»¿
 
 
 #include "util_fifo.h"
 
-/*	¶ÓÁÐ³õÊ¼»¯		*/  		
+/*	é˜Ÿåˆ—åˆå§‹åŒ–		*/  		
 bool fifo_init(fifo_buf_t *ptQ, uint8_t *ptBuffer, uint16_t tSize)
 {                                                        
     if (NULL == ptQ || NULL == ptBuffer || 0 == tSize) { 
@@ -19,7 +19,7 @@ bool fifo_init(fifo_buf_t *ptQ, uint8_t *ptBuffer, uint16_t tSize)
     return true;                                         
 }
 
-// Çå¿Õ»º³å 
+// æ¸…ç©ºç¼“å†² 
 bool fifo_flush(fifo_buf_t *ptQ)
 {
 	if (NULL == ptQ ){
@@ -32,7 +32,7 @@ bool fifo_flush(fifo_buf_t *ptQ)
 	return true;
 }
 
- /*	Èë¶Ó		*/                   					     
+ /*	å…¥é˜Ÿ		*/                   					     
 uint16_t fifo_put(fifo_buf_t *ptQ, uint8_t tObj)
 {														
 	if (ptQ == NULL){
@@ -50,7 +50,7 @@ uint16_t fifo_put(fifo_buf_t *ptQ, uint8_t tObj)
 	
 	return 0; 								
 }	
-  /*	´ÓÍ·Èë¶Ó	 ÊµÏÖÕ»	*/  
+  /*	ä»Žå¤´å…¥é˜Ÿ	 å®žçŽ°æ ˆ	*/  
 uint16_t fifo_put_front(fifo_buf_t *ptQ, uint8_t tObj)
 {
 	if ( ptQ == NULL){
@@ -70,7 +70,7 @@ uint16_t fifo_put_front(fifo_buf_t *ptQ, uint8_t tObj)
 	
 	return 0; 	
 }
-  /*	³ö¶Ó		*/                                       
+  /*	å‡ºé˜Ÿ		*/                                       
 uint16_t fifo_pop(fifo_buf_t *ptQ, uint8_t *ptObj)
 {                                                          
 	if(ptQ == NULL && NULL == ptObj){						
@@ -88,7 +88,7 @@ uint16_t fifo_pop(fifo_buf_t *ptQ, uint8_t *ptObj)
 		                                                       
     return 0;                                        
 }
-  /* ÎÒ¾Í¿´¿´,¾ÍÊÇ²»³ö¶Ó*/
+  /* æˆ‘å°±çœ‹çœ‹,å°±æ˜¯ä¸å‡ºé˜Ÿ*/
   bool fifo_peek(fifo_buf_t *ptQ, uint8_t *ptObj)
   {      
       if (NULL == ptQ && NULL == ptObj) { 
@@ -103,7 +103,7 @@ uint16_t fifo_pop(fifo_buf_t *ptQ, uint8_t *ptObj)
       return false; 
   }
 
-/*  Èë¶Ó     ³¤¶ÈÎªlengthµÄÊý¾Ýbuf  */  
+/*  å…¥é˜Ÿ     é•¿åº¦ä¸ºlengthçš„æ•°æ®buf  */  
 uint16_t fifo_bufput(fifo_buf_t *ptQ, uint8_t *buf, uint16_t length)
 {
   uint16_t availcount;
@@ -111,7 +111,7 @@ uint16_t fifo_bufput(fifo_buf_t *ptQ, uint8_t *buf, uint16_t length)
   if (NULL == ptQ || buf == NULL ){
       return 0;               
   }   
-  //²é¿´ÓÐ¶àÉÙ¿ÕÎ»
+  //æŸ¥çœ‹æœ‰å¤šå°‘ç©ºä½
   availcount = ptQ->tSize - ptQ->tCounter;
   if(availcount < length){
       length = availcount;
@@ -131,7 +131,7 @@ uint16_t fifo_bufput(fifo_buf_t *ptQ, uint8_t *buf, uint16_t length)
   
   return length;
 }
-  /*	³ö¶Ó	 ³¤¶ÈÎªlengthµÄÊý¾Ýµ½buf	*/ 
+  /*	å‡ºé˜Ÿ	 é•¿åº¦ä¸ºlengthçš„æ•°æ®åˆ°buf	*/ 
 uint16_t fifo_bufpop(fifo_buf_t *ptQ, uint8_t *buf, uint16_t length)
 {
 	uint16_t lens;
@@ -140,7 +140,7 @@ uint16_t fifo_bufpop(fifo_buf_t *ptQ, uint8_t *buf, uint16_t length)
 	if (NULL == ptQ || buf == NULL ){
 		return 0;				
 	}	
-	//²é¿´ÓÐ¶àÉÙÓÐÐ§ÊýÖµ
+	//æŸ¥çœ‹æœ‰å¤šå°‘æœ‰æ•ˆæ•°å€¼
 	validcount = ptQ->tCounter;
 	if(validcount >= length){
 		lens = length;
@@ -162,7 +162,7 @@ uint16_t fifo_bufpop(fifo_buf_t *ptQ, uint8_t *buf, uint16_t length)
 	
 	return lens;
 }
-/* ÓÐÐ§×Ö½ÚÊý */
+/* æœ‰æ•ˆå­—èŠ‚æ•° */
 uint16_t fifo_count(fifo_buf_t *ptQ)
 {
 	if (NULL == ptQ)
@@ -170,12 +170,12 @@ uint16_t fifo_count(fifo_buf_t *ptQ)
     
     return ptQ->tCounter;
 }
-/* ¶ÓÁÐÊÇ·ñÎª¿Õ */
+/* é˜Ÿåˆ—æ˜¯å¦ä¸ºç©º */
 bool fifo_empty(fifo_buf_t *ptQ)
 {
 	return (ptQ ? (ptQ->tCounter == 0) : true);
 }
-/* ¶ÓÁÐÊÇ·ñÎªÂú */
+/* é˜Ÿåˆ—æ˜¯å¦ä¸ºæ»¡ */
 bool fifo_full(fifo_buf_t *ptQ)
 {
 	return (ptQ ? (ptQ->tCounter == ptQ->tSize) : true);

@@ -1,4 +1,4 @@
-
+ï»¿
 
 
 
@@ -14,9 +14,9 @@
 static cks_mem_t *cks_head = NULL;
 
 /**
-  * @brief	checkregister×¢²á
+  * @brief	checkregisteræ³¨å†Œ
   * @param	None
-  * @note		pcks check½á¹¹Ö¸Õë£¬filtetime ÂË²¨Ê±¼ä£¬msÎª×¼  pfuc ĞèÇócheckµÄ¼ü»òÒı½Å£¬ pdowncallback °´ÏÂ»Øµ÷º¯Êı£¬ pUpcallfuc Æğ¼ü»Øµ÷º¯Êı
+  * @note		pcks checkç»“æ„æŒ‡é’ˆï¼Œfiltetime æ»¤æ³¢æ—¶é—´ï¼Œmsä¸ºå‡†  pfuc éœ€æ±‚checkçš„é”®æˆ–å¼•è„šï¼Œ pdowncallback æŒ‰ä¸‹å›è°ƒå‡½æ•°ï¼Œ pUpcallfuc èµ·é”®å›è°ƒå‡½æ•°
   * @retval  None
   */
 void checkregister(cks_mem_t *pcks, uint8_t filtetime, IsDownFunc pfuc, CheckCallBackFunc pdowncallback, CheckCallBackFunc pUpcallfuc)
@@ -35,7 +35,7 @@ void checkregister(cks_mem_t *pcks, uint8_t filtetime, IsDownFunc pfuc, CheckCal
 
 	if(!cks_head){
 		cks_head = pcks;
-	}else{						//ÀàÕ»
+	}else{						//ç±»æ ˆ
 		pcks->next = cks_head;
 		cks_head = pcks;
 	}
@@ -43,16 +43,16 @@ void checkregister(cks_mem_t *pcks, uint8_t filtetime, IsDownFunc pfuc, CheckCal
 
 
 /**
-  * @brief	check ¸üĞÂ
-  * @param	ElapseTime Á÷ÊÅÊ±¼ä
-  * @note		ÏÂ½µÑØºÍÉÏÉıÑØ¶¼ÓĞ×öÂË²¨£¬ÂË²¨Ò»ÑùµÄ
+  * @brief	check æ›´æ–°
+  * @param	ElapseTime æµé€æ—¶é—´
+  * @note		ä¸‹é™æ²¿å’Œä¸Šå‡æ²¿éƒ½æœ‰åšæ»¤æ³¢ï¼Œæ»¤æ³¢ä¸€æ ·çš„
   * @retval  None
   */
 void checkupdate(uint16_t ElapseTime)
 {
 	cks_mem_t *pcur;
 
-	pcur = cks_head; // ±éÀú
+	pcur = cks_head; // éå†
 	while(pcur)
 	{
 		switch(pcur->state){

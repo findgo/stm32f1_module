@@ -1,14 +1,14 @@
-
+ï»¿
 #ifndef __COMMON_CPU_H_
 #define __COMMON_CPU_H_
 
 
-// µÍµØÖ·µÍ×Ö½Ú
+// ä½åœ°å€ä½å­—èŠ‚
 #ifndef LITTLE_ENDIAN
 #define LITTLE_ENDIAN 1234
 #endif
 
-// µÍ×Ö½Ú´æ¸ßµØÖ·
+// ä½å­—èŠ‚å­˜é«˜åœ°å€
 #ifndef BIG_ENDIAN
 #define BIG_ENDIAN 4321
 #endif

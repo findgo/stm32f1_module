@@ -1,17 +1,17 @@
-/**
+ï»¿/**
   ******************************************************************************
   * @file   mtimers.h
   * @author  
   * @version 
   * @date    
-  * @brief     »ùÓÚmclock.h
+  * @brief     åŸºäºmclock.h
   ******************************************************************************
   * @attention 	  v1.1    jgb     jiangguobao        20151110
-  * @attention      v1.2    jgb     ÖØĞÂĞŞÕıº¯Êı¹æ·¶          20170427
+  * @attention      v1.2    jgb     é‡æ–°ä¿®æ­£å‡½æ•°è§„èŒƒ          20170427
   ******************************************************************************
   */
 /*
-;   ¸Ã¶¨Ê±Æ÷³¬Ê±ºó»á×ÔÎÒÉ¾³ı£¬ÈçĞèÆô¶¯£¬ÒªÖØĞÂµ÷ÓÃstart;
+;   è¯¥å®šæ—¶å™¨è¶…æ—¶åä¼šè‡ªæˆ‘åˆ é™¤ï¼Œå¦‚éœ€å¯åŠ¨ï¼Œè¦é‡æ–°è°ƒç”¨start;
 ;   
 ;
 ;
@@ -37,15 +37,15 @@ typedef struct mtimer_s
     bool enable;
 }mtimer_t;
 
-//¾²Ì¬³õÊ¼»¯
+//é™æ€åˆå§‹åŒ–
 #define MTIMER_INIT() { 0,0,false }  
-//¶¯Ì¬³õÊ¼»¯
+//åŠ¨æ€åˆå§‹åŒ–
 #define INIT_MTIMER(ptr)			do{\
                                 (ptr)->start = 0; \
                                 (ptr)->timeout = 0; \
                                 (ptr)->enable = false;\
                             }while (0)
-// ¶¨ÒåÒ»¸ömtimer±äÁ¿
+// å®šä¹‰ä¸€ä¸ªmtimerå˜é‡
 #define DELCARE_MTIMER(t) mtimer_t t = MTIMER_INIT()
 
 void mtimer_start(mtimer_t *t,uint32_t timeout);

@@ -1,12 +1,12 @@
-/**
+ï»¿/**
   ******************************************************************************
   * @file   util_math.h
   * @author  
   * @version 
   * @date    
-  * @brief  	¸ß¼¶Êı¾İËã·¨
+  * @brief  	é«˜çº§æ•°æ®ç®—æ³•
   ******************************************************************************
-  * @attention 	20151110     v1.1   	jgb		ÖØ¹¹,ÒÑ²âÊÔ
+  * @attention 	20151110     v1.1   	jgb		é‡æ„,å·²æµ‹è¯•
   ******************************************************************************
   */
   
@@ -14,7 +14,7 @@
 
 
 /**
-  * @brief ÇóµÃnumber Æ½·½¸ùµÄµ¹Êı
+  * @brief æ±‚å¾—number å¹³æ–¹æ ¹çš„å€’æ•°
   * @param  None
   * @note     
   * @retval None
@@ -29,14 +29,14 @@ float invSqrt(float number)
 	y = number;
 	i = *((long *) &y);
 	i =  0x5f375a86 - (i >> 1);  //Lomont
-	//i  = 0x5f3759df - ( i >> 1 );  //¿¨Âí¿Ë what the fuck?
+	//i  = 0x5f3759df - ( i >> 1 );  //å¡é©¬å…‹ what the fuck?
 	y = *((float *) &i);
 	y = y * (threehalfs - (x * y * y));
 
 	return y;
 }
 /**
-  * @brief ÇóµÃx Æ½·½¸ù
+  * @brief æ±‚å¾—x å¹³æ–¹æ ¹
   * @param  None
   * @note     
   * @retval None

@@ -1,33 +1,33 @@
-/**
+﻿/**
   ******************************************************************************
   * @file   mleds.h
   * @author  
   * @version 
   * @date    
-  * @brief    ledsģ��,�����ڷ�����
+  * @brief    leds模块,可用于蜂鸣器
   ******************************************************************************
-  * @attention      v1.1   	jgb		�ع�                                    20151110
-  * @attention      v1.2   	jgb		����꣬�����û�����                   20170429
-  * @attention      v1.3   	jgb		�޸�һЩ��,���Ӷ��¼����ӵĳ����      20170522
+  * @attention      v1.1   	jgb		重构                                    20151110
+  * @attention      v1.2   	jgb		抽像宏，减少用户介入                   20170429
+  * @attention      v1.3   	jgb		修改一些宏,增加对事件添加的抽像层      20170522
   ******************************************************************************
   */
 /*
-;   ����coilsʹ�õĸ���mLEDSNUM��
-;   ʵ��MTURN_LED1_ON ����coils��on off���ܺ�
+;   定义coils使用的个数mLEDSNUM，
+;   实现MTURN_LED1_ON 各个coils的on off功能宏
 ;   
-;  ʵ���Զ����¼���������ledseq_eve_t ��ö���ж����Լ����¼�
-;   ���� LEDSEQ_EVE_REGISTER(eve,todo,onduty,cycle) ��LEDSEQ_EVE_EXTERN_LSIT �����Լ����¼�
+;  实现自定义事件，首先在ledseq_eve_t 的枚举中定义自己的事件
+;   调用 LEDSEQ_EVE_REGISTER(eve,todo,onduty,cycle) 在LEDSEQ_EVE_EXTERN_LSIT 添加自己的事件
 ;
-;   LEDSEQ_EVE_REGISTER ����˵��:
-;   eve: �Լ���ledseq_eve_t ������¼�
-;   todo: ���¼�Ҫ�������Σ���������޴η�������ʹ�ú� LED_SEQ_ALWAYS_TODO
-;   onduty: ռ�ձ� Ϊ0 - 100������
-;   cycle:  ���� 
+;   LEDSEQ_EVE_REGISTER 参数说明:
+;   eve: 自己在ledseq_eve_t 定义的事件
+;   todo: 本事件要发生几次，如果是无限次发生，可使用宏 LED_SEQ_ALWAYS_TODO
+;   onduty: 占空比 为0 - 100的整数
+;   cycle:  周期 
 ;
 ;
-;   ledseqset ����API˵����
-;   ���ֻ�Ǽ򵥿�,��,�л������ú���ledseqmodeset
-;   ������¼�,���ú���ledseqeveset
+;   ledseqset 调用API说明，
+;   如果只是简单开,关,切换，调用函数ledseqmodeset
+;   如果是事件,调用函数ledseqeveset
 ;
 */
 
@@ -54,11 +54,11 @@
 
 #define LED_SEQ_ALWAYS_TODO						 0xff
 
-#define LED_SEQ_BLINK_TODO      		 1    //!< Ĭ��գ�ִ���
-#define LED_SEQ_BLINK_DUTY_CYCLE 		 5    //!< Ĭ��գ��ռ�ձ�
-#define LED_SEQ_FLASH_QUARTER_DUTY_CYCLE 25   //!< �ٷֶ�ʮ��ռ�ձ�
-#define LED_SEQ_FLASH_HALF_DUTY_CYCLE 	 50   //!< �ٷ���ʮռ�ձ�
-#define LED_SEQ_FLASH_CYCLE_TIME       		 1000 //!< Ĭ�����ڣ�(��ʱ��Ϊ׼)
+#define LED_SEQ_BLINK_TODO      		 1    //!< 默认眨现次数
+#define LED_SEQ_BLINK_DUTY_CYCLE 		 5    //!< 默认眨现占空比
+#define LED_SEQ_FLASH_QUARTER_DUTY_CYCLE 25   //!< 百分二十五占空比
+#define LED_SEQ_FLASH_HALF_DUTY_CYCLE 	 50   //!< 百分五十占空比
+#define LED_SEQ_FLASH_CYCLE_TIME       		 1000 //!< 默认周期，(以时基为准)
 
 /* Modes */
 typedef enum 
@@ -73,10 +73,10 @@ typedef enum
 typedef enum 
 {
 	LEDSEQ_EVE_NONE = 0,
-	LEDSEQ_EVE_BLINK_ONCE = 1,		// գ��һ��
-	LEDSEQ_EVE_FLASH_BLINK = 2,		// ����գ��
-	LEDSEQ_EVE_FLASH_QUARTER = 3,	// ��˸ռ�ձ�1/4
-	LEDSEQ_EVE_FLASH_HALF = 4,      // ��˸ռ�ձ�1/4
+	LEDSEQ_EVE_BLINK_ONCE = 1,		// 眨现一次
+	LEDSEQ_EVE_FLASH_BLINK = 2,		// 无限眨现
+	LEDSEQ_EVE_FLASH_QUARTER = 3,	// 闪烁占空比1/4
+	LEDSEQ_EVE_FLASH_HALF = 4,      // 闪烁占空比1/4
 // add you define event below
 
 
@@ -117,7 +117,7 @@ void ledsequpdate (uint16_t ElapseTime);
 #define ledseqmodeset(leds,mode)  ledseqset(leds,LEDSEQ_EVE_NONE,mode)
 #define ledseqeveset(leds,eve)   ledseqset(leds,eve,LEDSEQ_MODE_NONE)
 
-// �ڲ���������������
+// 内部函数，尽量少用
 void ledseqOnOff (uint8_t leds, bool val);
 
 #endif

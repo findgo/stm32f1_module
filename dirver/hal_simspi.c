@@ -1,10 +1,10 @@
-
-/* Ö÷»úÄ£Ê½ */
-//Ä£ÄâSPI
+ï»¿
+/* ä¸»æœºæ¨¡å¼ */
+//æ¨¡æ‹ŸSPI
 #include "hal_simspi.h"
 
 
-/* ³õÊ¼»¯º¯Êı */
+/* åˆå§‹åŒ–å‡½æ•° */
 void halsimspiInit(void)
 {
     GPIO_InitTypeDef GPIO_InitStructure;
@@ -16,7 +16,7 @@ void halsimspiInit(void)
 
     HAL_SIMSPI_GPIO_CLOCK_EN();
 
-	//--- ÅäÖÃSPI1µÄSCK,MISO MOSI 
+	//--- é…ç½®SPI1çš„SCK,MISO MOSI 
 	GPIO_InitStructure.GPIO_Pin = HAL_SIMSPI_SCK_PIN;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;	    
@@ -32,18 +32,18 @@ void halsimspiInit(void)
 	GPIO_Init(HAL_SIMSPI_CS_PORT, &GPIO_InitStructure);
  
 // for spi init
-    HAL_SIMSPI_CS_ASSERT();    //Ñ¡ÖĞ
+    HAL_SIMSPI_CS_ASSERT();    //é€‰ä¸­
 #if HAL_SIMSPI_MODE == 0 || HAL_SIMSPI_MODE == 1
     HAL_SIMSPI_SCK_LOW();        
 #elif HAL_SIMSPI_MODE == 2 || HAL_SIMSPI_MODE == 3
     HAL_SIMSPI_SCK_HIGH();  
 #endif
-    HAL_SIMSPI_CS_DEASSERT();  //²»Ñ¡ÖĞ
+    HAL_SIMSPI_CS_DEASSERT();  //ä¸é€‰ä¸­
 }
 
 
 #if HAL_SIMSPI_MODE == 0
-/* Ä£Ê½0: sck³£Ì¬ÎªµÍ,¸ßÎ»ÏÈ·¢ËÍ */
+/* æ¨¡å¼0: sckå¸¸æ€ä¸ºä½,é«˜ä½å…ˆå‘é€ */
 uint8_t halsimSpi_transmit_byte(uint8_t dat)
 {
     uint8_t ret = 0;
@@ -54,18 +54,18 @@ uint8_t halsimSpi_transmit_byte(uint8_t dat)
         if (dat & 0x80){
             HAL_SIMSPI_MOSI_HIGH();
         }else{
-            HAL_SIMSPI_MOSI_LOW();    //ÉèÖÃ
+            HAL_SIMSPI_MOSI_LOW();    //è®¾ç½®
         }
         dat <<= 1;
         HAL_SIMSPI_TIME_CLOCK_WIDE();  
-        HAL_SIMSPI_SCK_HIGH();       //ÉÏÉıÑØ²ÉÑù
-        HAL_SIMSPI_TIME_CLOCK_WIDE();//MOSI·¢ËÍ£¬MISO½ÓÊÕ
+        HAL_SIMSPI_SCK_HIGH();       //ä¸Šå‡æ²¿é‡‡æ ·
+        HAL_SIMSPI_TIME_CLOCK_WIDE();//MOSIå‘é€ï¼ŒMISOæ¥æ”¶
 
         ret <<= 1;
         if (HAL_SIMSPI_MISO_READ){
             ret |= 0x01;
         }
-        HAL_SIMSPI_SCK_LOW(); //ÏÂ½µÑØºó¿ÉÉèÖÃ
+        HAL_SIMSPI_SCK_LOW(); //ä¸‹é™æ²¿åå¯è®¾ç½®
         HAL_SIMSPI_TIME_CLOCK_WIDE();
     }
 
@@ -74,22 +74,22 @@ uint8_t halsimSpi_transmit_byte(uint8_t dat)
 
 
 #elif HAL_SIMSPI_MODE == 1
-/* Ä£Ê½1: sck³£Ì¬ÎªµÍ,¸ßÎ»ÏÈ·¢ËÍ */
+/* æ¨¡å¼1: sckå¸¸æ€ä¸ºä½,é«˜ä½å…ˆå‘é€ */
 uint32_t halsimSpi_transmit_byte(uint8_t dat)
 {
     uint8_t ret = 0;
     uint8_t i;
 
     for(i = 0; i < 8; i++) {
-        HAL_SIMSPI_SCK_HIGH();        /* ÆğÊ¼ÑØ */
+        HAL_SIMSPI_SCK_HIGH();        /* èµ·å§‹æ²¿ */
         if (dat & 0x80){
             HAL_SIMSPI_MOSI_HIGH();
         }else{
             HAL_SIMSPI_MOSI_LOW();
         }
         dat <<= 1;
-        HAL_SIMSPI_TIME_CLOCK_WIDE();   /*µÈ´ıÊÊµ±µÄÊ±¼ä£¬ÒÔµÈ´ıÊı¾İÎÈ¶¨*/   
-        HAL_SIMSPI_SCK_LOW();       //ÏÂ½µÑØ²ÉÑù£¬MOSI·¢ËÍ£¬MISO½ÓÊÕ
+        HAL_SIMSPI_TIME_CLOCK_WIDE();   /*ç­‰å¾…é€‚å½“çš„æ—¶é—´ï¼Œä»¥ç­‰å¾…æ•°æ®ç¨³å®š*/   
+        HAL_SIMSPI_SCK_LOW();       //ä¸‹é™æ²¿é‡‡æ ·ï¼ŒMOSIå‘é€ï¼ŒMISOæ¥æ”¶
 
         ret <<= 1;
         if (HAL_SIMSPI_MISO_READ){
@@ -103,7 +103,7 @@ uint32_t halsimSpi_transmit_byte(uint8_t dat)
 
 
 #elif HAL_SIMSPI_MODE == 2
-/* Ä£Ê½0: sck³£Ì¬Îª¸ß,¸ßÎ»ÏÈ·¢ËÍ */
+/* æ¨¡å¼0: sckå¸¸æ€ä¸ºé«˜,é«˜ä½å…ˆå‘é€ */
 uint8_t halsimSpi_transmit_byte(uint8_t dat)
 {
     uint8_t ret = 0;
@@ -113,18 +113,18 @@ uint8_t halsimSpi_transmit_byte(uint8_t dat)
         if (dat & 0x80){
             HAL_SIMSPI_MOSI_HIGH();
         }else{
-            HAL_SIMSPI_MOSI_LOW(); //ÉèÖÃ
+            HAL_SIMSPI_MOSI_LOW(); //è®¾ç½®
         }
         dat <<= 1;
         HAL_SIMSPI_TIME_CLOCK_WIDE();  
-        HAL_SIMSPI_SCK_LOW();    //ÏÂ½µÑØ²ÉÑù£¬MOSI·¢ËÍ£¬MISO²ÉÇ×
+        HAL_SIMSPI_SCK_LOW();    //ä¸‹é™æ²¿é‡‡æ ·ï¼ŒMOSIå‘é€ï¼ŒMISOé‡‡äº²
         HAL_SIMSPI_TIME_CLOCK_WIDE();
 
         ret <<= 1;
         if (HAL_SIMSPI_MISO_READ){
             ret |= 0x01;
         }
-        HAL_SIMSPI_SCK_HIGH(); //ÉÏÉıÑØ¿ÉÉèÖÃ
+        HAL_SIMSPI_SCK_HIGH(); //ä¸Šå‡æ²¿å¯è®¾ç½®
         HAL_SIMSPI_TIME_CLOCK_WIDE();
     }
 
@@ -133,22 +133,22 @@ uint8_t halsimSpi_transmit_byte(uint8_t dat)
 
 
 #elif HAL_SIMSPI_MODE == 3
-/* Ä£Ê½3: SCK³£Ì¬Îª¸ß.¸ßÎ»ÏÈ·¢ËÍ */
+/* æ¨¡å¼3: SCKå¸¸æ€ä¸ºé«˜.é«˜ä½å…ˆå‘é€ */
 uint8_t halsimSpi_transmit_byte(uint8_t dat)
 {
     uint8_t ret = 0;
     uint8_t i;
     
     for(i = 0; i < 8; i++) {
-        HAL_SIMSPI_SCK_LOW();        /* ÆğÊ¼ÑØ */
+        HAL_SIMSPI_SCK_LOW();        /* èµ·å§‹æ²¿ */
         if (dat & 0x80){
             HAL_SIMSPI_MOSI_HIGH();
         }else{
-            HAL_SIMSPI_MOSI_LOW();//ÉèÖÃ
+            HAL_SIMSPI_MOSI_LOW();//è®¾ç½®
         }
         dat <<= 1;
-        HAL_SIMSPI_TIME_CLOCK_WIDE();   /*µÈ´ıÊÊµ±µÄÊ±¼ä£¬ÒÔµÈ´ıÊı¾İÎÈ¶¨*/   
-        HAL_SIMSPI_SCK_HIGH();        //ÉÏÉıÑØ²ÉÑù£¬MOSI·¢ËÍ£¬MOSI½ÓÊÕ
+        HAL_SIMSPI_TIME_CLOCK_WIDE();   /*ç­‰å¾…é€‚å½“çš„æ—¶é—´ï¼Œä»¥ç­‰å¾…æ•°æ®ç¨³å®š*/   
+        HAL_SIMSPI_SCK_HIGH();        //ä¸Šå‡æ²¿é‡‡æ ·ï¼ŒMOSIå‘é€ï¼ŒMOSIæ¥æ”¶
 
         ret <<= 1;
         if (HAL_SIMSPI_MISO_READ){

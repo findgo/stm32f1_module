@@ -1,13 +1,13 @@
-
+ï»¿
 #include "mleds.h"
 
 
 typedef struct ledseq_t{
     uint8_t     eve;
-    uint8_t     todo;       /* Õ£ÏÖ´ÎÊı£¬Èç¹ûÉèÖÃÎª0xff£¬±íÃ÷ÎŞÏŞÉÁË¸*/
-    uint8_t     onPct;      /* Õ¼¿Õ±È*/
-    uint16_t    cycle;      /*¿ª/¹Ø×ÜÖÜÆÚ */    
-    uint16_t    next;       /* ÏÂÒ»´Î¸Ä±äµÄÊ±¼ä/ÓëÁ÷ÊÅÊ±¼äÏà¹Ø £¬ÓëÊ±»ù°ó¶¨*/
+    uint8_t     todo;       /* çœ¨ç°æ¬¡æ•°ï¼Œå¦‚æœè®¾ç½®ä¸º0xffï¼Œè¡¨æ˜æ— é™é—ªçƒ*/
+    uint8_t     onPct;      /* å ç©ºæ¯”*/
+    uint16_t    cycle;      /*å¼€/å…³æ€»å‘¨æœŸ */    
+    uint16_t    next;       /* ä¸‹ä¸€æ¬¡æ”¹å˜çš„æ—¶é—´/ä¸æµé€æ—¶é—´ç›¸å…³ ï¼Œä¸æ—¶åŸºç»‘å®š*/
 }ledseq_t;
 
 static uint8_t PreledsOnOffstatus;
@@ -22,7 +22,7 @@ const ledseq_t ledseqeveList[LEDSEQ_EVE_MAX]= {
     LEDSEQ_EVE_EXTERN_LSIT
 };
 /**
-  * @brief  ³õÊ¼»¯
+  * @brief  åˆå§‹åŒ–
   * @param  None
   * @note   
   * @retval  None
@@ -38,14 +38,14 @@ void ledseqInit(void)
         ledseqControl[i].cycle = LED_SEQ_FLASH_CYCLE_TIME;
         ledseqControl[i].next = 0;
     }
-    ledseqOnOff( MLED_ALL, false);// ËùÓĞµÆ¹Ø
+    ledseqOnOff( MLED_ALL, false);// æ‰€æœ‰ç¯å…³
 }
 
 /**
   * @brief  
-  * @param  leds ÄÄ¸öµÆ£¬Î»Óò·¨£¬¿ÉÍ¬Ê±ÉèÖÃ¼¸¸öµÆ   
-  * @note       eve Îª LEDSEQ_EVE_NONE£¬µÆ×´Ì¬ÓĞmode ¾ö¶¨(µ±ÉèÖÃ LEDSEQ_MODE_NONE )
-  * @note       eve ²»Îª LEDSEQ_EVE_NONE£¬ºöÂÔ²ÎÊımode£¬Ò»°ãÉèÖÃÎª LEDSEQ_MODE_NONE
+  * @param  leds å“ªä¸ªç¯ï¼Œä½åŸŸæ³•ï¼Œå¯åŒæ—¶è®¾ç½®å‡ ä¸ªç¯   
+  * @note       eve ä¸º LEDSEQ_EVE_NONEï¼Œç¯çŠ¶æ€æœ‰mode å†³å®š(å½“è®¾ç½® LEDSEQ_MODE_NONE )
+  * @note       eve ä¸ä¸º LEDSEQ_EVE_NONEï¼Œå¿½ç•¥å‚æ•°modeï¼Œä¸€èˆ¬è®¾ç½®ä¸º LEDSEQ_MODE_NONE
   * @retval  None
   */
 
@@ -54,25 +54,25 @@ void ledseqset(uint8_t leds, ledseq_eve_t eve, ledseq_mode_t mode)
     uint8_t led;
     ledseq_t *sts;
 
-    led = MLED_1;           //´ÓµÚÒ»¸öµÆ¿ªÊ¼²é
-    leds &= MLED_ALL;       //ÆÁ±Î²»ÔÚÇı¶¯ÄÚµÄµÆ
+    led = MLED_1;           //ä»ç¬¬ä¸€ä¸ªç¯å¼€å§‹æŸ¥
+    leds &= MLED_ALL;       //å±è”½ä¸åœ¨é©±åŠ¨å†…çš„ç¯
     sts = &ledseqControl[0];
-    while (leds)    //±éÀúÕÒ³öÏëÒªÉèÖÃµÄµÆ
+    while (leds)    //éå†æ‰¾å‡ºæƒ³è¦è®¾ç½®çš„ç¯
     {
         if (leds & led){
             if (eve == LEDSEQ_EVE_NONE){
                 if(mode != LEDSEQ_MODE_TOGGLE){
                     if(PreledsOnOffstatus & led){
                         if(mode == LEDSEQ_MODE_OFF){
-                            ledseqOnOff (led, false); //¶¯×÷
+                            ledseqOnOff (led, false); //åŠ¨ä½œ
                         }
                     }else{
                         if(mode == LEDSEQ_MODE_ON){
-                            ledseqOnOff (led, true); //¶¯×÷
+                            ledseqOnOff (led, true); //åŠ¨ä½œ
                         }
                     }
                  }else{
-                    ledseqOnOff(led, (PreledsOnOffstatus ^ led) & led);// È¡·´ do it
+                    ledseqOnOff(led, (PreledsOnOffstatus ^ led) & led);// å–å do it
                  }
                  sts->eve = LEDSEQ_EVE_NONE;
             }else{
@@ -86,17 +86,17 @@ void ledseqset(uint8_t leds, ledseq_eve_t eve, ledseq_mode_t mode)
                     ledseqOnOff(led, false); 
                 }
             }
-            leds ^= led;//Õâ¸ö²ÎÊıÒÑÉèÖÃÍê,Çå³ı¶ÔÓ¦Î»ÑÚÂë
+            leds ^= led;//è¿™ä¸ªå‚æ•°å·²è®¾ç½®å®Œ,æ¸…é™¤å¯¹åº”ä½æ©ç 
         }
-        led <<= 1;  //ÏÂÒ»¸öµÆ
-        sts++;      //ÏÂÒ»¸öµÆ
+        led <<= 1;  //ä¸‹ä¸€ä¸ªç¯
+        sts++;      //ä¸‹ä¸€ä¸ªç¯
     }
 }
 
 
 /**
-  * @brief  led·şÎñ³ÌĞò£¬´óÑ­»·µ÷ÓÃ
-  * @param  ElapseTime :Á÷ÊÅÊ±¼ä (ÒÔÊ±»ùÎª×¼)
+  * @brief  ledæœåŠ¡ç¨‹åºï¼Œå¤§å¾ªç¯è°ƒç”¨
+  * @param  ElapseTime :æµé€æ—¶é—´ (ä»¥æ—¶åŸºä¸ºå‡†)
   * @note   
   * @retval  None
   */
@@ -109,17 +109,17 @@ void ledsequpdate (uint16_t ElapseTime)
 
     led  = MLED_1;
     leds = MLED_ALL;
-    sts = &ledseqControl[0];//Ç°¶Ë³õÊ¼»¯
-    while (leds)//±éÀúËùÓĞµÆ
+    sts = &ledseqControl[0];//å‰ç«¯åˆå§‹åŒ–
+    while (leds)//éå†æ‰€æœ‰ç¯
     {
         if (leds & led){
             if(sts->eve != LEDSEQ_EVE_NONE){
-                if(ElapseTime >= sts->next){//³¬Ê±
+                if(ElapseTime >= sts->next){//è¶…æ—¶
                     if(PreledsOnOffstatus & led){
                         pct = 100 - sts->onPct;         /* Percentage of cycle for off */
                         ledseqOnOff(led, false);        /* Turn it off */
                         
-                        if (sts->todo != LED_SEQ_ALWAYS_TODO){  //²»ÊÇÎŞÏŞÉÁË¸£¬¼õÉÙÉÁ´ÎÊı
+                        if (sts->todo != LED_SEQ_ALWAYS_TODO){  //ä¸æ˜¯æ— é™é—ªçƒï¼Œå‡å°‘é—ªæ¬¡æ•°
                             sts->todo--;                        /* Not continuous, reduce count */
                         }
                     }else{
@@ -127,22 +127,22 @@ void ledsequpdate (uint16_t ElapseTime)
                         ledseqOnOff (led, true);    /* Turn it on */
                     }
                     
-                    if( !sts->todo){//´ÎÊıµ½
-                        sts->eve = LEDSEQ_EVE_NONE; //×ªµ½Í£Ö¹
+                    if( !sts->todo){//æ¬¡æ•°åˆ°
+                        sts->eve = LEDSEQ_EVE_NONE; //è½¬åˆ°åœæ­¢
                     }
-                    sts->next = (uint16_t)(((uint32_t)pct * (uint32_t)sts->cycle) / 100);//È¡³öÏÂÒ»´ÎÊ±¼ä
-                }else{//Î´³¬Ê±£¬¼õÈ¥Á÷ÊÅÊ±¼ä
+                    sts->next = (uint16_t)(((uint32_t)pct * (uint32_t)sts->cycle) / 100);//å–å‡ºä¸‹ä¸€æ¬¡æ—¶é—´
+                }else{//æœªè¶…æ—¶ï¼Œå‡å»æµé€æ—¶é—´
                     sts->next -= ElapseTime;
                 }
             }
-            leds ^= led;//ÒÑ´¦ÀíÍê£¬¶ÔÓ¦Î»ÇåÁã
+            leds ^= led;//å·²å¤„ç†å®Œï¼Œå¯¹åº”ä½æ¸…é›¶
         }
-        led <<= 1;  //ÏÂÒ»¸öµÆ
-        sts++;      //ÏÂÒ»¸öµÆ
+        led <<= 1;  //ä¸‹ä¸€ä¸ªç¯
+        sts++;      //ä¸‹ä¸€ä¸ªç¯
     }
 }
 /**
-  * @brief  leds¿ª¹Ø¿ØÖÆ ³éÏóµÍ²ã
+  * @brief  ledså¼€å…³æ§åˆ¶ æŠ½è±¡ä½å±‚
   * @param  leds: bitmask ,detaial for MLED_XX ,bool
   * @note   
   * @note    

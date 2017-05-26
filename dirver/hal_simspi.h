@@ -1,9 +1,9 @@
-
-/* ʵ��ģ��SPIʱ�� 
- *  ģʽ0  Ĭ�ϵͣ���һ�������ز���
- *  ģʽ1  Ĭ�ϵͣ��ڶ��������ز���
- *  ģʽ2  Ĭ�ϸߣ���һ�½����ز���
- *  ģʽ3  Ĭ�ϸߣ��ڶ��½����ز���
+﻿
+/* 实现模拟SPI时序 
+ *  模式0  默认低，第一上升边沿捕获
+ *  模式1  默认低，第二上升边沿捕获
+ *  模式2  默认高，第一下降边沿捕获
+ *  模式3  默认高，第二下降边沿捕获
  */
 #ifndef _DRIVER_HAL_SIMSPI_H_
 #define _DRIVER_HAL_SIMSPI_H_
@@ -12,7 +12,7 @@
 
 #define HAL_SIMSPI_MODE        (0)
 
-/*����Ӳ��IO*/
+/*定义硬件IO*/
 #define HAL_SIMSPI_SCK_PORT        GPIOA
 #define HAL_SIMSPI_SCK_PIN         GPIO_Pin_5
 #define HAL_SIMSPI_MISO_PORT       GPIOA
@@ -25,21 +25,21 @@
 #define HAL_SIMSPI_GPIO_CLOCK_EN() do{RCC_APB2PeriphClockCmd( RCC_APB2Periph_GPIOA ,ENABLE );}while(0)
     
 
-/*SPI��*/
-#define HAL_SIMSPI_TIME_CLOCK_WIDE()           //delay_us(1)//��ʱ���100ns����
+/*SPI宏*/
+#define HAL_SIMSPI_TIME_CLOCK_WIDE()           //delay_us(1)//延时间隔100ns以上
 
-#define HAL_SIMSPI_SCK_OUTPUT_MODE()           /* ����Ϊoutputģʽ */ 
+#define HAL_SIMSPI_SCK_OUTPUT_MODE()           /* 设置为output模式 */ 
 #define HAL_SIMSPI_SCK_LOW()                   GPIO_ResetBits(HAL_SIMSPI_SCK_PORT, HAL_SIMSPI_SCK_PIN)              
 #define HAL_SIMSPI_SCK_HIGH()                  GPIO_SetBits(HAL_SIMSPI_SCK_PORT, HAL_SIMSPI_SCK_PIN)               
 
-#define HAL_SIMSPI_MISO_INPUT_MODE()            /* ����Ϊinputģʽ */ 
+#define HAL_SIMSPI_MISO_INPUT_MODE()            /* 设置为input模式 */ 
 #define HAL_SIMSPI_MISO_READ                   GPIO_ReadInputDataBit(HAL_SIMSPI_MISO_PORT,HAL_SIMSPI_MISO_PIN)
 
-#define HAL_SIMSPI_MOSI_OUTPUT_MODE()           /* ����Ϊoutputģʽ */ 
+#define HAL_SIMSPI_MOSI_OUTPUT_MODE()           /* 设置为output模式 */ 
 #define HAL_SIMSPI_MOSI_LOW()                  GPIO_ResetBits(HAL_SIMSPI_MOSI_PORT,HAL_SIMSPI_MOSI_PIN)    
 #define HAL_SIMSPI_MOSI_HIGH()                 GPIO_SetBits(HAL_SIMSPI_MOSI_PORT,HAL_SIMSPI_MOSI_PIN)      
 
-#define HAL_SIMSPI_CS_OUTPUT_MODE()            /* ����Ϊoutputģʽ */ 
+#define HAL_SIMSPI_CS_OUTPUT_MODE()            /* 设置为output模式 */ 
 #define HAL_SIMSPI_CS_DEASSERT()               GPIO_SetBits(HAL_SIMSPI_CS_PORT,HAL_SIMSPI_CS_PIN)
 #define HAL_SIMSPI_CS_ASSERT()                 GPIO_ResetBits(HAL_SIMSPI_CS_PORT,HAL_SIMSPI_CS_PIN)
 

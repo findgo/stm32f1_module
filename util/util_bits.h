@@ -1,12 +1,12 @@
-/**
+ï»¿/**
   ******************************************************************************
   * @file   util_bits.h
   * @author  
   * @version 
   * @date    
-  * @brief  	 Î»²Ù×÷£¬ÈÎÒâÎ»ÈÎÒâÊýÖµ
+  * @brief  	 ä½æ“ä½œï¼Œä»»æ„ä½ä»»æ„æ•°å€¼
   ******************************************************************************
-  * @attention 	20161110     v1.1   	jgb		ÒÑ²âÊÔ20161111
+  * @attention 	20161110     v1.1   	jgb		å·²æµ‹è¯•20161111
   ******************************************************************************
   */
 #ifndef __UTIL_BITS_H_
@@ -15,9 +15,9 @@
 #include "app_cfg.h"
 
 /*
- * @ ¹ØÓÚÏÂÃæÁ½¸öºêµÄÕýÏòºÍ·´Ïò£¬
- * @ ÕýÏò£¬°´Î»ÊýÓò¶¨ÏòÎªÕýÏò£¬BITSTART ´ÓÓÒÍù×ó Êý __LENGTH ³¤ 		¼´°´Õý³£Î»½Ú
- * @ ·´Ïò£¬°´Î»ÊýÓò¶¨Ïò·´ÏòÎª·´Ïò£¬BITSTART ´Ó×óÍùÓÒÊý __LENGTH ³¤	¼´°´·´ÏòÎ»½Ú
+ * @ å…³äºŽä¸‹é¢ä¸¤ä¸ªå®çš„æ­£å‘å’Œåå‘ï¼Œ
+ * @ æ­£å‘ï¼ŒæŒ‰ä½æ•°åŸŸå®šå‘ä¸ºæ­£å‘ï¼ŒBITSTART ä»Žå³å¾€å·¦ æ•° __LENGTH é•¿ 		å³æŒ‰æ­£å¸¸ä½èŠ‚
+ * @ åå‘ï¼ŒæŒ‰ä½æ•°åŸŸå®šå‘åå‘ä¸ºåå‘ï¼ŒBITSTART ä»Žå·¦å¾€å³æ•° __LENGTH é•¿	å³æŒ‰åå‘ä½èŠ‚
  */
 
 void writebits_U8(uint8_t *value, uint8_t bitStart, uint8_t length, uint8_t data);

@@ -1,8 +1,8 @@
-
+ï»¿
 /*
- * debug µ÷ÊÔÄ£¿é£¬Ê¹ÓÃºêÐèÒª¿ªÆôºêDEBUG_MSG
- * ÅäÖÃÖØ¶¨Òåfput,Ö±½Ó¿ÉÔÚÍ·ÎÄ¼þ ÅäÖÃREDIR_FPUT(ch)µÄºê
- * Ä¬ÈÏÖ»¿ªÆô err, ¶øwarn£¬verbos²»¿ªÆô¡£
+ * debug è°ƒè¯•æ¨¡å—ï¼Œä½¿ç”¨å®éœ€è¦å¼€å¯å®DEBUG_MSG
+ * é…ç½®é‡å®šä¹‰fput,ç›´æŽ¥å¯åœ¨å¤´æ–‡ä»¶ é…ç½®REDIR_FPUT(ch)çš„å®
+ * é»˜è®¤åªå¼€å¯ err, è€Œwarnï¼Œverbosä¸å¼€å¯ã€‚
  * 
  */
 
@@ -44,7 +44,7 @@ do {                                                \
         }                                               \
     } while (0)
 
-//ÖØ¶¨Ïòfput  ÓÃ»§¶¨Òå
+//é‡å®šå‘fput  ç”¨æˆ·å®šä¹‰
 #define REDIR_FPUT(ch)   (void)Serial_WriteByte(COM0,ch);
 #else
 #define DBG_VERBOS(fmt, args...)

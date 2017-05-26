@@ -1,4 +1,4 @@
-
+ï»¿
 
 #include "debug.h"
 
@@ -24,7 +24,7 @@ void dbg_print_dbg_level(void)
     printf("dbg_err: %s\r\n",dbg_err ? "enable":"disable");
 }
 
-/* ÖØ¶¨Ïòfputc µ½Êä³ö£¬µ¥Æ¬»úÒ»°ãÎª´®¿Ú*/ 
+/* é‡å®šå‘fputc åˆ°è¾“å‡ºï¼Œå•ç‰‡æœºä¸€èˆ¬ä¸ºä¸²å£*/ 
 int fputc(int ch, FILE *f)
 {
     /* e.g. write a character to the USART */

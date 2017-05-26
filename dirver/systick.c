@@ -1,4 +1,4 @@
-/**
+ï»¿/**
   ******************************************************************************
   * @file    systick.c
   * @author  
@@ -13,7 +13,7 @@
 #include "systick.h"
 
 /**
-  * @brief  ³õÊ¼»¯systick Îª1ms
+  * @brief  åˆå§‹åŒ–systick ä¸º1ms
   * @param  None
   * @note   
   * @note    

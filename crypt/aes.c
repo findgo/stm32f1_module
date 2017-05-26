@@ -1,9 +1,9 @@
-#include "AES.h"
+ï»¿#include "AES.h"
 #include <string.h>
 
-#define Nk  (AES_KEY_LENGTH / 32)       // ÒÔ¡°×Ö¡±£¨4×Ö½Ú£©Îªµ¥Î»µÄÃÜÔ¿³¤¶È
-#define Nb  4                           // ÒÔ¡°×Ö¡±£¨4×Ö½Ú£©Îªµ¥Î»µÄ¼Ó½âÃÜÊı¾İ¿é´óĞ¡£¬¹Ì¶¨Îª4
-// Nr£º¼ÓÃÜµÄÂÖÊı
+#define Nk  (AES_KEY_LENGTH / 32)       // ä»¥â€œå­—â€ï¼ˆ4å­—èŠ‚ï¼‰ä¸ºå•ä½çš„å¯†é’¥é•¿åº¦
+#define Nb  4                           // ä»¥â€œå­—â€ï¼ˆ4å­—èŠ‚ï¼‰ä¸ºå•ä½çš„åŠ è§£å¯†æ•°æ®å—å¤§å°ï¼Œå›ºå®šä¸º4
+// Nrï¼šåŠ å¯†çš„è½®æ•°
 #if   AES_KEY_LENGTH == 128
     #define Nr  10
 #elif AES_KEY_LENGTH == 192
@@ -14,18 +14,18 @@
     #error AES_KEY_LENGTH must be 128, 192 or 256 unsigned chars!
 #endif
 
-// GF(28) ¶àÏîÊ½
+// GF(28) å¤šé¡¹å¼
 #define BPOLY 0x1B // Lower 8 unsigned chars of (x^8 + x^4 + x^3 + x + 1), ie. (x^4 + x^3 + x + 1).
 
-//AES Ô­Ê¼ÃÜÔ¿
+//AES åŸå§‹å¯†é’¥
 static const unsigned char AesdefaultKey[4  * Nk] = AES_DEFAULT_KEY;
-// AES×ÓÃÜÔ¿±í£¬µ±ÃÜÔ¿³¤¶ÈÎª128Î»Ê±£¬Õ¼ÓÃ176×Ö½Ú¿Õ¼ä
+// AESå­å¯†é’¥è¡¨ï¼Œå½“å¯†é’¥é•¿åº¦ä¸º128ä½æ—¶ï¼Œå ç”¨176å­—èŠ‚ç©ºé—´
 static unsigned char g_roundKeyTable[4 * Nb * (Nr + 1)];
 #if AES_MODE == AES_MODE_CBC 
 static const unsigned char AesIVKey[4  * Nb] = AES_IV_KEY;
 #endif
 
-// ¼ÓÃÜÓÃµÄSBox
+// åŠ å¯†ç”¨çš„SBox
 static const unsigned char SBox[256] = 
 {
     0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76,
@@ -46,7 +46,7 @@ static const unsigned char SBox[256] =
     0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68, 0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16 
 };
 
-// ½âÃÜÓÃµÄInvSBox
+// è§£å¯†ç”¨çš„InvSBox
 static const unsigned char InvSBox[256] = 
 {
     0x52, 0x09, 0x6a, 0xd5, 0x30, 0x36, 0xa5, 0x38, 0xbf, 0x40, 0xa3, 0x9e, 0x81, 0xf3, 0xd7, 0xfb,
@@ -67,10 +67,10 @@ static const unsigned char InvSBox[256] =
     0x17, 0x2b, 0x04, 0x7e, 0xba, 0x77, 0xd6, 0x26, 0xe1, 0x69, 0x14, 0x63, 0x55, 0x21, 0x0c, 0x7d  
 };
 /*
- *@  ÃèÊö£º      ÔÚGF(28)ÓòµÄ ³Ë2 ÔËËã¡£
- *@  ÊäÈë²ÎÊı£º  num -- ³ËÊı¡£
- *@  Êä³ö²ÎÊı£º  ÎŞ¡£
- *@  ·µ»ØÖµ£º    num³ËÒÔ2µÄ½á¹û¡£
+ *@  æè¿°ï¼š      åœ¨GF(28)åŸŸçš„ ä¹˜2 è¿ç®—ã€‚
+ *@  è¾“å…¥å‚æ•°ï¼š  num -- ä¹˜æ•°ã€‚
+ *@  è¾“å‡ºå‚æ•°ï¼š  æ— ã€‚
+ *@  è¿”å›å€¼ï¼š    numä¹˜ä»¥2çš„ç»“æœã€‚
  */
 static unsigned char GfMultBy02(unsigned char num)
 {
@@ -83,10 +83,10 @@ static unsigned char GfMultBy02(unsigned char num)
     return num;
 }
 /*
- *@  ÃèÊö£º      ¶ÔÒ»¸ö¡°×Ö¡±Êı¾İ½øĞĞÑ­»·ÓÒÒÆ (Ò»¸ö×Ö½Ú)¡£
- *@  ÊäÈë²ÎÊı£º  pWord -- ÒªÓÒÒÆµÄ4×Ö½ÚÊı¾İ¡£
- *@  Êä³ö²ÎÊı£º  pWord -- ÓÒÒÆºóµÄ4×Ö½ÚÊı¾İ¡£
- *@  ·µ»ØÖµ£º    ÎŞ¡£
+ *@  æè¿°ï¼š      å¯¹ä¸€ä¸ªâ€œå­—â€æ•°æ®è¿›è¡Œå¾ªç¯å³ç§» (ä¸€ä¸ªå­—èŠ‚)ã€‚
+ *@  è¾“å…¥å‚æ•°ï¼š  pWord -- è¦å³ç§»çš„4å­—èŠ‚æ•°æ®ã€‚
+ *@  è¾“å‡ºå‚æ•°ï¼š  pWord -- å³ç§»åçš„4å­—èŠ‚æ•°æ®ã€‚
+ *@  è¿”å›å€¼ï¼š    æ— ã€‚
  */
 static void RotationWord(unsigned char *pWord)
 {
@@ -98,12 +98,12 @@ static void RotationWord(unsigned char *pWord)
 }
 
 /*
- *@  ÃèÊö£º      ÅúÁ¿Òì»òÁ½×éÊı¾İ¡£
- *@  ÊäÈë²ÎÊı£º  pData1 -- ÒªÒì»òµÄµÚÒ»×éÊı¾İ¡£
- *@              pData2 -- ÒªÒì»òµÄµÚ¶ş×éÊı¾İ¡£
- *@              nCount -- ÒªÒì»òµÄÊı¾İ³¤¶È¡£
- *@  Êä³ö²ÎÊı£º  pData1 -- Òì»òºóµÄ½á¹û¡£
- *@  ·µ»ØÖµ£º    ÎŞ¡£
+ *@  æè¿°ï¼š      æ‰¹é‡å¼‚æˆ–ä¸¤ç»„æ•°æ®ã€‚
+ *@  è¾“å…¥å‚æ•°ï¼š  pData1 -- è¦å¼‚æˆ–çš„ç¬¬ä¸€ç»„æ•°æ®ã€‚
+ *@              pData2 -- è¦å¼‚æˆ–çš„ç¬¬äºŒç»„æ•°æ®ã€‚
+ *@              nCount -- è¦å¼‚æˆ–çš„æ•°æ®é•¿åº¦ã€‚
+ *@  è¾“å‡ºå‚æ•°ï¼š  pData1 -- å¼‚æˆ–åçš„ç»“æœã€‚
+ *@  è¿”å›å€¼ï¼š    æ— ã€‚
  */
 static void XorBytes(unsigned char *pData1, const unsigned char *pData2, unsigned char nCount)
 {
@@ -115,21 +115,21 @@ static void XorBytes(unsigned char *pData1, const unsigned char *pData2, unsigne
     }
 }
 /*
- *@  ÃèÊö£º      °Ñ ÖĞ¼ä×´Ì¬Êı¾İ ¼ÓÉÏ£¨Òì»ò£©×ÓÃÜÔ¿£¬Êı¾İ³¤¶ÈÎª16×Ö½Ú¡£
- *@  ÊäÈë²ÎÊı£º  pState    -- ×´Ì¬Êı¾İ¡£
- *@              pRoundKey -- ×ÓÃÜÔ¿Êı¾İ¡£
- *@  Êä³ö²ÎÊı£º  pState    -- ¼ÓÉÏ×ÓÃÜÔ¿ºóµÄ×´Ì¬Êı¾İ¡£
- *@  ·µ»ØÖµ£º    ÎŞ¡£
+ *@  æè¿°ï¼š      æŠŠ ä¸­é—´çŠ¶æ€æ•°æ® åŠ ä¸Šï¼ˆå¼‚æˆ–ï¼‰å­å¯†é’¥ï¼Œæ•°æ®é•¿åº¦ä¸º16å­—èŠ‚ã€‚
+ *@  è¾“å…¥å‚æ•°ï¼š  pState    -- çŠ¶æ€æ•°æ®ã€‚
+ *@              pRoundKey -- å­å¯†é’¥æ•°æ®ã€‚
+ *@  è¾“å‡ºå‚æ•°ï¼š  pState    -- åŠ ä¸Šå­å¯†é’¥åçš„çŠ¶æ€æ•°æ®ã€‚
+ *@  è¿”å›å€¼ï¼š    æ— ã€‚
  */
-// AddRoundKeyµÄºêĞÎÊ½£¬±Èº¯ÊıĞÎÊ½¿ÉÒÔ½ÚÊ¡4×Ö½ÚµÄdataÊı¾İ
+// AddRoundKeyçš„å®å½¢å¼ï¼Œæ¯”å‡½æ•°å½¢å¼å¯ä»¥èŠ‚çœ4å­—èŠ‚çš„dataæ•°æ®
 #define AddRoundKey(pState, pRoundKey) XorBytes((pState), (pRoundKey), 4 * Nb)
 /*
- *@  ÃèÊö£º      Í¨¹ıSºĞ×ÓÖÃ»»×´Ì¬Êı¾İ¡£
- *@  ÊäÈë²ÎÊı£º  pState  -- ×´Ì¬Êı¾İ¡£
- *@              nCount  -- ×´Ì¬Êı¾İ³¤¶È¡£
- *@              bInvert -- ÊÇ·ñÊ¹ÓÃ·´ÏòSºĞ×Ó£¨½âÃÜÊ±Ê¹ÓÃ£©¡£
- *@  Êä³ö²ÎÊı£º  pState  -- ÖÃ»»ºóµÄ×´Ì¬Êı¾İ¡£
- *@  ·µ»ØÖµ£º    ÎŞ¡£
+ *@  æè¿°ï¼š      é€šè¿‡Sç›’å­ç½®æ¢çŠ¶æ€æ•°æ®ã€‚
+ *@  è¾“å…¥å‚æ•°ï¼š  pState  -- çŠ¶æ€æ•°æ®ã€‚
+ *@              nCount  -- çŠ¶æ€æ•°æ®é•¿åº¦ã€‚
+ *@              bInvert -- æ˜¯å¦ä½¿ç”¨åå‘Sç›’å­ï¼ˆè§£å¯†æ—¶ä½¿ç”¨ï¼‰ã€‚
+ *@  è¾“å‡ºå‚æ•°ï¼š  pState  -- ç½®æ¢åçš„çŠ¶æ€æ•°æ®ã€‚
+ *@  è¿”å›å€¼ï¼š    æ— ã€‚
  */
 static void SubBytes(unsigned char *pState, unsigned char nCount, unsigned char bInvert)
 {
@@ -142,22 +142,22 @@ static void SubBytes(unsigned char *pState, unsigned char nCount, unsigned char 
 }
 
 /*
- *@  ÃèÊö£º      °Ñ×´Ì¬Êı¾İÒÆĞĞ¡£
- *@  ÊäÈë²ÎÊı£º  pState  -- ×´Ì¬Êı¾İ¡£
- *@              bInvert -- ÊÇ·ñ·´ÏòÒÆĞĞ£¨½âÃÜÊ±Ê¹ÓÃ£©¡£
- *@  Êä³ö²ÎÊı£º  pState  -- ÒÆĞĞºóµÄ×´Ì¬Êı¾İ¡£
- *@  ·µ»ØÖµ£º    ÎŞ¡£
+ *@  æè¿°ï¼š      æŠŠçŠ¶æ€æ•°æ®ç§»è¡Œã€‚
+ *@  è¾“å…¥å‚æ•°ï¼š  pState  -- çŠ¶æ€æ•°æ®ã€‚
+ *@              bInvert -- æ˜¯å¦åå‘ç§»è¡Œï¼ˆè§£å¯†æ—¶ä½¿ç”¨ï¼‰ã€‚
+ *@  è¾“å‡ºå‚æ•°ï¼š  pState  -- ç§»è¡Œåçš„çŠ¶æ€æ•°æ®ã€‚
+ *@  è¿”å›å€¼ï¼š    æ— ã€‚
 */
 static void ShiftRows(unsigned char *pState, unsigned char bInvert)
 {
-    // ×¢Òâ£º×´Ì¬Êı¾İÒÔÁĞĞÎÊ½´æ·Å£¡
-    unsigned char r;    // row£¬   ĞĞ
-    unsigned char c;    // column£¬ÁĞ
+    // æ³¨æ„ï¼šçŠ¶æ€æ•°æ®ä»¥åˆ—å½¢å¼å­˜æ”¾ï¼
+    unsigned char r;    // rowï¼Œ   è¡Œ
+    unsigned char c;    // columnï¼Œåˆ—
     unsigned char temp;
     unsigned char rowData[4];
     
     for (r = 1; r < 4; r++){
-        // ±¸·İÒ»ĞĞÊı¾İ
+        // å¤‡ä»½ä¸€è¡Œæ•°æ®
         for (c = 0; c < 4; c++){
             rowData[c] = pState[r + 4*c];
         }
@@ -169,11 +169,11 @@ static void ShiftRows(unsigned char *pState, unsigned char bInvert)
     }
 }
 /*
- *@  ÃèÊö£º      »ìºÏ×´Ì¬¸÷ÁĞÊı¾İ¡£
- *@  ÊäÈë²ÎÊı£º  pState  -- ×´Ì¬Êı¾İ¡£
- *@              bInvert -- ÊÇ·ñ·´Ïò»ìºÏ£¨½âÃÜÊ±Ê¹ÓÃ£©¡£
- *@  Êä³ö²ÎÊı£º  pState  -- »ìºÏÁĞºóµÄ×´Ì¬Êı¾İ¡£
- *@  ·µ»ØÖµ£º    ÎŞ¡£
+ *@  æè¿°ï¼š      æ··åˆçŠ¶æ€å„åˆ—æ•°æ®ã€‚
+ *@  è¾“å…¥å‚æ•°ï¼š  pState  -- çŠ¶æ€æ•°æ®ã€‚
+ *@              bInvert -- æ˜¯å¦åå‘æ··åˆï¼ˆè§£å¯†æ—¶ä½¿ç”¨ï¼‰ã€‚
+ *@  è¾“å‡ºå‚æ•°ï¼š  pState  -- æ··åˆåˆ—åçš„çŠ¶æ€æ•°æ®ã€‚
+ *@  è¿”å›å€¼ï¼š    æ— ã€‚
  */
  static void MixColumns(unsigned char *pState, unsigned char bInvert)
 {
@@ -205,10 +205,10 @@ static void ShiftRows(unsigned char *pState, unsigned char bInvert)
 }
 
 /*
- *@  ÃèÊö£º      ¶Ôµ¥¿éÊı¾İ¼ÓÃÜ¡£
- *@  ÊäÈë²ÎÊı£º  pState -- ×´Ì¬Êı¾İ¡£
- *@  Êä³ö²ÎÊı£º  pState -- ¼ÓÃÜºóµÄ×´Ì¬Êı¾İ¡£
- *@  ·µ»ØÖµ£º    ÎŞ¡£
+ *@  æè¿°ï¼š      å¯¹å•å—æ•°æ®åŠ å¯†ã€‚
+ *@  è¾“å…¥å‚æ•°ï¼š  pState -- çŠ¶æ€æ•°æ®ã€‚
+ *@  è¾“å‡ºå‚æ•°ï¼š  pState -- åŠ å¯†åçš„çŠ¶æ€æ•°æ®ã€‚
+ *@  è¿”å›å€¼ï¼š    æ— ã€‚
  */
 static void BlockEncrypt(unsigned char *pState)
 {
@@ -219,17 +219,17 @@ static void BlockEncrypt(unsigned char *pState)
     for (i = 1; i <= Nr; i++){   // i = [1, Nr]
         SubBytes(pState, 4 * Nb, 0);
         ShiftRows(pState, 0);
-        if (i != Nr){  // ×îºóÒ»ÂÖ²»»ìºÏ
+        if (i != Nr){  // æœ€åä¸€è½®ä¸æ··åˆ
             MixColumns(pState, 0);
         }
         AddRoundKey(pState, &g_roundKeyTable[4 * Nb * i]);
     }
 }
 /*
- *@  ÃèÊö£º      ¶Ôµ¥¿éÊı¾İ½âÃÜ¡£
- *@  ÊäÈë²ÎÊı£º  pState -- ×´Ì¬Êı¾İ¡£
- *@  Êä³ö²ÎÊı£º  pState -- ½âÃÜºóµÄ×´Ì¬Êı¾İ¡£
- *@  ·µ»ØÖµ£º    ÎŞ¡£
+ *@  æè¿°ï¼š      å¯¹å•å—æ•°æ®è§£å¯†ã€‚
+ *@  è¾“å…¥å‚æ•°ï¼š  pState -- çŠ¶æ€æ•°æ®ã€‚
+ *@  è¾“å‡ºå‚æ•°ï¼š  pState -- è§£å¯†åçš„çŠ¶æ€æ•°æ®ã€‚
+ *@  è¿”å›å€¼ï¼š    æ— ã€‚
  */
 static void BlockDecrypt(unsigned char *pState)
 {
@@ -255,7 +255,7 @@ static void BlockDecrypt(unsigned char *pState)
  */
 void AES_Init(void)
 {
-    // À©Õ¹ÃÜÔ¿
+    // æ‰©å±•å¯†é’¥
     unsigned char i;
     unsigned char *pRoundKey;
     unsigned char Rcon[4] = {0x01, 0x00, 0x00, 0x00};
@@ -290,11 +290,11 @@ void AES_Set_CBCDefaultIV(unsigned char ivec[16])
 }
 /*
  *@  describe: Encrypt
- *@  input:   in  -- Ã÷ÎÄ
- *@           inLen -- Êı¾İ³¤¶È£¬±ØĞëÎª16byteµÄÕû±¶Êı¡£
- *@           ivec -- ³õÊ¼»¯ÏòÁ¿
- *@  output:  out -- ÃÜÎÄ
- *@           ivec -- cbcÄ£Ê½¼ÓÁ´ĞÂÏòÁ¿,ECBÄ£Ê½ÎªNULL
+ *@  input:   in  -- æ˜æ–‡
+ *@           inLen -- æ•°æ®é•¿åº¦ï¼Œå¿…é¡»ä¸º16byteçš„æ•´å€æ•°ã€‚
+ *@           ivec -- åˆå§‹åŒ–å‘é‡
+ *@  output:  out -- å¯†æ–‡
+ *@           ivec -- cbcæ¨¡å¼åŠ é“¾æ–°å‘é‡,ECBæ¨¡å¼ä¸ºNULL
  *@  return:  none
  */
 void AES_Encrypt(const unsigned char *in, unsigned char *out, unsigned int inLen, unsigned char ivec[16])
@@ -327,12 +327,12 @@ void AES_Encrypt(const unsigned char *in, unsigned char *out, unsigned int inLen
 }
 /*
  *@  describe: Decrypt
- *@  input£º   in -- ÃÜÎÄ£¬
- *@            inlen    -- Êı¾İ³¤¶È, ±ØĞëÎª16byteµÄÕû±¶Êı¡£ 
- *@            ivec -- ³õÊ¼»¯ÏòÁ¿
- *@  output£º  out  -- Ã÷ÎÄ
- *@            ivec -- cbcÄ£Ê½¼ÓÁ´ĞÂÏòÁ¿,ECBÄ£Ê½ÎªNULL
- *@  return£º  none
+ *@  inputï¼š   in -- å¯†æ–‡ï¼Œ
+ *@            inlen    -- æ•°æ®é•¿åº¦, å¿…é¡»ä¸º16byteçš„æ•´å€æ•°ã€‚ 
+ *@            ivec -- åˆå§‹åŒ–å‘é‡
+ *@  outputï¼š  out  -- æ˜æ–‡
+ *@            ivec -- cbcæ¨¡å¼åŠ é“¾æ–°å‘é‡,ECBæ¨¡å¼ä¸ºNULL
+ *@  returnï¼š  none
  */
 #if AES_MODE == AES_MODE_CBC
 static unsigned char tempiv[4 * Nb];
@@ -345,21 +345,21 @@ void AES_Decrypt(const unsigned char *in, unsigned char *out, unsigned int inLen
         memcpy(out, in, inLen);
     }
 
-    // ´Ó×îºóÒ»¿éÊı¾İ¿ªÊ¼½âÃÜ£¬ÕâÑù²»ÓÃ¿ª±Ù¿Õ¼äÀ´±£´æIV
+    // ä»æœ€åä¸€å—æ•°æ®å¼€å§‹è§£å¯†ï¼Œè¿™æ ·ä¸ç”¨å¼€è¾Ÿç©ºé—´æ¥ä¿å­˜IV
 #if AES_MODE == AES_MODE_CBC
     out += inLen - 4 * Nb;
     memcpy(tempiv, ivec, 4 * Nb);
     memcpy(ivec, out, 4 * Nb);
     for (i = inLen / (4 * Nb); i > 0 ; i--, out -= 4 * Nb){
         BlockDecrypt(out);
-        if (i == 1){// ×îºóÒ»¿éÊı¾İ
+        if (i == 1){// æœ€åä¸€å—æ•°æ®
             XorBytes(out, tempiv, 4 * Nb);
         }else{
             XorBytes(out, out - 4 * Nb, 4 * Nb);
         }
     }
 #else
-    // ´Ó×îºóÒ»¿éÊı¾İ¿ªÊ¼½âÃÜ£¬ÕâÑù²»ÓÃ¿ª±Ù¿Õ¼äÀ´±£´æIV
+    // ä»æœ€åä¸€å—æ•°æ®å¼€å§‹è§£å¯†ï¼Œè¿™æ ·ä¸ç”¨å¼€è¾Ÿç©ºé—´æ¥ä¿å­˜IV
     out += inLen - 4 * Nb;
     for (i = inLen / (4 * Nb); i > 0 ; i--, out -= 4 * Nb){
         BlockDecrypt(out);

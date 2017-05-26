@@ -1,10 +1,10 @@
-
+﻿
 #ifndef __CODING_H_
 #define __CODING_H_
 
 #include "app_cfg.h"
 
-// for coding �ȵ�8λ���ٸ�8λ
+// for coding 先低8位，再高8位
 uint8_t encode_signed8(uint8_t *pdu, int8_t value);
 uint8_t encode_signed16(uint8_t *pdu, int16_t value);
 uint8_t encode_signed24(uint8_t *pdu, int32_t value);

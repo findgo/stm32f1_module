@@ -1,4 +1,4 @@
-
+ï»¿
 #include "console.h"
 
 //!<    MACROS
@@ -10,13 +10,13 @@
 #define CONSOLE_SEPARATOR               " "
 //! \brief Default Separator : clear
 #define CONSOLE_CLEAR_CODE              0x0C
-//¶¨ÒåÃüÁî×Ü´óĞ¡
+//å®šä¹‰å‘½ä»¤æ€»å¤§å°
 #define CONSOLE_CMD_CONSOLE_BUFFER_SIZE     (CONSOLE_BUFFER_SIZE + 1)
 //!< \bad command note
 #define CONSOLE_BADCOMMAND_PRINT    "\tBad command or file name,and use \'help\' or '?' to get more info!\r\n"
 
 
-//!< °´¼ü±àÂë
+//!< æŒ‰é”®ç¼–ç 
 #define KEY_CODE_ESC    0x00001BUL
 #define KEY_CODE_F1     0x1B4F50UL
 #define KEY_CODE_F3     0x1B4F52UL
@@ -24,26 +24,26 @@
 #define KEY_CODE_DOWN   0x1B5B42UL
 
 typedef struct {
-    uint8_t index; // Ö¸ÁîË÷Òı
+    uint8_t index; // æŒ‡ä»¤ç´¢å¼•
     uint8_t chCmd[CONSOLE_CMD_CONSOLE_BUFFER_SIZE];             
 } console_curcmd_t;
 
 typedef struct {
-    uint8_t chCmdLen; // Ö¸Áî³¤¶È
+    uint8_t chCmdLen; // æŒ‡ä»¤é•¿åº¦
     uint8_t chCmd[CONSOLE_CMD_CONSOLE_BUFFER_SIZE];             
 } console_cmd_t;
 
 typedef struct {
-    uint8_t s_chCurHisCmdPtr;   // µ±Ç°ÀúÊ·ÃüÁîÏÂ±ê
-    uint8_t s_chLastCmdPtr;     // ×î½üÒ»ÌõÀúÊ·ÃüÁîÏÂ±ê
-    uint8_t s_chHisCmdNum;      // ÀúÊ·ÃüÁîÌõÊı
-    uint8_t s_chCurHisCmdNum;   // µ±Ç°¿ÉÓÃÀúÊ·ÃüÁîµÄ×î´ó±àºÅ
+    uint8_t s_chCurHisCmdPtr;   // å½“å‰å†å²å‘½ä»¤ä¸‹æ ‡
+    uint8_t s_chLastCmdPtr;     // æœ€è¿‘ä¸€æ¡å†å²å‘½ä»¤ä¸‹æ ‡
+    uint8_t s_chHisCmdNum;      // å†å²å‘½ä»¤æ¡æ•°
+    uint8_t s_chCurHisCmdNum;   // å½“å‰å¯ç”¨å†å²å‘½ä»¤çš„æœ€å¤§ç¼–å·
     console_cmd_t s_tHisCmd[CONSOLE_HIS_CMD_NUM];
 } his_cmd_queue_t;
 
 typedef struct {
-	uint8_t argc;//²ÎÊı¸öÊı
-	char *argv[CONSOLE_ARGV_MAX_SIZE];//Ö¸ÕëÊı×é
+	uint8_t argc;//å‚æ•°ä¸ªæ•°
+	char *argv[CONSOLE_ARGV_MAX_SIZE];//æŒ‡é’ˆæ•°ç»„
 } console_arg_t;
 
 static void cmd_help_hander(uint8_t argc, char *argv[], void *pcmd);
@@ -55,14 +55,14 @@ static const console_command_t s_tCMD[] = {
     {"?",  &cmd_help_hander,  "?\t-- same as help,How to use the console",NULL},
 };
 
-//!< ½ÓÊÕµ½ÃüÁî»º´æÇø
+//!< æ¥æ”¶åˆ°å‘½ä»¤ç¼“å­˜åŒº
 static console_curcmd_t s_chCurCmd = {0,{'\0'}};
-//!< ÀúÊ·ÃüÁî
+//!< å†å²å‘½ä»¤
 static his_cmd_queue_t s_chHisCmd;
-//!< ½âÎöÃüÁî
+//!< è§£æå‘½ä»¤
 static console_arg_t s_argCmd;
 
-//!< dynamic command ¶¯Ì¬Íâ²¿ÃüÁî
+//!< dynamic command åŠ¨æ€å¤–éƒ¨å‘½ä»¤
 static console_command_t *s_ptDynaCmdHead = NULL;
 
 /*============================ IMPLEMENTATION ================================*/
@@ -73,40 +73,40 @@ static void console_hiscmd_save(console_cmd_t *ptHistory)
     uint8_t i;
     his_cmd_queue_t *ptQ = &s_chHisCmd;
     
-    // ±£´æÀúÊ·ÃüÁî
-    for ( i = 0; i <= ptHistory->chCmdLen; i++ ){    // ½«'\0'Ò²±£´æ
+    // ä¿å­˜å†å²å‘½ä»¤
+    for ( i = 0; i <= ptHistory->chCmdLen; i++ ){    // å°†'\0'ä¹Ÿä¿å­˜
         ptQ->s_tHisCmd[ptQ->s_chLastCmdPtr].chCmd[i] = ptHistory->chCmd[i];
     }
     ptQ->s_tHisCmd[ptQ->s_chLastCmdPtr].chCmdLen = ptHistory->chCmdLen;
 
-    if ( ptQ->s_chHisCmdNum < CONSOLE_HIS_CMD_NUM ){ // ÀúÊ·ÃüÁîÌõÊı
+    if ( ptQ->s_chHisCmdNum < CONSOLE_HIS_CMD_NUM ){ // å†å²å‘½ä»¤æ¡æ•°
         ptQ->s_chHisCmdNum++;
     }
-    ptQ->s_chCurHisCmdNum = ptQ->s_chHisCmdNum - 1; // ¸üĞÂµ±Ç°¿ÉÓÃÃüÁî×î´ó±àºÅ
+    ptQ->s_chCurHisCmdNum = ptQ->s_chHisCmdNum - 1; // æ›´æ–°å½“å‰å¯ç”¨å‘½ä»¤æœ€å¤§ç¼–å·
 
-    ptQ->s_chCurHisCmdPtr = ptQ->s_chLastCmdPtr;  // ¸üĞÂµ±Ç°ÀúÊ·ÃüÁîÏÂ±ê
-    if ( ++ptQ->s_chLastCmdPtr >= CONSOLE_HIS_CMD_NUM){ //³¬¹ı×î´óÃüÁîÊı ÔòÏÂÒ»´Î±£´æ¸²¸Ç×îÔçµÄÃüÁî
+    ptQ->s_chCurHisCmdPtr = ptQ->s_chLastCmdPtr;  // æ›´æ–°å½“å‰å†å²å‘½ä»¤ä¸‹æ ‡
+    if ( ++ptQ->s_chLastCmdPtr >= CONSOLE_HIS_CMD_NUM){ //è¶…è¿‡æœ€å¤§å‘½ä»¤æ•° åˆ™ä¸‹ä¸€æ¬¡ä¿å­˜è¦†ç›–æœ€æ—©çš„å‘½ä»¤
         ptQ->s_chLastCmdPtr = 0;
     }               
 }
 
-//!< É¾³ıÒ»¸ö×Ö·û
+//!< åˆ é™¤ä¸€ä¸ªå­—ç¬¦
 static void console_display_backspace(uint8_t chNum)
 {
     if(chNum == 0)
         return;
 
     while(chNum--){
-        console_writebyte('\b');    //ÏÈÍËÒ»¸ñ
-        console_writebyte(' '); //Êä³ö¿Õ°×
-        console_writebyte('\b'); //ÔÙÍËÒ»¸ñ
+        console_writebyte('\b');    //å…ˆé€€ä¸€æ ¼
+        console_writebyte(' '); //è¾“å‡ºç©ºç™½
+        console_writebyte('\b'); //å†é€€ä¸€æ ¼
     }
 }
-//!< »Ø³µ²¢ÖØÆôÒ»ĞĞ
+//!< å›è½¦å¹¶é‡å¯ä¸€è¡Œ
 static void console_prn_rn(void)
 {
-    console_writebyte('\r'); //Êä³ö»Ø³µ
-    console_writebyte('\n'); //ÖØÆğÒ»ĞĞ
+    console_writebyte('\r'); //è¾“å‡ºå›è½¦
+    console_writebyte('\n'); //é‡èµ·ä¸€è¡Œ
 }
 
 
@@ -116,15 +116,15 @@ static void console_prn_rn(void)
 #define FRONT_END_CHECK24_RESET()   do{s_chState = 0;}while(0)
 #define FRONT_END_CHECK24_TIMEOUT_NUM       500UL
 /**
-  * @brief   ¼ì²â¹¦ÄÜ°´¼üº¯Êı(¹¦ÄÜ°´¼ü24Î»±àÂë)
-  * @param  pwCmd  -- ÓÃÒÔ·µ»Ø¼ì²âµ½µÄ¹¦ÄÜ¼ü±àÂëµÄµØÖ·
+  * @brief   æ£€æµ‹åŠŸèƒ½æŒ‰é”®å‡½æ•°(åŠŸèƒ½æŒ‰é”®24ä½ç¼–ç )
+  * @param  pwCmd  -- ç”¨ä»¥è¿”å›æ£€æµ‹åˆ°çš„åŠŸèƒ½é”®ç¼–ç çš„åœ°å€
   * @note   
   * @retval     FSM stutas detail in common_type.h
   */
 static fsm_rt_t front_end_check24(uint32_t *pwCmd)
 {
     static uint8_t s_chState = FRONT_END_CHECK24_START;
-    static uint32_t s_wTimeOut;     // ³¬Ê±¼ÆÊıÆ÷
+    static uint32_t s_wTimeOut;     // è¶…æ—¶è®¡æ•°å™¨
     static uint8_t s_chTemp;
     static uint32_t s_wCmdTemp;
 
@@ -146,8 +146,8 @@ static fsm_rt_t front_end_check24(uint32_t *pwCmd)
                 } else {
                     s_wTimeOut++;
                 }
-            } else {                    // ³¬Ê±
-                *pwCmd = KEY_CODE_ESC;  // ·µ»ØEsc¼ü±àÂë
+            } else {                    // è¶…æ—¶
+                *pwCmd = KEY_CODE_ESC;  // è¿”å›Escé”®ç¼–ç 
                 FRONT_END_CHECK24_RESET();
                 return fsm_rt_cpl;
             }
@@ -164,8 +164,8 @@ static fsm_rt_t front_end_check24(uint32_t *pwCmd)
                 } else {
                     s_wTimeOut++;
                 }
-            } else {                    // ³¬Ê±
-                *pwCmd = KEY_CODE_ESC;  // ·µ»ØEsc¼ü±àÂë
+            } else {                    // è¶…æ—¶
+                *pwCmd = KEY_CODE_ESC;  // è¿”å›Escé”®ç¼–ç 
                 FRONT_END_CHECK24_RESET();
                 return fsm_rt_cpl;
             }
@@ -177,7 +177,7 @@ static fsm_rt_t front_end_check24(uint32_t *pwCmd)
     return fsm_rt_on_going;
 }
 /**
-  * @brief   ÊµÏÖ F1 ¹¦ÄÜ
+  * @brief   å®ç° F1 åŠŸèƒ½
   * @param  None
   * @note   
   * @retval none
@@ -193,7 +193,7 @@ static void front_fun_key_f1(void)
     } 
 }
 /**
-  * @brief  ÊµÏÖ F3 ¹¦ÄÜµÄº¯Êı
+  * @brief  å®ç° F3 åŠŸèƒ½çš„å‡½æ•°
   * @param  None
   * @note   
   * @retval     none
@@ -211,7 +211,7 @@ static void front_fun_key_f3(void)
     }
 }
 /**
-  * @brief  ÊµÏÖ up ¹¦ÄÜµÄº¯Êı  ¶ÁÉÏÒ»ÌõÖ¸Áî
+  * @brief  å®ç° up åŠŸèƒ½çš„å‡½æ•°  è¯»ä¸Šä¸€æ¡æŒ‡ä»¤
   * @param  None
   * @note   
   * @retval  none
@@ -220,8 +220,8 @@ static void front_fun_key_up(void)
 {
     uint8_t chLen;
 
-    if( s_chHisCmd.s_chHisCmdNum > 0 ){             // ÓĞÀúÊ·ÃüÁî    
-        console_display_backspace(s_chCurCmd.index); //µ±Ç°È«É¾
+    if( s_chHisCmd.s_chHisCmdNum > 0 ){             // æœ‰å†å²å‘½ä»¤    
+        console_display_backspace(s_chCurCmd.index); //å½“å‰å…¨åˆ 
         chLen =s_chHisCmd.s_tHisCmd[s_chHisCmd.s_chCurHisCmdPtr].chCmdLen;
         for( s_chCurCmd.index = 0; s_chCurCmd.index < chLen; s_chCurCmd.index++ ) {
             s_chCurCmd.chCmd[s_chCurCmd.index] = s_chHisCmd.s_tHisCmd[s_chHisCmd.s_chCurHisCmdPtr].chCmd[s_chCurCmd.index];
@@ -235,7 +235,7 @@ static void front_fun_key_up(void)
     }
 }
 /**
-  * @brief  ÊµÏÖ down ¹¦ÄÜµÄº¯Êı  ¶ÁÉÏÒ»ÌõÖ¸Áî
+  * @brief  å®ç° down åŠŸèƒ½çš„å‡½æ•°  è¯»ä¸Šä¸€æ¡æŒ‡ä»¤
   * @param  None
   * @note   
   * @retval  none
@@ -244,8 +244,8 @@ static void front_fun_key_down(void)
 {
     uint8_t chLen;
 
-    if( s_chHisCmd.s_chHisCmdNum > 0 ){             // ÓĞÀúÊ·ÃüÁî    
-        console_display_backspace(s_chCurCmd.index); //µ±Ç°È«É¾
+    if( s_chHisCmd.s_chHisCmdNum > 0 ){             // æœ‰å†å²å‘½ä»¤    
+        console_display_backspace(s_chCurCmd.index); //å½“å‰å…¨åˆ 
         chLen =s_chHisCmd.s_tHisCmd[s_chHisCmd.s_chCurHisCmdPtr].chCmdLen;
         for( s_chCurCmd.index = 0; s_chCurCmd.index < chLen; s_chCurCmd.index++ ) {
             s_chCurCmd.chCmd[s_chCurCmd.index] = s_chHisCmd.s_tHisCmd[s_chHisCmd.s_chCurHisCmdPtr].chCmd[s_chCurCmd.index];
@@ -259,8 +259,8 @@ static void front_fun_key_down(void)
     }
 }
 /**
-  * @brief  ×Ö·û¹¦ÄÜ´¦Àíº¯Êı
-  * @param  wKey --×Ö·û±àÂë
+  * @brief  å­—ç¬¦åŠŸèƒ½å¤„ç†å‡½æ•°
+  * @param  wKey --å­—ç¬¦ç¼–ç 
   * @note   
   * @note    
   * @note   
@@ -284,13 +284,13 @@ static void front_end_function_key(uint32_t wKey)
         case KEY_CODE_DOWN:
             front_fun_key_down();
             break;
-        default:            // Î´¶¨Òå°´¼ü
+        default:            // æœªå®šä¹‰æŒ‰é”®
              break;
     }
 }
 
 
-//!< ²é¿´×Ö·ûÊÇ·ñÎª·Ö¸ô·û
+//!< æŸ¥çœ‹å­—ç¬¦æ˜¯å¦ä¸ºåˆ†éš”ç¬¦
 static bool IsSeparator(uint8_t chByte)
 {
     //!< command separator
@@ -312,7 +312,7 @@ static bool IsSeparator(uint8_t chByte)
 #define FRONT_END_TAKEN                     3
 #define FRONT_END_RESET_FSM()               do{s_chState = 0;}while(0)
 
-//>! ×´Ì¬»ú´¦ÀíÖÁÊÕµ½Ò»ÌõÍêÕûÃüÁî£¬²¢±£´æºó·µ»Ø
+//>! çŠ¶æ€æœºå¤„ç†è‡³æ”¶åˆ°ä¸€æ¡å®Œæ•´å‘½ä»¤ï¼Œå¹¶ä¿å­˜åè¿”å›
 static fsm_rt_t front_end(void)
 {
     static uint8_t s_chState = FRONT_END_START;
@@ -323,17 +323,17 @@ static fsm_rt_t front_end(void)
     switch (s_chState) {
         case FRONT_END_START:
             pcmd->index = 0;
-            console_writebyte('>'); // Êä³ö'>'
+            console_writebyte('>'); // è¾“å‡º'>'
             s_chState = FRONT_END_INPUT; //fall through
             
         case FRONT_END_INPUT:
             if(console_readbyte(&chKey)) {
-                if ('\b' == chKey) {                 //!<  Backspace(BS) ÍË¸ñ
+                if ('\b' == chKey) {                 //!<  Backspace(BS) é€€æ ¼
                     if (0 != pcmd->index) {
                         pcmd->index--;
-                        console_display_backspace(1); // É¾³ıÒ»¸ö×Ö·û
+                        console_display_backspace(1); // åˆ é™¤ä¸€ä¸ªå­—ç¬¦
                     }       
-                } else if ('\r' == chKey) {     // »»ĞĞĞÂĞĞ »Ø³µ
+                } else if ('\r' == chKey) {     // æ¢è¡Œæ–°è¡Œ å›è½¦
                     console_prn_rn();           
                     if(0 == pcmd->index){
                         s_chState = FRONT_END_START;
@@ -343,12 +343,12 @@ static fsm_rt_t front_end(void)
                         s_chState = FRONT_END_TAKEN;
                     }
                 }else if( (chKey >= 32) && (chKey <= 127) ){
-                    if ( pcmd->index < (CONSOLE_CMD_CONSOLE_BUFFER_SIZE - 1)){ // Î´Âú
+                    if ( pcmd->index < (CONSOLE_CMD_CONSOLE_BUFFER_SIZE - 1)){ // æœªæ»¡
                         pcmd->chCmd[pcmd->index++] = chKey;
-                        console_writebyte(chKey); //!< »ØÏÔ
+                        console_writebyte(chKey); //!< å›æ˜¾
                     }
                 }
-                else if(chKey == 0x1B){ // Esc »òÕß24Î»±àÂë°´¼ü
+                else if(chKey == 0x1B){ // Esc æˆ–è€…24ä½ç¼–ç æŒ‰é”®
                     s_chState = FRONT_END_CHECK24; 
                 }
             }
@@ -361,7 +361,7 @@ static fsm_rt_t front_end(void)
             break;
             
         case FRONT_END_TAKEN:
-            //±£´æÀúÊ·ÃüÁî
+            //ä¿å­˜å†å²å‘½ä»¤
             console_hiscmd_save((console_cmd_t *)pcmd);			
             FRONT_END_RESET_FSM();
             return fsm_rt_cpl;
@@ -508,13 +508,13 @@ static void cmd_clear_hander(uint8_t argc, char *argv[], void *pcmd)
 }
 
 
-/*   ´¦ÀíRaw command
-	È¥³ı¶àÓà¿Õ¸ñ£¬²¢¶Ô·Ö×Ö·û´®²¹'\0' ½áÎ² */
+/*   å¤„ç†Raw command
+	å»é™¤å¤šä½™ç©ºæ ¼ï¼Œå¹¶å¯¹åˆ†å­—ç¬¦ä¸²è¡¥'\0' ç»“å°¾ */
 static void RawCmdtoken(console_arg_t *para)
 {
     char *pchRead;
     char *pchWrite;
-    bool bstringLast = false;//Óö·Ö¸ô·ûÇ°£¬±ØĞèÇ°ÃæÊÇ×Ö·û´®
+    bool bstringLast = false;//é‡åˆ†éš”ç¬¦å‰ï¼Œå¿…éœ€å‰é¢æ˜¯å­—ç¬¦ä¸²
     bool bSeparator;
     
     pchRead = (char *)&s_chCurCmd.chCmd[0];
@@ -559,7 +559,7 @@ static void parse(void)
     s_ptCMD = search_cmd_map(s_argCmd.argv[0]);
     if (NULL == s_ptCMD) { 
         console_writestring(CONSOLE_BADCOMMAND_PRINT);
-    }else{//ÏûÏ¢ÕÒµ½
+    }else{//æ¶ˆæ¯æ‰¾åˆ°
         if(s_argCmd.argc == 2 && IsMeetHelp(s_argCmd.argv[1])){
             if(s_ptCMD->pchHelp){
                 console_writebyte('\t');

@@ -1,12 +1,12 @@
-
-/* ±¾Çý¶¯Î´²âÊÔ */
+ï»¿
+/* æœ¬é©±åŠ¨æœªæµ‹è¯• */
 #ifndef __HAL_ADC_H_
 #define __HAL_ADC_H_
 
 #include "app_cfg.h"
 
 
-#define ADC_FULL_SCAL	4095	// ¾«¶È12
+#define ADC_FULL_SCAL	4095	// ç²¾åº¦12
 #define ADC_FULL_VREF	3300	//3300mV
 
 

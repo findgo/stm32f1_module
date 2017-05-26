@@ -1,9 +1,9 @@
-
+ï»¿
 #include "util_bits.h"
 /*
- * @ ¹ØÓÚÏÂÃæÁ½¸öºêµÄÕıÏòºÍ·´Ïò£¬
- * @ ÕıÏò£¬°´Î»ÊıÓò¶¨ÏòÎªÕıÏò£¬BITSTART ´ÓÓÒÍù×ó Êı __LENGTH ³¤ 		¼´°´Õı³£Î»½Ú
- * @ ·´Ïò£¬°´Î»ÊıÓò¶¨Ïò·´ÏòÎª·´Ïò£¬BITSTART ´Ó×óÍùÓÒÊı __LENGTH ³¤	¼´°´·´ÏòÎ»½Ú
+ * @ å…³äºä¸‹é¢ä¸¤ä¸ªå®çš„æ­£å‘å’Œåå‘ï¼Œ
+ * @ æ­£å‘ï¼ŒæŒ‰ä½æ•°åŸŸå®šå‘ä¸ºæ­£å‘ï¼ŒBITSTART ä»å³å¾€å·¦ æ•° __LENGTH é•¿ 		å³æŒ‰æ­£å¸¸ä½èŠ‚
+ * @ åå‘ï¼ŒæŒ‰ä½æ•°åŸŸå®šå‘åå‘ä¸ºåå‘ï¼ŒBITSTART ä»å·¦å¾€å³æ•° __LENGTH é•¿	å³æŒ‰åå‘ä½èŠ‚
  */
 
 #define WRITEBITS_UINTx( __VALUE, __BITSTART, __LENGTH, __DATA, __TYPE) \
@@ -61,9 +61,9 @@
 
 
 /**
-  * @brief  ½«valueÄÚ´æµÄÄÚÈİ bitstartÎ»ÊıÆğ³¤¶ÈlengthµÄÎ»Êı£¬¸ÄÎªÊı¾İdata 
-  * @param  value Òª¸ÄµÄÄÚÈİ bitStart ÆğÊ¼Î» length ³¤¶ÈÎ» data Êı¾İ
-  * @note   ·½Ïò: ÕıÏò       Èç¹ûdataÊı¾İ³¬³ö£¬Ôò»á±»½Ø¶Ï
+  * @brief  å°†valueå†…å­˜çš„å†…å®¹ bitstartä½æ•°èµ·é•¿åº¦lengthçš„ä½æ•°ï¼Œæ”¹ä¸ºæ•°æ®data 
+  * @param  value è¦æ”¹çš„å†…å®¹ bitStart èµ·å§‹ä½ length é•¿åº¦ä½ data æ•°æ®
+  * @note   æ–¹å‘: æ­£å‘       å¦‚æœdataæ•°æ®è¶…å‡ºï¼Œåˆ™ä¼šè¢«æˆªæ–­
   * @retval none
   */
 void writebits_U8(uint8_t *value, uint8_t bitStart, uint8_t length, uint8_t data)
@@ -72,8 +72,8 @@ void writebits_U8(uint8_t *value, uint8_t bitStart, uint8_t length, uint8_t data
 }
 /**
   * @brief  
-  * @param   value Òª¸ÄµÄÄÚÈİ bitStart ÆğÊ¼Î» length ³¤¶ÈÎ» data Êı¾İ
-  * @note    ·½Ïò: ÕıÏò
+  * @param   value è¦æ”¹çš„å†…å®¹ bitStart èµ·å§‹ä½ length é•¿åº¦ä½ data æ•°æ®
+  * @note    æ–¹å‘: æ­£å‘
   * @retval 
   */
 void writebits_U16(uint16_t *value, uint8_t bitStart, uint8_t length, uint16_t data)
@@ -82,8 +82,8 @@ void writebits_U16(uint16_t *value, uint8_t bitStart, uint8_t length, uint16_t d
 }
 /**
   * @brief  
-  * @param   value Òª¸ÄµÄÄÚÈİ bitStart ÆğÊ¼Î» length ³¤¶ÈÎ» data Êı¾İ
-  * @note    ·½Ïò: ÕıÏò
+  * @param   value è¦æ”¹çš„å†…å®¹ bitStart èµ·å§‹ä½ length é•¿åº¦ä½ data æ•°æ®
+  * @note    æ–¹å‘: æ­£å‘
   * @retval 
   */
 void writebits_U32(uint32_t *value, uint8_t bitStart, uint8_t length, uint32_t data)
@@ -92,9 +92,9 @@ void writebits_U32(uint32_t *value, uint8_t bitStart, uint8_t length, uint32_t d
 }
 
 /**
-  * @brief  ½«valueÄÚ´æµÄÄÚÈİ bitstartÎ»ÊıÆğ³¤¶ÈlengthµÄÎ»Êı£¬¸ÄÎªÊı¾İdata 
-  * @param  value Òª¸ÄµÄÄÚÈİ bitStart ÆğÊ¼Î» length ³¤¶ÈÎ» data Êı¾İ
-  * @note    ·½Ïò: ·´Ïò       Èç¹ûdataÊı¾İ³¬³ö£¬Ôò»á±»½Ø¶Ï
+  * @brief  å°†valueå†…å­˜çš„å†…å®¹ bitstartä½æ•°èµ·é•¿åº¦lengthçš„ä½æ•°ï¼Œæ”¹ä¸ºæ•°æ®data 
+  * @param  value è¦æ”¹çš„å†…å®¹ bitStart èµ·å§‹ä½ length é•¿åº¦ä½ data æ•°æ®
+  * @note    æ–¹å‘: åå‘       å¦‚æœdataæ•°æ®è¶…å‡ºï¼Œåˆ™ä¼šè¢«æˆªæ–­
   * @retval none
   */
 void writebits_invU8(uint8_t *value, uint8_t bitStart, uint8_t length, uint8_t data)
@@ -103,8 +103,8 @@ void writebits_invU8(uint8_t *value, uint8_t bitStart, uint8_t length, uint8_t d
 }
 /**
   * @brief  
-  * @param   value Òª¸ÄµÄÄÚÈİ bitStart ÆğÊ¼Î» length ³¤¶ÈÎ» data Êı¾İ
-  * @note    ·½Ïò: ·´Ïò
+  * @param   value è¦æ”¹çš„å†…å®¹ bitStart èµ·å§‹ä½ length é•¿åº¦ä½ data æ•°æ®
+  * @note    æ–¹å‘: åå‘
   * @retval 
   */
 void writebits_invU16(uint16_t *value, uint8_t bitStart, uint8_t length, uint16_t data)
@@ -114,8 +114,8 @@ void writebits_invU16(uint16_t *value, uint8_t bitStart, uint8_t length, uint16_
 
 /**
   * @brief  
-  * @param   value Òª¸ÄµÄÄÚÈİ bitStart ÆğÊ¼Î» length ³¤¶ÈÎ» data Êı¾İ
-  * @note    ·½Ïò: ·´Ïò
+  * @param   value è¦æ”¹çš„å†…å®¹ bitStart èµ·å§‹ä½ length é•¿åº¦ä½ data æ•°æ®
+  * @note    æ–¹å‘: åå‘
   * @retval 
   */
 void writebits_invU32(uint32_t *value, uint8_t bitStart, uint8_t length, uint32_t data)
@@ -125,9 +125,9 @@ void writebits_invU32(uint32_t *value, uint8_t bitStart, uint8_t length, uint32_
 
 /**
   * @brief  
-  * @param   value Òª¶ÁµÄÄÚÈİ bitStart ÆğÊ¼Î» length ³¤¶ÈÎ»
-  * @note    ·½Ïò: ÕıÏò
-  * @retval  Öµ
+  * @param   value è¦è¯»çš„å†…å®¹ bitStart èµ·å§‹ä½ length é•¿åº¦ä½
+  * @note    æ–¹å‘: æ­£å‘
+  * @retval  å€¼
   */
 uint8_t readbits_U8(uint8_t value, uint8_t bitStart, uint8_t length)
 {
@@ -135,9 +135,9 @@ uint8_t readbits_U8(uint8_t value, uint8_t bitStart, uint8_t length)
 }
 /**
   * @brief  
-  * @param   value Òª¶ÁµÄÄÚÈİ bitStart ÆğÊ¼Î» length ³¤¶ÈÎ»
-  * @note    ·½Ïò: ÕıÏò
-  * @retval  Öµ
+  * @param   value è¦è¯»çš„å†…å®¹ bitStart èµ·å§‹ä½ length é•¿åº¦ä½
+  * @note    æ–¹å‘: æ­£å‘
+  * @retval  å€¼
   */
 uint16_t readbits_U16(uint16_t value, uint8_t bitStart, uint8_t length)
 {
@@ -146,9 +146,9 @@ uint16_t readbits_U16(uint16_t value, uint8_t bitStart, uint8_t length)
 
 /**
   * @brief  
-  * @param   value Òª¶ÁµÄÄÚÈİ bitStart ÆğÊ¼Î» length ³¤¶ÈÎ»
-  * @note    ·½Ïò: ÕıÏò
-  * @retval  Öµ
+  * @param   value è¦è¯»çš„å†…å®¹ bitStart èµ·å§‹ä½ length é•¿åº¦ä½
+  * @note    æ–¹å‘: æ­£å‘
+  * @retval  å€¼
   */
 uint32_t readbits_U32(uint32_t value, uint8_t bitStart, uint8_t length)
 {
@@ -156,9 +156,9 @@ uint32_t readbits_U32(uint32_t value, uint8_t bitStart, uint8_t length)
 }
 /**
   * @brief  
-  * @param   value Òª¶ÁµÄÄÚÈİ bitStart ÆğÊ¼Î» length ³¤¶ÈÎ»
-  * @note    ·½Ïò: ·´Ïò
-  * @retval  Öµ
+  * @param   value è¦è¯»çš„å†…å®¹ bitStart èµ·å§‹ä½ length é•¿åº¦ä½
+  * @note    æ–¹å‘: åå‘
+  * @retval  å€¼
   */
 uint8_t readbits_invU8(uint8_t value, uint8_t bitStart, uint8_t length)
 {
@@ -166,9 +166,9 @@ uint8_t readbits_invU8(uint8_t value, uint8_t bitStart, uint8_t length)
 }
 /**
   * @brief  
-  * @param   value Òª¶ÁµÄÄÚÈİ bitStart ÆğÊ¼Î» length ³¤¶ÈÎ»
-  * @note    ·½Ïò: ·´Ïò
-  * @retval  Öµ
+  * @param   value è¦è¯»çš„å†…å®¹ bitStart èµ·å§‹ä½ length é•¿åº¦ä½
+  * @note    æ–¹å‘: åå‘
+  * @retval  å€¼
   */
 uint16_t readbits_invU16(uint16_t value, uint8_t bitStart, uint8_t length)
 {
@@ -177,9 +177,9 @@ uint16_t readbits_invU16(uint16_t value, uint8_t bitStart, uint8_t length)
 
 /**
   * @brief  
-  * @param   value Òª¶ÁµÄÄÚÈİ bitStart ÆğÊ¼Î» length ³¤¶ÈÎ»
-  * @note    ·½Ïò: ·´Ïò
-  * @retval  Öµ
+  * @param   value è¦è¯»çš„å†…å®¹ bitStart èµ·å§‹ä½ length é•¿åº¦ä½
+  * @note    æ–¹å‘: åå‘
+  * @retval  å€¼
   */
 uint32_t readbits_invU32(uint32_t value, uint8_t bitStart, uint8_t length)
 {

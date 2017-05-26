@@ -1,4 +1,4 @@
-#include "mkey.h"
+ï»¿#include "mkey.h"
 
 typedef struct{                                                                     
     uint8_t     tHead;
@@ -8,9 +8,9 @@ typedef struct{
     uint8_t    *ptBuffer;
 }key_fifo_t;
 
-//¶¨Òå»º³åÇø
+//å®šä¹‰ç¼“å†²åŒº
 static uint8_t s_tKeyDetectorBuffer[KEY_QUEUE_MAX_SIZE];
-//¶¨ÒåÒ»¸ö¶ÔÏóÊµÁÐ
+//å®šä¹‰ä¸€ä¸ªå¯¹è±¡å®žåˆ—
 static key_fifo_t s_tKeyDetectorQueue = {0, 0, 0, KEY_QUEUE_MAX_SIZE, s_tKeyDetectorBuffer};
 
 static key_cfg_t *KeyHead = NULL;
@@ -79,7 +79,7 @@ void mkey_create(key_cfg_t *cfg,KeyDownFunc IsKeyDownFunc,
 }
 
 /**
-  * @brief   °´¼ü·ÖÎö³ÌÐò£¬¶Ì»÷£¬³¤»÷£¬Á¬»÷,Ì§¼ü
+  * @brief   æŒ‰é”®åˆ†æžç¨‹åºï¼ŒçŸ­å‡»ï¼Œé•¿å‡»ï¼Œè¿žå‡»,æŠ¬é”®
   * @param  none
   * @note   
   * @retval  none
@@ -99,10 +99,10 @@ void mkey_decetor_task(void)
                 break;
                 
             case KEY_DECETOR_CHECK_DOWN:    
-                if(++curcfg->filterCount >= curcfg->filterTime){ // ÂË²¨
+                if(++curcfg->filterCount >= curcfg->filterTime){ // æ»¤æ³¢
                     curcfg->filterCount = 0;
                     if(curcfg->IsKeyDownFunc()){
-                        if((curcfg ->longTime == 0) && (curcfg->repeatSpeed == 0)){ // ²»Ö§³Ö³¤»÷ºÍÁ¬»÷£¬Ö±½Óµ½Ì§¼ü×´Ì¬
+                        if((curcfg ->longTime == 0) && (curcfg->repeatSpeed == 0)){ // ä¸æ”¯æŒé•¿å‡»å’Œè¿žå‡»ï¼Œç›´æŽ¥åˆ°æŠ¬é”®çŠ¶æ€
                             key_put(curcfg->KeyCodeDown);
                             curcfg->state = KEY_DECETOR_IS_UP;
                         }else{
@@ -115,23 +115,23 @@ void mkey_decetor_task(void)
                 break;
                 
             case KEY_DECETOR_LONG_PRESS:
-                if(curcfg->longTime > 0){ // Ö§³Ö³¤°´
+                if(curcfg->longTime > 0){ // æ”¯æŒé•¿æŒ‰
                     if(curcfg->IsKeyDownFunc()){
-                        if(++curcfg->longrepCount >= curcfg->longTime){// ³¤°´
+                        if(++curcfg->longrepCount >= curcfg->longTime){// é•¿æŒ‰
                             key_put(curcfg->KeyCodeLong);
-                            if(curcfg->repeatSpeed == 0)// ²»Ö§³ÖÁ¬»÷£¬Ö±½Óµ½Ì§¼ü
+                            if(curcfg->repeatSpeed == 0)// ä¸æ”¯æŒè¿žå‡»ï¼Œç›´æŽ¥åˆ°æŠ¬é”®
                                 curcfg->state = KEY_DECETOR_IS_UP;
                             else
                                 curcfg->state = KEY_DECETOR_REPEAT_PRESS;
                             curcfg->longrepCount = 0;  
                         }
-                    }else{  //¶Ì°´
+                    }else{  //çŸ­æŒ‰
                         key_put(curcfg->KeyCodeDown);
                         curcfg->state = KEY_DECETOR_IS_UP;
                         curcfg->longrepCount = 0;
                     }
-                }else{  // ²»Ö§³Ö³¤°´
-                    if(curcfg->repeatSpeed > 0){ //Ö§³ÖÁ¬»÷
+                }else{  // ä¸æ”¯æŒé•¿æŒ‰
+                    if(curcfg->repeatSpeed > 0){ //æ”¯æŒè¿žå‡»
                        if(curcfg->IsKeyDownFunc()){
                             if(++curcfg->longrepCount >= KEY_LONGTOREAP_TIME){
                                 curcfg->state = KEY_DECETOR_REPEAT_PRESS;                        
@@ -142,14 +142,14 @@ void mkey_decetor_task(void)
                             curcfg->longrepCount = 0;
                             curcfg->state = KEY_DECETOR_IS_UP; 
                        }
-                    }else{ // ²»Ö§³ÖÁ¬»÷
+                    }else{ // ä¸æ”¯æŒè¿žå‡»
                        key_put(curcfg->KeyCodeDown);
                        curcfg->state = KEY_DECETOR_IS_UP; 
                     }
                 }
                 break;
             case KEY_DECETOR_REPEAT_PRESS:
-                if(curcfg->repeatSpeed > 0){ // Ö§³ÖÁ¬»÷
+                if(curcfg->repeatSpeed > 0){ // æ”¯æŒè¿žå‡»
                     if(curcfg->IsKeyDownFunc()){
                         if(++curcfg->longrepCount >= curcfg->repeatSpeed){
                             key_put(curcfg->KeyCodeDown);
@@ -159,13 +159,13 @@ void mkey_decetor_task(void)
                          curcfg->longrepCount = 0;
                          curcfg->state = KEY_DECETOR_IS_UP;
                     }
-                }else{ // ²»Ö§³ÖÁ¬»÷            
+                }else{ // ä¸æ”¯æŒè¿žå‡»            
                     curcfg->longrepCount = 0;
                     curcfg->state = KEY_DECETOR_IS_UP;
                 }
                 break;
                 
-            case KEY_DECETOR_IS_UP:         //Ì§¼ü´¦Àí
+            case KEY_DECETOR_IS_UP:         //æŠ¬é”®å¤„ç†
                 if(++curcfg->filterCount >= curcfg->filterTime){
                     if(!curcfg->IsKeyDownFunc()){
                         if(curcfg->KeyCodeUp != KEY_NULL)
@@ -183,7 +183,7 @@ void mkey_decetor_task(void)
     }
 }
 /**
-  * @brief  ·µ»Ø¼üÖµ
+  * @brief  è¿”å›žé”®å€¼
   * @param  
   * @note   
   * @retval  none
@@ -222,13 +222,13 @@ void  FunDebuginit(void)
 	GPIO_Init(GPIOA, &GPIO_InitStruct);
     
     dbg_set_dbg_level(7);
-    // ²âÊÔÈ«¹¦ÄÜ
+    // æµ‹è¯•å…¨åŠŸèƒ½
 //    mkey_create(&testKey,TestKeyDown,KEY_PRESS1_DOWN, KEY_PRESS1_LONG, KEY_PRESS1_UP,2,100,20);
-    // ²âÊÔ¶Ì°´  Ì§¼ü  
+    // æµ‹è¯•çŸ­æŒ‰  æŠ¬é”®  
 //    mkey_create(&testKey,TestKeyDown,KEY_PRESS1_DOWN, KEY_PRESS1_LONG, KEY_PRESS1_UP,2,0,0);
-    // ²âÊÔ¶Ì°´  ³¤°´    
+    // æµ‹è¯•çŸ­æŒ‰  é•¿æŒ‰    
 //    mkey_create(&testKey,TestKeyDown,KEY_PRESS1_DOWN, KEY_PRESS1_LONG, KEY_NULL,2,100,0);
-    // ²âÊÔ¶Ì°´  Á¬»÷     
+    // æµ‹è¯•çŸ­æŒ‰  è¿žå‡»     
     mkey_create(&testKey,TestKeyDown,KEY_PRESS1_DOWN, KEY_NULL, KEY_NULL,2,0,20);
     mtimer_start(&testkey_time,tm_ms(10));
 }
