@@ -12,7 +12,7 @@ static void prvClockInit(void);
 static void prvnvicInit(void);
 
 int main(void)
-{	    
+{
     SystemCoreClockUpdate();
 	prvnvicInit();
 	Systick_Configuration();
@@ -40,27 +40,27 @@ int main(void)
  *=============================================================================
  *						  System Clock Configuration
  *=============================================================================
- *		 System Clock source		  | PLL(HSE)
+ *		 System Clock source		  | PLL(HSI)
  *-----------------------------------------------------------------------------
- *		 SYSCLK 					  | 72000000 Hz
+ *		 SYSCLK 					  | 36000000 Hz
  *-----------------------------------------------------------------------------
- *		 HCLK					  | 72000000 Hz
+ *		 HCLK					  | 36000000 Hz
  *-----------------------------------------------------------------------------
  *		 PCLK1					  | 36000000 Hz
  *-----------------------------------------------------------------------------
- *		 PCLK2					  | 72000000 Hz
+ *		 PCLK2					  | 36000000 Hz
  *-----------------------------------------------------------------------------
- *		 ADCCLK					  | 12000000 Hz
+ *		 ADCCLK					  | 9000000 Hz
  *-----------------------------------------------------------------------------
  *		 AHB Prescaler			  | 1
  *-----------------------------------------------------------------------------
- *		 APB1 Prescaler 			  | 2
+ *		 APB1 Prescaler 			  | 1
  *-----------------------------------------------------------------------------
  *		 APB2 Prescaler 			  | 1
  *-----------------------------------------------------------------------------
- *		 ADC Prescaler 			  | 6
+ *		 ADC Prescaler 			  | 4
  *-----------------------------------------------------------------------------
- *		 HSE Frequency			  | 8000000 Hz
+ *		 HSI Frequency			  | 8000000 Hz   /   2
  *-----------------------------------------------------------------------------
  *		 PLL MUL					  | 9
  *-----------------------------------------------------------------------------
@@ -70,19 +70,14 @@ int main(void)
  *-----------------------------------------------------------------------------
  *=============================================================================
 */
-//Clock configuration
+//HSI Clock configuration
+// 当不使用外部时钟时，配置内部时钟参数
 static void prvClockInit(void)
 {
-  ErrorStatus HSEStartUpStatus;
+    RCC_DeInit();
+    /* Enable HSi */
+    RCC_HSICmd(ENABLE);
 
-  RCC_DeInit();
-  /* Enable HSE */
-  RCC_HSEConfig(RCC_HSE_ON);
-  /* Wait till HSE is ready */
-  HSEStartUpStatus = RCC_WaitForHSEStartUp();
-
-  if (HSEStartUpStatus == SUCCESS)
-  {
     /* Enable Prefetch Buffer */
     FLASH_PrefetchBufferCmd(FLASH_PrefetchBuffer_Enable);
 
@@ -95,14 +90,14 @@ static void prvClockInit(void)
     /* APB2 = DIV1, PCLK2 = HCLK */
     RCC_PCLK2Config(RCC_HCLK_Div1);
 
-    /* APB1 = DIV2, PCLK1 = HCLK/2 */
-    RCC_PCLK1Config(RCC_HCLK_Div2);
+    /* APB1 = DIV1, PCLK1 = HCLK */
+    RCC_PCLK1Config(RCC_HCLK_Div1);
 
-    /* ADCCLK = PCLK2/6 = 72 / 6 = 12 MHz*/
-    RCC_ADCCLKConfig(RCC_PCLK2_Div6);
+    /* ADCCLK = PCLK2/6 = 36 / 4 = 9 MHz*/
+    RCC_ADCCLKConfig(RCC_PCLK2_Div4);
 
-    /* PLLCLK = 8MHz * 9 = 72 MHz */
-    RCC_PLLConfig(RCC_PLLSource_HSE_Div1, RCC_PLLMul_9);
+    /* PLLCLK = 8 / 2MHz * 9 = 36 MHz */
+    RCC_PLLConfig(RCC_PLLSource_HSI_Div2, RCC_PLLMul_9);
 
     /* Enable PLL */
     RCC_PLLCmd(ENABLE);
@@ -114,13 +109,7 @@ static void prvClockInit(void)
     RCC_SYSCLKConfig(RCC_SYSCLKSource_PLLCLK);
 
     /* Wait till PLL is used as system clock source */
-    while(RCC_GetSYSCLKSource() != 0x08);
-
-	SystemCoreClockUpdate();
-  } else {
-    //Cannot start xtal oscillator!
-    while(1); 
-  }
+    while(RCC_GetSYSCLKSource() != 0x08); 
 }
 
 //nvic configuration
