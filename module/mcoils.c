@@ -43,17 +43,20 @@ void mCoilsSet (uint8_t Coils, mCoils_Mode mode)
         if (mode != MCOILS_MODE_TOGGLE){//非切换模式        
             if(PreCoilStatus(Coil)){//查看当前coil状态
               if(mode == MCOILS_MODE_OFF){ //on,then check it want to set off?
-                mCoilsOnOff(Coil, MCOILS_MODE_OFF); //动作
+              	mCoilsOnOff(Coil, MCOILS_MODE_OFF); //动作
               }
-            }else{               
+            }
+			else{               
               if(mode == MCOILS_MODE_ON){   //off, then check it want to set on?
                 mCoilsOnOff(Coil, MCOILS_MODE_ON); 
               }
             }
-        } else {           /* Toggle mode*/
+        }
+		else {           /* Toggle mode*/
             if(PreCoilStatus(Coil)){  //查看当前coil状态
                 uSMode = MCOILS_MODE_OFF;   //on, Toggle to off 
-            }else{
+            }
+			else{
                 uSMode = MCOILS_MODE_ON;    //off, Toggle to on
             }
             mCoilsOnOff(Coil, uSMode);    //动作
@@ -105,7 +108,8 @@ void mCoilsOnOff(uint8_t Coils, mCoils_Mode mode)
       if (mode == MCOILS_MODE_ON){
         MTURN_COILS1_ON();      
         PreCoilOnOffStatus |= MCOILS_1;//save current mode
-      }else{
+      }
+	  else{
         MTURN_COILS1_OFF();     
         PreCoilOnOffStatus &= ~MCOILS_1;//save current mode
       }
@@ -116,7 +120,8 @@ void mCoilsOnOff(uint8_t Coils, mCoils_Mode mode)
       if (mode == MCOILS_MODE_ON){
         MTURN_COILS2_ON();
         PreCoilOnOffStatus |= MCOILS_2;//save current mode
-      }else{
+      }
+	  else{
         MTURN_COILS2_OFF(); 
         PreCoilOnOffStatus &= ~MCOILS_2;//save current mode
       }
@@ -127,7 +132,8 @@ void mCoilsOnOff(uint8_t Coils, mCoils_Mode mode)
       if (mode == MCOILS_MODE_ON){
         MTURN_COILS3_ON();  
         PreCoilOnOffStatus |= MCOILS_3;//save current mode
-      }else{
+      }
+	  else{
         MTURN_COILS3_OFF();
         PreCoilOnOffStatus &= ~MCOILS_3;//save current mode
       }
@@ -138,7 +144,8 @@ void mCoilsOnOff(uint8_t Coils, mCoils_Mode mode)
       if (mode == MCOILS_MODE_ON){
         MTURN_COILS4_ON();
         PreCoilOnOffStatus |= MCOILS_4;//save current mode
-      }else{
+      }
+	  else{
         MTURN_COILS4_OFF();
         PreCoilOnOffStatus &= ~MCOILS_4;//save current mode
       }
@@ -149,7 +156,8 @@ void mCoilsOnOff(uint8_t Coils, mCoils_Mode mode)
       if (mode == MCOILS_MODE_ON){
         MTURN_COILS5_ON();
         PreCoilOnOffStatus |= MCOILS_5;//save current mode
-      }else{
+      }
+	  else{
         MTURN_COILS5_OFF();
         PreCoilOnOffStatus &= ~MCOILS_5;//save current mode
       }
@@ -160,7 +168,8 @@ void mCoilsOnOff(uint8_t Coils, mCoils_Mode mode)
       if (mode == MCOILS_MODE_ON){
         MTURN_COILS6_ON();  
         PreCoilOnOffStatus |= MCOILS_6;//save current mode
-      }else{
+      }
+	  else{
         MTURN_COILS6_OFF();
         PreCoilOnOffStatus &= ~MCOILS_6;//save current mode
       }
@@ -171,7 +180,8 @@ void mCoilsOnOff(uint8_t Coils, mCoils_Mode mode)
       if (mode == MCOILS_MODE_ON){
         MTURN_COILS7_ON();
         PreCoilOnOffStatus |= MCOILS_7;//save current mode
-      }else{
+      }
+	  else{
         MTURN_COILS7_OFF(); 
         PreCoilOnOffStatus &= ~MCOILS_7;//save current mode
       }
@@ -182,7 +192,8 @@ void mCoilsOnOff(uint8_t Coils, mCoils_Mode mode)
       if (mode == MCOILS_MODE_ON){
         MTURN_COILS8_ON();  
         PreCoilOnOffStatus |= MCOILS_8;//save current mode
-      }else{
+      }
+	  else{
         MTURN_COILS8_OFF(); 
         PreCoilOnOffStatus &= ~MCOILS_8;//save current mode
       }

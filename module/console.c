@@ -1,4 +1,4 @@
-﻿
+
 #include "console.h"
 
 //!<    MACROS
@@ -96,7 +96,8 @@ static void console_display_backspace(uint8_t chNum)
     if(chNum == 0)
         return;
 
-    while(chNum--){
+    while(chNum--)
+	{
         console_writebyte('\b');    //先退一格
         console_writebyte(' '); //输出空白
         console_writebyte('\b'); //再退一格
@@ -131,48 +132,51 @@ static fsm_rt_t front_end_check24(uint32_t *pwCmd)
     assert_param(NULL != pwCmd);
 
     *pwCmd = 0;
-    switch (s_chState) 
-    {
-        case FRONT_END_CHECK24_START:
-            s_wTimeOut = 0;
-            s_chState = FRONT_END_CHECK24_SEC;      // fall through
-            
-        case FRONT_END_CHECK24_SEC:
-            if( s_wTimeOut < FRONT_END_CHECK24_TIMEOUT_NUM ) {
-                if(console_readbyte(&s_chTemp)) {
-                    s_wCmdTemp = (KEY_CODE_ESC << 16) + ( ((uint32_t)s_chTemp) << 8 );
-                    s_wTimeOut = 0;
-                    s_chState = FRONT_END_CHECK24_THR;
-                } else {
-                    s_wTimeOut++;
-                }
-            } else {                    // 超时
-                *pwCmd = KEY_CODE_ESC;  // 返回Esc键编码
+    switch (s_chState) {
+    case FRONT_END_CHECK24_START:
+        s_wTimeOut = 0;
+        s_chState = FRONT_END_CHECK24_SEC;      // fall through
+        
+    case FRONT_END_CHECK24_SEC:
+        if( s_wTimeOut < FRONT_END_CHECK24_TIMEOUT_NUM ) {
+            if(console_readbyte(&s_chTemp)) {
+                s_wCmdTemp = (KEY_CODE_ESC << 16) + ( ((uint32_t)s_chTemp) << 8 );
+                s_wTimeOut = 0;
+                s_chState = FRONT_END_CHECK24_THR;
+            }
+			else {
+                s_wTimeOut++;
+            }
+        }
+		else {                    // 超时
+            *pwCmd = KEY_CODE_ESC;  // 返回Esc键编码
+            FRONT_END_CHECK24_RESET();
+            return fsm_rt_cpl;
+        }
+        break;
+        
+    case FRONT_END_CHECK24_THR:
+        if( s_wTimeOut < FRONT_END_CHECK24_TIMEOUT_NUM ) {
+            if( console_readbyte(&s_chTemp) ) {
+                s_wCmdTemp += s_chTemp;
+                s_wTimeOut = 0;
+                *pwCmd = s_wCmdTemp;
                 FRONT_END_CHECK24_RESET();
                 return fsm_rt_cpl;
             }
-            break;
-            
-        case FRONT_END_CHECK24_THR:
-            if( s_wTimeOut < FRONT_END_CHECK24_TIMEOUT_NUM ) {
-                if( console_readbyte(&s_chTemp) ) {
-                    s_wCmdTemp += s_chTemp;
-                    s_wTimeOut = 0;
-                    *pwCmd = s_wCmdTemp;
-                    FRONT_END_CHECK24_RESET();
-                    return fsm_rt_cpl;
-                } else {
-                    s_wTimeOut++;
-                }
-            } else {                    // 超时
-                *pwCmd = KEY_CODE_ESC;  // 返回Esc键编码
-                FRONT_END_CHECK24_RESET();
-                return fsm_rt_cpl;
+			else {
+                s_wTimeOut++;
             }
-            break;
-            
-		default: 
-	   		break;
+        }
+		else {                    // 超时
+            *pwCmd = KEY_CODE_ESC;  // 返回Esc键编码
+            FRONT_END_CHECK24_RESET();
+            return fsm_rt_cpl;
+        }
+        break;
+        
+	default: 
+   		break;
     }
     return fsm_rt_on_going;
 }
@@ -222,14 +226,15 @@ static void front_fun_key_up(void)
 
     if( s_chHisCmd.s_chHisCmdNum > 0 ){             // 有历史命令    
         console_display_backspace(s_chCurCmd.index); //当前全删
-        chLen =s_chHisCmd.s_tHisCmd[s_chHisCmd.s_chCurHisCmdPtr].chCmdLen;
+        chLen = s_chHisCmd.s_tHisCmd[s_chHisCmd.s_chCurHisCmdPtr].chCmdLen;
         for( s_chCurCmd.index = 0; s_chCurCmd.index < chLen; s_chCurCmd.index++ ) {
             s_chCurCmd.chCmd[s_chCurCmd.index] = s_chHisCmd.s_tHisCmd[s_chHisCmd.s_chCurHisCmdPtr].chCmd[s_chCurCmd.index];
             console_writebyte(s_chCurCmd.chCmd[s_chCurCmd.index]);
         }
         if(s_chHisCmd.s_chCurHisCmdPtr == 0){
             s_chHisCmd.s_chCurHisCmdPtr = s_chHisCmd.s_chCurHisCmdNum;
-        }else{
+        }
+		else{
             s_chHisCmd.s_chCurHisCmdPtr--;
         }
     }
@@ -253,7 +258,8 @@ static void front_fun_key_down(void)
         }
         if(s_chHisCmd.s_chCurHisCmdPtr == s_chHisCmd.s_chCurHisCmdNum){
             s_chHisCmd.s_chCurHisCmdPtr = 0;
-        }else{
+        }
+		else{
             s_chHisCmd.s_chCurHisCmdPtr++;
         }
     }
@@ -269,23 +275,23 @@ static void front_fun_key_down(void)
 static void front_end_function_key(uint32_t wKey)
 {
     switch(wKey) {
-        case KEY_CODE_F1:
-            front_fun_key_f1();
-            break;
+    case KEY_CODE_F1:
+        front_fun_key_f1();
+        break;
 
-        case KEY_CODE_F3:
-            front_fun_key_f3();
-            break;
-            
-        case KEY_CODE_UP:
-            front_fun_key_up();
-            break;
+    case KEY_CODE_F3:
+        front_fun_key_f3();
+        break;
+        
+    case KEY_CODE_UP:
+        front_fun_key_up();
+        break;
 
-        case KEY_CODE_DOWN:
-            front_fun_key_down();
-            break;
-        default:            // 未定义按键
-             break;
+    case KEY_CODE_DOWN:
+        front_fun_key_down();
+        break;
+    default:            // 未定义按键
+         break;
     }
 }
 
@@ -297,7 +303,8 @@ static bool IsSeparator(uint8_t chByte)
     const uint8_t c_chSeparator[] = CONSOLE_SEPARATOR;
     uint8_t const *pchBuffer = &c_chSeparator[0];
 
-    while ('\0' != *pchBuffer) {
+    while ('\0' != *pchBuffer) 
+	{
         if (chByte == *pchBuffer) {
             return true;
         }   
@@ -321,106 +328,60 @@ static fsm_rt_t front_end(void)
     console_curcmd_t *pcmd = &s_chCurCmd;
     
     switch (s_chState) {
-        case FRONT_END_START:
-            pcmd->index = 0;
-            console_writebyte('>'); // 输出'>'
-            s_chState = FRONT_END_INPUT; //fall through
-            
-        case FRONT_END_INPUT:
-            if(console_readbyte(&chKey)) {
-                if ('\b' == chKey) {                 //!<  Backspace(BS) 退格
-                    if (0 != pcmd->index) {
-                        pcmd->index--;
-                        console_display_backspace(1); // 删除一个字符
-                    }       
-                } else if ('\r' == chKey) {     // 换行新行 回车
-                    console_prn_rn();           
-                    if(0 == pcmd->index){
-                        s_chState = FRONT_END_START;
-                    }else{
-                        pcmd->chCmd[pcmd->index] = '\0';
-                        FRONT_END_RESET_FSM();
-                        s_chState = FRONT_END_TAKEN;
-                    }
-                }else if( (chKey >= 32) && (chKey <= 127) ){
-                    if ( pcmd->index < (CONSOLE_CMD_CONSOLE_BUFFER_SIZE - 1)){ // 未满
-                        pcmd->chCmd[pcmd->index++] = chKey;
-                        console_writebyte(chKey); //!< 回显
-                    }
+    case FRONT_END_START:
+        pcmd->index = 0;
+        console_writebyte('>'); // 输出'>'
+        s_chState = FRONT_END_INPUT; //fall through
+        
+    case FRONT_END_INPUT:
+        if(console_readbyte(&chKey)) {
+            if ('\b' == chKey) {                 //!<  Backspace(BS) 退格
+                if (0 != pcmd->index) {
+                    pcmd->index--;
+                    console_display_backspace(1); // 删除一个字符
+                }       
+            } 
+			else if ('\r' == chKey) {     // 换行新行 回车
+                console_prn_rn();           
+                if(0 == pcmd->index){
+                    s_chState = FRONT_END_START;
                 }
-                else if(chKey == 0x1B){ // Esc 或者24位编码按键
-                    s_chState = FRONT_END_CHECK24; 
+				else{
+                    pcmd->chCmd[pcmd->index] = '\0';
+                    FRONT_END_RESET_FSM();
+                    s_chState = FRONT_END_TAKEN;
                 }
             }
-            break;
-        case FRONT_END_CHECK24:
-            if(IS_FSM_CPL(front_end_check24( &wKey ))){
-                front_end_function_key(wKey);
-                s_chState = FRONT_END_INPUT; 
+			else if( (chKey >= 32) && (chKey <= 127) ){
+                if ( pcmd->index < (CONSOLE_CMD_CONSOLE_BUFFER_SIZE - 1)){ // 未满
+                    pcmd->chCmd[pcmd->index++] = chKey;
+                    console_writebyte(chKey); //!< 回显
+                }
             }
-            break;
-            
-        case FRONT_END_TAKEN:
-            //保存历史命令
-            console_hiscmd_save((console_cmd_t *)pcmd);			
-            FRONT_END_RESET_FSM();
-            return fsm_rt_cpl;
-            //break;
-        default:
-            FRONT_END_RESET_FSM();
-            break;
+            else if(chKey == 0x1B){ // Esc 或者24位编码按键
+                s_chState = FRONT_END_CHECK24; 
+            }
+        }
+        break;
+    case FRONT_END_CHECK24:
+        if(IS_FSM_CPL(front_end_check24( &wKey ))){
+            front_end_function_key(wKey);
+            s_chState = FRONT_END_INPUT; 
+        }
+        break;
+        
+    case FRONT_END_TAKEN:
+        //保存历史命令
+        console_hiscmd_save((console_cmd_t *)pcmd);			
+        FRONT_END_RESET_FSM();
+        return fsm_rt_cpl;
+        //break;
+    default:
+        FRONT_END_RESET_FSM();
+        break;
     }
     
     return fsm_rt_on_going;
-}
-
-//!< ok
-bool console_str_cpy(char *dst, const char *src)
-{
-    if ((NULL == dst) || (NULL == src)) {
-        return false;
-    }
-    
-    while ('\0' != *src) {
-        *dst = *src;
-        dst++;
-        src++;
-    }
-    
-    *dst = *src;
-    
-    return true;
-}
-
-// ok
-bool console_str_cmp(char *pchString1, char *pchString2)
-{
-    if ( (NULL == pchString1) || (NULL == pchString2) ) {
-        return false;
-    }
-
-    while (*pchString1 == *pchString2) {
-        if ('\0' == *pchString1) {
-            return true;
-        }
-        pchString1++;
-        pchString2++;
-    }
-    
-    return false;
-}
-
-// ok
-uint8_t console_str_len(char *pchString)
-{
-    uint8_t chLen = 0;
-    
-    while ('\0' != *pchString) {
-        pchString++;
-        chLen++;
-    }
-    
-    return chLen;
 }
 
 //!> search the command map to find it
@@ -432,7 +393,8 @@ static const console_command_t *search_cmd_map(char* proutine)
 	if(proutine == NULL)
 		return NULL;
 	
-    while (chCount < UBOUND(s_tCMD)) {
+    while (chCount < UBOUND(s_tCMD))
+	{
         if (strcmp(proutine, s_tCMD[chCount].pchCMD) == 0) {
             return &s_tCMD[chCount];
         }
@@ -530,12 +492,14 @@ static void RawCmdtoken(console_arg_t *para)
                     *pchWrite++ = '\0';
                     para->argv[++para->argc] = pchWrite; //next command
                 }
-            }else{
+            }
+			else{
                 *pchWrite++ = *pchRead;
             }
             bstringLast = !bSeparator;
             pchRead++;              
-        }else{
+        }
+		else{
             if(bstringLast){
                 ++para->argc;
                 *pchWrite = '\0';
@@ -559,14 +523,16 @@ static void parse(void)
     s_ptCMD = search_cmd_map(s_argCmd.argv[0]);
     if (NULL == s_ptCMD) { 
         console_writestring(CONSOLE_BADCOMMAND_PRINT);
-    }else{//消息找到
+    }
+	else{//消息找到
         if(s_argCmd.argc == 2 && IsMeetHelp(s_argCmd.argv[1])){
             if(s_ptCMD->pchHelp){
                 console_writebyte('\t');
                 console_writestring(s_ptCMD->pchHelp);
                 console_prn_rn();
             }
-        }else{
+        }
+		else{
             s_ptCMD->fncmd_handler(s_argCmd.argc,s_argCmd.argv, (void *)s_ptCMD);
         }   
     }
@@ -611,7 +577,8 @@ bool console_cmd_register(console_command_t *ptCmd,
     
     if(!s_ptDynaCmdHead){
         s_ptDynaCmdHead = ptCmd;
-    }else{
+    }
+	else{
         ptCmd->next = s_ptDynaCmdHead;
         s_ptDynaCmdHead = ptCmd;
     }

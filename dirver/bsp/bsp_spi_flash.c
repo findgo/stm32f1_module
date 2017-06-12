@@ -14,7 +14,9 @@
 #define SF_CMD_READ      0x03       /*!< Read Status Register instruction  */
 #define SF_CMD_RDID      0x9F       /*!< Read identification */
 #define SF_CMD_SE        0x20       /*!< Sector Erase instruction */
-#define SF_CMD_BE        0xC7       /*!< Bulk Erase instruction */
+#define SF_CMD_32KBE	 0x52		/*!< 32k Block Erase instruction */
+#define SF_CMD_64KBE	 0xD8		/*!< 64k Erase instruction */
+#define SF_CMD_CE        0xC7       /*!< Chip Erase instruction */
 #define SF_DUMMY_BYTE    0xA5       /*!< Dummy commad */
 
 #define WIP_FLAG      0x01          /*!< Write In Progress (WIP) flag */
@@ -182,6 +184,28 @@ void sf_EraseSector(uint32_t _uiSectorAddr)
     /*!< Wait the end of Flash writing */
     __sf_WaitForWriteEnd();                         
 }
+void sf_EraseBlock(uint32_t _uiBlockAddr,beraseType_t betype)
+{
+    /*!< Send write enable instruction */
+    __sf_WriteEnable();                             
+
+    SF_SPI_CS_ASSERT();
+	
+    /*!< Send block Erase instruction */
+	if(betype == BE32)
+    	sf_spiReadWriteByte(SF_CMD_32KBE);
+	else
+		sf_spiReadWriteByte(SF_CMD_64KBE);
+	
+    /*!< Send block Erase instruction */
+    sf_spiReadWriteByte((_uiBlockAddr & 0xFF0000) >> 16);
+    sf_spiReadWriteByte((_uiBlockAddr & 0xFF00) >> 8); 
+    sf_spiReadWriteByte(_uiBlockAddr & 0xFF);          
+    SF_SPI_CS_DEASSERT();                               
+
+    /*!< Wait the end of Flash writing */
+    __sf_WaitForWriteEnd();                         
+}
 
 void sf_EraseChip(void)
 {
@@ -190,7 +214,7 @@ void sf_EraseChip(void)
 
     SF_SPI_CS_ASSERT();             
     /*!< Bulk Erase */
-    sf_spiReadWriteByte(SF_CMD_BE); 
+    sf_spiReadWriteByte(SF_CMD_CE); 
     SF_SPI_CS_DEASSERT();           
     /*!< Wait the end of Flash writing */
     __sf_WaitForWriteEnd();         

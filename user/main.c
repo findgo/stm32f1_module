@@ -1,4 +1,4 @@
-﻿#include "app_cfg.h"
+#include "app_cfg.h"
 
 //for driver
 #include "usart.h"
@@ -25,9 +25,7 @@ int main(void)
 	while(1)
 	{
 		console_task();
-
-
-		
+	
 #ifdef DEBUG_MSG
 		FunDebugtask();
 #endif

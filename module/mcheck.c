@@ -35,7 +35,8 @@ void checkregister(cks_mem_t *pcks, uint8_t filtetime, IsDownFunc pfuc, CheckCal
 
 	if(!cks_head){
 		cks_head = pcks;
-	}else{						//类栈
+	}
+	else{						//类栈
 		pcks->next = cks_head;
 		cks_head = pcks;
 	}
@@ -56,48 +57,50 @@ void checkupdate(uint16_t ElapseTime)
 	while(pcur)
 	{
 		switch(pcur->state){
-			case CKS_STATE_IDLE: // fall through
-			case CKS_STATE_CHECK:
+		case CKS_STATE_IDLE: // fall through
+		case CKS_STATE_CHECK:
+			if(pcur->pfuc()){
+				pcur->filtercount = 0;
+				pcur->state = CKS_STATE_FILTER;
+			}
+			break;
+			
+		case CKS_STATE_FILTER:
+			pcur->filtercount += ElapseTime;
+			if(pcur->filtercount >= pcur->filtertime){
 				if(pcur->pfuc()){
-					pcur->filtercount = 0;
-					pcur->state = CKS_STATE_FILTER;
+					if(pcur->pdowncallfuc)
+						pcur->pdowncallfuc();
+					pcur->state = CKS_STATE_WAITUP;
 				}
-				break;
-				
-			case CKS_STATE_FILTER:
-				pcur->filtercount += ElapseTime;
-				if(pcur->filtercount >= pcur->filtertime){
-					if(pcur->pfuc()){
-						if(pcur->pdowncallfuc)
-							pcur->pdowncallfuc();
-						pcur->state = CKS_STATE_WAITUP;
-					}else{
-						pcur->state = CKS_STATE_IDLE;
-					}
+				else{
+					pcur->state = CKS_STATE_IDLE;
 				}
-				break;
-				
-			case CKS_STATE_WAITUP:
+			}
+			break;
+			
+		case CKS_STATE_WAITUP:
+			if(!pcur->pfuc()){
+				pcur->filtercount = 0;
+				pcur->state = CKS_STATE_UP_FILTER;
+			}
+			break;
+		case CKS_STATE_UP_FILTER:
+			pcur->filtercount += ElapseTime;
+			if(pcur->filtercount >= pcur->filtertime){
 				if(!pcur->pfuc()){
-					pcur->filtercount = 0;
-					pcur->state = CKS_STATE_UP_FILTER;
+					if(pcur->pUpcallfuc)
+						pcur->pUpcallfuc();
+					pcur->state = CKS_STATE_IDLE;
 				}
-				break;
-			case CKS_STATE_UP_FILTER:
-				pcur->filtercount += ElapseTime;
-				if(pcur->filtercount >= pcur->filtertime){
-					if(!pcur->pfuc()){
-						if(pcur->pUpcallfuc)
-							pcur->pUpcallfuc();
-						pcur->state = CKS_STATE_IDLE;
-					}else{
-						pcur->state = CKS_STATE_WAITUP;
-					}
+				else{
+					pcur->state = CKS_STATE_WAITUP;
 				}
-				break;
-			default:
-				pcur->state = CKS_STATE_IDLE;
-				break;
+			}
+			break;
+		default:
+			pcur->state = CKS_STATE_IDLE;
+			break;
 		}
 		pcur = pcur->next;
 	}

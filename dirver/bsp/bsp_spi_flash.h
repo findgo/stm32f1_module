@@ -66,11 +66,18 @@ typedef struct
     uint32_t TotalSize;     /* 总容量 */
 }sflash_info_t;
 
+typedef enum 
+{
+	BE32,
+	BE64
+}beraseType_t;
+
 void sf_InitFlash(void);
 sflash_info_t *sf_info(void);
 uint32_t sf_ReadID(void);
-void sf_EraseChip(void);
 void sf_EraseSector(uint32_t _uiSectorAddr);
+void sf_EraseBlock(uint32_t _uiBlockAddr,beraseType_t betype);
+void sf_EraseChip(void);
 void sf_WritePage(uint32_t _PageAddr,uint8_t * _pBuf,uint16_t NumByteToWrite);
 void sf_WriteSector(uint32_t _SectorAddr,uint8_t * _pBuf,uint16_t NumByteToWrite);
 void sf_ReadBuffer(uint32_t _uiReadAddr, uint8_t * _pBuf,uint32_t _uiSize);
