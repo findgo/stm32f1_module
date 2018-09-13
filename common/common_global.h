@@ -21,12 +21,12 @@
 #include "stm32F10x.h"
 
 #ifndef FALSE
-#define FLASE 0
+#define FALSE 0
 #endif
 
 
 #ifndef TRUE
-#define TURE 0
+#define TURE 1
 #endif
 
 /*
